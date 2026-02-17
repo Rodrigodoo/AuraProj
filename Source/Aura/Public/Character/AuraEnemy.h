@@ -24,4 +24,8 @@ public:
 	virtual void UnHighlightActor();
 	
 	//---IEnemyInterface---End
+
+	// Temp Bool flag
+	UPROPERTY(BlueprintReadOnly)
+	bool bHighlightActor = false;
 };

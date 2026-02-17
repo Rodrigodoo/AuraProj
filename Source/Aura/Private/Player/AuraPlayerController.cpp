@@ -4,12 +4,21 @@
 #include "Player/AuraPlayerController.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Interaction/EnemyInterface.h"
 
 
 AAuraPlayerController::AAuraPlayerController()
 {
 	// Should replicate
 	bReplicates = true;
+}
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+	
+	// Find object under cursor
+	CursorTrace();
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -76,4 +85,64 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	// Right Direction was setup to the X axis [A/D]
 	ControlledPawn->AddMovementInput(ForwardDirection,InputAxisVector.Y);
 	ControlledPawn->AddMovementInput(RightDirection,InputAxisVector.X);
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	// Get hit result under the cursor
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECC_Visibility,false,CursorHit);
+	if (!CursorHit.bBlockingHit)
+	{
+		// No hit found
+		return;
+	}
+	
+	// Replace Current and Last Actor implementing IEnemyInterface
+	LastActor = CurrentActor;
+	CurrentActor = CursorHit.GetActor();
+
+	/** -----!Highlight Logic!-----
+	 * Line Trace from cursor. There are several scenarios:
+	 *	A. LastActor = null & CurrentActor = null
+	 *		- Do nothing
+	 *	B. LastActor = null & CurrentActor = valid
+	 *		- Highlight the CurrentActor
+	 *	C. LastActor = valid & CurrentActor = null
+	 *		- Unhighlight the LastActor
+	 *	D. LastActor = valid & CurrentActor = valid & LastActor != CurrentActor
+	 *		- Unhighlight the LastActor & Highlight the CurrentActor
+	 *	E. LastActor = valid & CurrentActor = valid & LastActor == CurrentActor
+	 *		- Do nothing
+	 */
+	if (!LastActor)
+	{
+		if (CurrentActor)
+		{
+			// Case B
+			CurrentActor->HighlightActor();
+		}
+		else
+		{
+			// Case A - Do Nothing
+		}
+	}
+	else // LastActor is valid
+	{
+		if (!CurrentActor)
+		{
+			// Case C
+			LastActor->UnHighlightActor();
+		}
+		else if (LastActor != CurrentActor)
+		{
+			// Case D
+			LastActor->UnHighlightActor();
+			CurrentActor->HighlightActor();
+		}
+		else
+		{
+			// Case E - do nothing
+		}
+	}
 }
