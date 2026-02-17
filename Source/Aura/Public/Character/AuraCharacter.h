@@ -13,5 +13,13 @@ UCLASS()
 class AURA_API AAuraCharacter : public AAuraCharacterBase
 {
 	GENERATED_BODY()
+
+public:
+	AAuraCharacter();
+	
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Rotation")
+	float YawRotationRate = 400.0f;
 	
 };
