@@ -7,7 +7,9 @@
 #include "AuraPlayerController.generated.h"
 
 
+class UInputAction;
 class UInputMappingContext;
+struct FInputActionValue;
 
 /**
  * Player controller for aura characters
@@ -22,8 +24,15 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
 	
 private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> MoveAction;
+	
+	// Move the character 2D (XY)
+	void Move(const FInputActionValue& InputActionValue);
 };
