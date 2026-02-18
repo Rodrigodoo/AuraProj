@@ -16,6 +16,9 @@ AAuraEnemy::AAuraEnemy()
 	// Construct and setup the Ability System Component
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
+	// Set Replication mode to Minimal so that Gameplay Effects are NOT replicated to Clients
+	// The AI-Controlled pawns on the client do not need to process these effects as they will be done on the server
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
 	// Construct the Attribute Set
 	AttributeSet = CreateDefaultSubobject<UAttributeSet>("AttributeSet");
