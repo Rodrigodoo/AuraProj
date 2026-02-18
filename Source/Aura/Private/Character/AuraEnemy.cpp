@@ -3,6 +3,8 @@
 
 #include "Character/AuraEnemy.h"
 
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
 
 
@@ -10,6 +12,13 @@ AAuraEnemy::AAuraEnemy()
 {
 	// Set collision to block visibility
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility,ECR_Block);
+	
+	// Construct and setup the Ability System Component
+	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent->SetIsReplicated(true);
+	
+	// Construct the Attribute Set
+	AttributeSet = CreateDefaultSubobject<UAttributeSet>("AttributeSet");
 }
 
 void AAuraEnemy::HighlightActor()
