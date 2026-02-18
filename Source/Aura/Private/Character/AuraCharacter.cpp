@@ -3,7 +3,9 @@
 
 #include "Character/AuraCharacter.h"
 
+#include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/AuraPlayerState.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -21,4 +23,45 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+}
+
+void AAuraCharacter::InitAndCacheAbilitySystemComponentAndAttributeSet(AAuraPlayerState* AuraPlayerState)
+{
+	// An invalid pointer was provided
+	if (!AuraPlayerState)
+	{
+		return;
+	}
+	
+	// Initialises the Ability Actor Info
+	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState,this);
+		
+	// Pass references this character of the PlayerState's AbilitySystemComponent and AttributeSet
+	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	AttributeSet = AuraPlayerState->GetAttributeSet();
+}
+
+void AAuraCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
+	if (HasAuthority())
+	{
+		// Initialise and cache the Ability Actor Info on the server as it will have all the information needed.
+		AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+		check(AuraPlayerState);
+		InitAndCacheAbilitySystemComponentAndAttributeSet(AuraPlayerState);
+	}
+}
+
+void AAuraCharacter::OnRep_PlayerState()
+{
+	// Only on clients
+	Super::OnRep_PlayerState();
+	
+	// Initialise and cache the Ability Actor Info on the client as it will have all the information needed.
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	InitAndCacheAbilitySystemComponentAndAttributeSet(AuraPlayerState);
+	
 }

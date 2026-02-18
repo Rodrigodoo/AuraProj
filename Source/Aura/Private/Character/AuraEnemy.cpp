@@ -19,9 +19,17 @@ AAuraEnemy::AAuraEnemy()
 	// Set Replication mode to Minimal so that Gameplay Effects are NOT replicated to Clients
 	// The AI-Controlled pawns on the client do not need to process these effects as they will be done on the server
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
-	
+
 	// Construct the Attribute Set
 	AttributeSet = CreateDefaultSubobject<UAttributeSet>("AttributeSet");
+}
+
+void AAuraEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	// Initialise the Ability Actor Info as both server and client will have all the information needed.
+	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 }
 
 void AAuraEnemy::HighlightActor()
