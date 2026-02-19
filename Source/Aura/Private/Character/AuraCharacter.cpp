@@ -44,7 +44,7 @@ void AAuraCharacter::InitAndCacheAbilitySystemComponentAndAttributeSet(AAuraPlay
 void AAuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	
+
 	if (HasAuthority())
 	{
 		// Initialise and cache the Ability Actor Info on the server as it will have all the information needed.

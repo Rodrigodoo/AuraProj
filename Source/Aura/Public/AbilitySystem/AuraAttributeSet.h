@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "AttributeSet.h"
 #include "AuraAttributeSet.generated.h"
 
@@ -24,10 +25,12 @@ public:
 	// Character's Health
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
 	FGameplayAttributeData Health;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Health); // Generates All basic accessor functions
 	
 	// Character's Max Health
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes")
 	FGameplayAttributeData MaxHealth;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, MaxHealth); // Generates All basic accessor functions
 	
 	// Replication method for Health
 	UFUNCTION()
@@ -43,10 +46,12 @@ public:
 	// Character's Mana
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Consumable Attributes")
 	FGameplayAttributeData Mana;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Mana); // Generates All basic accessor functions
 	
 	// Character's Max Mana
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Consumable Attributes")
 	FGameplayAttributeData MaxMana;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, MaxMana); // Generates All basic accessor functions
 	
 	// Replication method for Mana
 	UFUNCTION()
