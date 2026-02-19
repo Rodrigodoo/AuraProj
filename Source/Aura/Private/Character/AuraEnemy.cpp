@@ -21,15 +21,17 @@ AAuraEnemy::AAuraEnemy()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	// Construct the Attribute Set
-	AttributeSet = CreateDefaultSubobject<UAttributeSet>("AttributeSet");
+	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 }
 
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Add the Attribute set to the Ability System Component
+	AbilitySystemComponent->AddAttributeSetSubobject(AttributeSet.Get());
 	// Initialise the Ability Actor Info as both server and client will have all the information needed.
-	AbilitySystemComponent->InitAbilityActorInfo(this,this);
+	//AbilitySystemComponent->InitAbilityActorInfo(this,this);
 }
 
 void AAuraEnemy::HighlightActor()

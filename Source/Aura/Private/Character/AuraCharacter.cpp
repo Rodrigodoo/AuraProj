@@ -35,7 +35,7 @@ void AAuraCharacter::InitAndCacheAbilitySystemComponentAndAttributeSet(AAuraPlay
 	
 	// Initialises the Ability Actor Info
 	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState,this);
-		
+	
 	// Pass references this character of the PlayerState's AbilitySystemComponent and AttributeSet
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();

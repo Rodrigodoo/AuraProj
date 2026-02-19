@@ -16,7 +16,7 @@ AAuraPlayerState::AAuraPlayerState()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
 	// Construct the Attribute Set
-	AttributeSet = CreateDefaultSubobject<UAttributeSet>("AttributeSet");
+	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 	
 	// Frequency that the server will send updates to clients
 	// Note: For games that the ASC is set on player state the frequency needs to be high to make sure replication 
