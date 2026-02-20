@@ -33,7 +33,8 @@ void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		
 		// TODOBARBORO - Breaking the rules so that we can test the changes, PLEASE REMOVE
 		UAuraAttributeSet* MutableAuraAttributeSet= const_cast<UAuraAttributeSet*>(AuraAttributeSet);
-		MutableAuraAttributeSet->SetHealth(AuraAttributeSet->GetHealth() + 25.f);
+		MutableAuraAttributeSet->SetHealth(AuraAttributeSet->GetHealth() -25.f);
+		MutableAuraAttributeSet->SetMana(AuraAttributeSet->GetMana() -25.f);
 		Destroy();
 	}
 }
