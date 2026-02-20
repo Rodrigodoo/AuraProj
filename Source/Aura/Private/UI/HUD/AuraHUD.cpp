@@ -16,6 +16,7 @@ UAuraOverlayWidgetController* AAuraHUD::GetAuraOverlayWidgetController(const FWi
 		// Creates Widget Controller and initialises its params
 		OverlayWidgetController = NewObject<UAuraOverlayWidgetController>(this, OverlayWidgetControllerClass);
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
+		OverlayWidgetController->BindCallbacksToDependencies();
 	}
 
 	return OverlayWidgetController;

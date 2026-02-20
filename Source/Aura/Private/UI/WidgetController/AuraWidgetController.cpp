@@ -13,5 +13,10 @@ void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerPar
 
 void UAuraWidgetController::BroadcastInitialValues()
 {
-	// Base Class does no work
+	// Base Class does no work. Implement in child class!
+}
+
+void UAuraWidgetController::BindCallbacksToDependencies()
+{
+	// Base Class does no work. Implement in child class!
 }

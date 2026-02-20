@@ -53,6 +53,9 @@ public:
 	
 	// Call delegates to broadcast initial values
 	virtual void BroadcastInitialValues();
+	
+	// Binds callbacks to dependencies of this controller
+	virtual void BindCallbacksToDependencies();
 protected:
 	//~ Begin Model Section
 	// Player Controller

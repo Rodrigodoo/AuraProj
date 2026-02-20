@@ -26,7 +26,8 @@ public:
 	TObjectPtr<UAuraUserWidget> OverlayWidget;
 	
 	// Get the Overlay Widget Controller if it doesn't exist makes one
-	// Note: Works like a singleton.
+	// Note: - Works like a singleton.
+	// - Initialise Controller (Sets up controller parameters and Binds delegates)
 	UAuraOverlayWidgetController* GetAuraOverlayWidgetController(const FWidgetControllerParams& WCParams);
 	
 	// Initialise the Overlay.
