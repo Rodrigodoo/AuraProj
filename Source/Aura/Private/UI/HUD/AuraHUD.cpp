@@ -36,6 +36,10 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	OverlayWidget = CreateWidget<UAuraUserWidget>(GetWorld(), OverlayWidgetClass);
 	OverlayWidget->SetWidgetController(WidgetController);
 	
+	// Since the Widget Controller is added to the widget and all model data was initiated (PC, PS, etc...)
+	// Can start binding/broadcast.
+	WidgetController->BroadcastInitialValues();
+	
 	// Add to Viewport
 	OverlayWidget->AddToViewport();
 }

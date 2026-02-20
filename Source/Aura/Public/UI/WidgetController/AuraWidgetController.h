@@ -51,6 +51,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Widget Controller")
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 	
+	// Call delegates to broadcast initial values
+	virtual void BroadcastInitialValues();
 protected:
 	//~ Begin Model Section
 	// Player Controller
