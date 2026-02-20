@@ -30,8 +30,6 @@ void AAuraEnemy::BeginPlay()
 	
 	// Add the Attribute set to the Ability System Component
 	AbilitySystemComponent->AddAttributeSetSubobject(AttributeSet.Get());
-	// Initialise the Ability Actor Info as both server and client will have all the information needed.
-	//AbilitySystemComponent->InitAbilityActorInfo(this,this);
 }
 
 void AAuraEnemy::HighlightActor()

@@ -7,7 +7,7 @@
 #include "AuraPlayerController.generated.h"
 
 
-class IEnemyInterface;
+class IAuraEnemyInterface;
 class UInputAction;
 class UInputMappingContext;
 struct FInputActionValue;
@@ -24,6 +24,7 @@ public:
 	AAuraPlayerController();
 	
 	virtual void PlayerTick(float DeltaTime) override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -44,7 +45,7 @@ private:
 	// Track Enemies
 	
 	// Last Enemy
-	TScriptInterface<IEnemyInterface> LastActor;
+	TScriptInterface<IAuraEnemyInterface> LastActor;
 	// Current Enemy
-	TScriptInterface<IEnemyInterface> CurrentActor;
+	TScriptInterface<IAuraEnemyInterface> CurrentActor;
 };

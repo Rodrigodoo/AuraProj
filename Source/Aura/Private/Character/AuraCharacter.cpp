@@ -5,7 +5,9 @@
 
 #include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
+#include "UI/HUD/AuraHUD.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -25,13 +27,11 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationYaw = false;
 }
 
-void AAuraCharacter::InitAndCacheAbilitySystemComponentAndAttributeSet(AAuraPlayerState* AuraPlayerState)
+void AAuraCharacter::InitCharacterAndComponents()
 {
-	// An invalid pointer was provided
-	if (!AuraPlayerState)
-	{
-		return;
-	}
+	// Retrieve the Player state
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
 	
 	// Initialises the Ability Actor Info
 	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState,this);
@@ -39,6 +39,17 @@ void AAuraCharacter::InitAndCacheAbilitySystemComponentAndAttributeSet(AAuraPlay
 	// Pass references this character of the PlayerState's AbilitySystemComponent and AttributeSet
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
+	
+	// Initialise the HUD since we have all required information
+	// Only pass check in Server or Owning client (other clients will fail check)
+	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
+	{
+		if (AAuraHUD* HUD = AuraPlayerController->GetHUD<AAuraHUD>())
+		{
+			// Initialise the HUD
+			HUD->InitOverlay(AuraPlayerController, AuraPlayerState,AbilitySystemComponent,AttributeSet);
+		}
+	}
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
@@ -48,9 +59,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	if (HasAuthority())
 	{
 		// Initialise and cache the Ability Actor Info on the server as it will have all the information needed.
-		AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
-		check(AuraPlayerState);
-		InitAndCacheAbilitySystemComponentAndAttributeSet(AuraPlayerState);
+		InitCharacterAndComponents();
 	}
 }
 
@@ -60,8 +69,5 @@ void AAuraCharacter::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 	
 	// Initialise and cache the Ability Actor Info on the client as it will have all the information needed.
-	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
-	check(AuraPlayerState);
-	InitAndCacheAbilitySystemComponentAndAttributeSet(AuraPlayerState);
-	
+	InitCharacterAndComponents();
 }

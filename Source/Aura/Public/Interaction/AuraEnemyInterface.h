@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "EnemyInterface.generated.h"
+#include "AuraEnemyInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UEnemyInterface : public UInterface
+class UAuraEnemyInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,7 +17,7 @@ class UEnemyInterface : public UInterface
  * This interface is to be used by enemies to apply generalized behaviour
  * NOTE: If other object are also to be highlighted then create a new HighlightInterface and make this one inherit from it!
  */
-class AURA_API IEnemyInterface
+class AURA_API IAuraEnemyInterface
 {
 	GENERATED_BODY()
 

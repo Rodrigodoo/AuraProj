@@ -4,26 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
-#include "Interaction/EnemyInterface.h"
+#include "Interaction/AuraEnemyInterface.h"
 #include "AuraEnemy.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
+class AURA_API AAuraEnemy : public AAuraCharacterBase, public IAuraEnemyInterface
 {
 	GENERATED_BODY()
 public:
 	AAuraEnemy();
 
-	//~ Begin - IEnemyInterface
+	//~ Begin - IAuraEnemyInterface
 	// Highlights the enemy
 	virtual void HighlightActor() override;
 	
 	// Unhighlights the enemy
 	virtual void UnHighlightActor() override;
-	//~ End - IEnemyInterface
+	//~ End - IAuraEnemyInterface
 protected:
 	virtual void BeginPlay() override;
 };

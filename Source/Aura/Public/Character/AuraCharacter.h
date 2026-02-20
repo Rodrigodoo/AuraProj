@@ -19,8 +19,10 @@ class AURA_API AAuraCharacter : public AAuraCharacterBase
 public:
 	AAuraCharacter();
 	
-	// Initializes the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
-	void InitAndCacheAbilitySystemComponentAndAttributeSet(AAuraPlayerState* AuraPlayerState);
+	// Initializes the character and other components
+	// Init the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
+	// initializes the HUD and its Over
+	void InitCharacterAndComponents();
 	
 	// Called whenever this character gets possessed by a controller
 	virtual void PossessedBy(AController* NewController) override;

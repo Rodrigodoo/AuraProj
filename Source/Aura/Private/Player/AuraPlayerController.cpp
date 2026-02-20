@@ -5,7 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Interaction/EnemyInterface.h"
+#include "Interaction/AuraEnemyInterface.h"
 
 
 AAuraPlayerController::AAuraPlayerController()
@@ -32,10 +32,12 @@ void AAuraPlayerController::BeginPlay()
 	check(AuraContext);
 	
 	// UEnhancedInputLocalPlayerSubsystem deals with adding mapping contexts
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-	Subsystem->AddMappingContext(AuraContext,0);
-	
+	// Since in multiplayer clients might not have Local Player if they are not the owning one
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(AuraContext,0);
+	}
+
 	// Mouse Cursor
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
@@ -99,7 +101,7 @@ void AAuraPlayerController::CursorTrace()
 		return;
 	}
 	
-	// Replace Current and Last Actor implementing IEnemyInterface
+	// Replace Current and Last Actor implementing IAuraEnemyInterface
 	LastActor = CurrentActor;
 	CurrentActor = CursorHit.GetActor();
 
