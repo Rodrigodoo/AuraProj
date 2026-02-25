@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "AuraEffectActor.generated.h"
 
+class UGameplayEffect;
 /**
  * Actor designed to apply an effect on another actor
  */
@@ -17,23 +17,14 @@ class AURA_API AAuraEffectActor : public AActor
 	
 public:	
 	AAuraEffectActor();
-
-	// Overlap function
-	UFUNCTION()
-	virtual void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	// End Overlap function
-	UFUNCTION()
-	virtual void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 protected:
 	virtual void BeginPlay() override;
 	
-private:
-	// Overlapping object
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USphereComponent> Sphere;
+	// Method to apply a Gameplay Effect to a target
+	UFUNCTION(BlueprintCallable)
+	void ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffect) const;
 	
-	// Static Mesh to visualise
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> Mesh;
+	// Gameplay Effect class to apply 
+	UPROPERTY(EditAnywhere, Category="Applied Effects")
+	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
 };
