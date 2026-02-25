@@ -22,9 +22,9 @@ protected:
 	
 	// Method to apply a Gameplay Effect to a target
 	UFUNCTION(BlueprintCallable)
-	void ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffect) const;
+	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffect) const;
 	
 	// Gameplay Effect class to apply 
-	UPROPERTY(EditAnywhere, Category="Applied Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
 	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
 };
