@@ -20,6 +20,11 @@ public:
 	// Replication method override for variable replication
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
+	// Called before an attribute change
+	// should only be used for clamping
+	// Later modifications might affect this value even after clamping it
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	
 	//~ Begin - Vital  Attributes
 	
 	// Character's Health
