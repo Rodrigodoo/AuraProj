@@ -15,7 +15,7 @@ struct FEffectProperties
 {
 	GENERATED_BODY()
 	
-	FEffectProperties();
+	FEffectProperties(){};
 	
 	// Context Handle for this effect
 	FGameplayEffectContextHandle EffectContextHandle;

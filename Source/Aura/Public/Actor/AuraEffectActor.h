@@ -100,4 +100,9 @@ protected:
 	
 	// Map the active Gameplay Effect Handles with the appropriate ASC
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHanles;
+	
+	// This actor's level
+	// Will have implications on the effect's magnitude
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
+	float ActorLevel = 1.f;
 };
