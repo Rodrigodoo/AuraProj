@@ -8,6 +8,56 @@
 #include "AuraAttributeSet.generated.h"
 
 /**
+ * Struct to store important information about a Gameplay effect
+ */
+USTRUCT()
+struct FEffectProperties
+{
+	GENERATED_BODY()
+	
+	FEffectProperties();
+	
+	// Context Handle for this effect
+	FGameplayEffectContextHandle EffectContextHandle;
+	
+	//~ Begin Source
+	// Source Ability System Component for this effect
+	UPROPERTY()
+	UAbilitySystemComponent* SourceAbilitySystemComponent = nullptr;
+	
+	// Source Avatar actor for this effect
+	UPROPERTY()
+	AActor* SourceAvatarActor = nullptr;
+	
+	// Source Controller for this effect
+	UPROPERTY()
+	AController* SourceController = nullptr;
+	
+	// Source Character for this effect
+	UPROPERTY()
+	ACharacter* SourceCharacter = nullptr;
+	//~ End Source
+	
+	//~ Begin Target
+	// Target Ability System Component for this effect
+	UPROPERTY()
+	UAbilitySystemComponent* TargetAbilitySystemComponent = nullptr;
+	
+	// Target Avatar actor for this effect
+	UPROPERTY()
+	AActor* TargetAvatarActor = nullptr;
+	
+	// Target Controller for this effect
+	UPROPERTY()
+	AController* TargetController = nullptr;
+	
+	// Target Character for this effect
+	UPROPERTY()
+	ACharacter* TargetCharacter = nullptr;
+	//~ End Target
+};
+
+/**
  * Attribute Set in charge of holding attributes for the Aura project
  */
 UCLASS()
@@ -24,6 +74,9 @@ public:
 	// should only be used for clamping
 	// Later modifications might affect this value even after clamping it
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	
+	// Called after a Gameplay Effect is exectuded
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
 	//~ Begin - Vital  Attributes
 	
@@ -66,4 +119,9 @@ public:
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData & OldMaxMana) const;
 	// ~ End Consumable Attributes
+	
+private:
+	
+	// Fill in the Effect Properties for this effect
+	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutEffectProperties) const;
 };
