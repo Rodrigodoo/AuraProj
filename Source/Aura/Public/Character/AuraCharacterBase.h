@@ -24,6 +24,10 @@ public:
 	
 	// Returns the attribute set to use for this actor.
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
+	
+	// Initializes the character and other components
+	// Init the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
+	virtual void InitCharacterAndComponents();
 
 protected:
 	virtual void BeginPlay() override;

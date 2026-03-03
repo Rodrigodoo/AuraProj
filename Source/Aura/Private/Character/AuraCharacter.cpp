@@ -4,6 +4,7 @@
 #include "Character/AuraCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
@@ -35,6 +36,13 @@ void AAuraCharacter::InitCharacterAndComponents()
 	
 	// Initialises the Ability Actor Info
 	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState,this);
+	if (UAuraAbilitySystemComponent* AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(
+		AuraPlayerState->GetAbilitySystemComponent()))
+	{
+		// Inform the ASC that its AbilityActorInfo was set
+		// This will bind delegates
+		AuraAbilitySystemComponent->AbilityActorInfoSet();
+	}
 	
 	// Pass references this character of the PlayerState's AbilitySystemComponent and AttributeSet
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();

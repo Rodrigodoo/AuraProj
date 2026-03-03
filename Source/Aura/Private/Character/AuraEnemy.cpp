@@ -28,8 +28,8 @@ void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Add the Attribute set to the Ability System Component
-	AbilitySystemComponent->AddAttributeSetSubobject(AttributeSet.Get());
+	// Initialize ASC
+	InitCharacterAndComponents();
 }
 
 void AAuraEnemy::HighlightActor()
@@ -57,5 +57,17 @@ void AAuraEnemy::UnHighlightActor()
 	if (Weapon)
 	{
 		Weapon->SetRenderCustomDepth(false);
+	}
+}
+
+void AAuraEnemy::InitCharacterAndComponents()
+{
+	// Initialises the Ability Actor Info
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	if (UAuraAbilitySystemComponent* AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		// Inform the ASC that its AbilityActorInfo was set
+		// This will bind delegates
+		AuraAbilitySystemComponent->AbilityActorInfoSet();
 	}
 }

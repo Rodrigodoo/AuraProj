@@ -24,6 +24,10 @@ public:
 	// Unhighlights the enemy
 	virtual void UnHighlightActor() override;
 	//~ End - IAuraEnemyInterface
+	
+	// Initializes the character and other components
+	// Init the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
+	virtual void InitCharacterAndComponents() override;
 protected:
 	virtual void BeginPlay() override;
 };

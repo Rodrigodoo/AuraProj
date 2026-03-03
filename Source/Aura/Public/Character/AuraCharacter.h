@@ -21,8 +21,8 @@ public:
 	
 	// Initializes the character and other components
 	// Init the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
-	// initializes the HUD and its Over
-	void InitCharacterAndComponents();
+	// initializes the HUD and its Overlay
+	virtual void InitCharacterAndComponents() override;
 	
 	// Called whenever this character gets possessed by a controller
 	virtual void PossessedBy(AController* NewController) override;
