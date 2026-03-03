@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/AuraOverlayWidgetController.h"
 
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
 void UAuraOverlayWidgetController::BroadcastInitialValues()
@@ -33,6 +34,23 @@ void UAuraOverlayWidgetController::BindCallbacksToDependencies()
 		AuraAttributeSet->GetManaAttribute()).AddUObject(this, &UAuraOverlayWidgetController::ManaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		AuraAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UAuraOverlayWidgetController::MaxManaChanged);
+	
+	// Note: Make sure this method is only called after UAuraAbilitySystemComponent is valid!
+	// Bind callbacks in this controller to the Aura ASC
+	if (UAuraAbilitySystemComponent* AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		AuraAbilitySystemComponent->EffectAssetTags.AddLambda(
+		[](const FGameplayTagContainer& AssetTags)
+			{
+				// Debug message showing all tags
+				for(const FGameplayTag& Tag : AssetTags)
+				{
+					FString TagName = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
+					GEngine->AddOnScreenDebugMessage(-1,8.f, FColor::Blue, TagName);
+				}
+			}	
+		);
+	}
 }
 
 void UAuraOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
