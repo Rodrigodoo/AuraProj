@@ -34,10 +34,7 @@ struct FUIWidgetRow : public FTableRowBase
 };
 
 // Delegates that can be used in BP and called on multiple widgets
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature, float, NewMaxHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 
 /**
@@ -62,19 +59,19 @@ public:
 	//~ Begin Delegate Variables
 	// Health Change Delegate
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnHealthChangedSignature OnHealthChanged;
+	FOnAttributeChangedSignature OnHealthChanged;
 	
 	// Max Health Change Delegate
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnMaxHealthChangedSignature OnMaxHealthChanged;
+	FOnAttributeChangedSignature OnMaxHealthChanged;
 	
 	// Mana Change Delegate
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnManaChangedSignature OnManaChanged;
+	FOnAttributeChangedSignature OnManaChanged;
 	
 	// Max Mana Change Delegate
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnMaxManaChangedSignature OnMaxManaChanged;
+	FOnAttributeChangedSignature OnMaxManaChanged;
 	
 	// Message Widget Row Delegate
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
@@ -84,18 +81,6 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
-	
-	//~ Begin Callback methods
-	// Called when Health changed
-	void HealthChanged(const FOnAttributeChangeData& Data) const;
-	// Called when Max Health changed
-	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
-	
-	// Called when Mana changed
-	void ManaChanged(const FOnAttributeChangeData& Data) const;
-	// Called when Max Mana changed
-	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
-	//~ End Callback methods
 	
 	// Will later be moved to a static function library
 	// Retrieve a data table row by tag
