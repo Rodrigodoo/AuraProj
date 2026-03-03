@@ -45,11 +45,15 @@ void UAuraOverlayWidgetController::BindCallbacksToDependencies()
 				// Debug message showing all tags
 				for(const FGameplayTag& Tag : AssetTags)
 				{
-					FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
-					
-					
-					FString TagName = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
-					GEngine->AddOnScreenDebugMessage(-1,8.f, FColor::Blue, TagName);
+					// Check if tag belongs to Messages tag
+					// How MatchesTag() works: "A.1".MatchesTag("A") will return True, "A".MatchesTag("A.1") will return False
+					FGameplayTag MessageGameplayTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+					if (Tag.MatchesTag(MessageGameplayTag))
+					{
+						// If it is a message tag then broadcast to listening widgets
+						const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+						MessageWidgetRowDelegate.Broadcast(*Row);
+					}
 				}
 			}	
 		);
