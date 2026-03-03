@@ -91,4 +91,16 @@ protected:
 	// Called when Max Mana changed
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	//~ End Callback methods
+	
+	// Will later be moved to a static function library
+	// Retrieve a data table row by tag
+	// Note: The row name must have the same name as the tag. (This is something easy to break but we are using it for educational purposes)
+	template<typename T>
+	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);	
 };
+
+template <typename T>
+T* UAuraOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	return DataTable->FindRow<T>(Tag.GetTagName(),TEXT(""));
+}
