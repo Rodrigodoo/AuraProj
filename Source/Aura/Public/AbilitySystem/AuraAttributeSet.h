@@ -87,37 +87,19 @@ public:
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Health); // Generates All basic accessor functions
 	
-	//~ Character's Max Health
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes")
-	FGameplayAttributeData MaxHealth;
-	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, MaxHealth); // Generates All basic accessor functions
-	
 	// Replication method for Health
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData & OldHealth) const;
-	
-	// Replication method for Max Health
-	UFUNCTION()
-	void OnRep_MaxHealth(const FGameplayAttributeData & OldMaxHealth) const;
 
 	//~ Character's Mana
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Vital Attributes")
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Mana); // Generates All basic accessor functions
-	
-	//~ Character's Max Mana
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Vital Attributes")
-	FGameplayAttributeData MaxMana;
-	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, MaxMana); // Generates All basic accessor functions
-	
+
 	// Replication method for Mana
 	UFUNCTION()
 	void OnRep_Mana(const FGameplayAttributeData & OldMana) const;
-	
-	// Replication method for Max Mana
-	UFUNCTION()
-	void OnRep_MaxMana(const FGameplayAttributeData & OldMaxMana) const;
-	
+
 	/*
 	 * End - Vital  Attributes
 	 */
@@ -165,6 +147,103 @@ public:
 	
 	/*
 	 * End - Primary Attributes
+	 */
+	
+	/*
+	 * Begin - Secondary Attributes
+	 */
+	
+	//~ Character's Armor (depends on Resilience)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armor, Category = "Secondary Attributes")
+	FGameplayAttributeData Armor;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Armor); // Generates All basic accessor functions
+	
+	//~ Character's Armor Penetration (depends on Resilience)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ArmorPenetration, Category = "Secondary Attributes")
+	FGameplayAttributeData ArmorPenetration;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, ArmorPenetration); // Generates All basic accessor functions
+	
+	//~ Character's Block Chance (depends on Armor)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BlockChance, Category = "Secondary Attributes")
+	FGameplayAttributeData BlockChance;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, BlockChance); // Generates All basic accessor functions
+	
+	//~ Character's Critical Hit Chance (depends on Armor Penetration)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalHitChance, Category = "Secondary Attributes")
+	FGameplayAttributeData CriticalHitChance;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, CriticalHitChance); // Generates All basic accessor functions
+	
+	//~ Character's Critical Hit Damage (depends on Armor Penetration)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalHitDamage, Category = "Secondary Attributes")
+	FGameplayAttributeData CriticalHitDamage;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, CriticalHitDamage); // Generates All basic accessor functions
+	
+	//~ Character's Critical Hit Resistance (depends on Armor)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalHitResistance, Category = "Secondary Attributes")
+	FGameplayAttributeData CriticalHitResistance;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, CriticalHitResistance); // Generates All basic accessor functions
+	
+	//~ Character's Health Regeneration (depends on Vigor)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegeneration, Category = "Secondary Attributes")
+	FGameplayAttributeData HealthRegeneration;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, HealthRegeneration); // Generates All basic accessor functions
+	
+	//~ Character's Mana Regeneration (depends on Intelligence)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration, Category = "Secondary Attributes")
+	FGameplayAttributeData ManaRegeneration;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, ManaRegeneration); // Generates All basic accessor functions
+
+	//~ Character's Max Health (depends on Vigor)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Secondary Attributes")
+	FGameplayAttributeData MaxHealth;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, MaxHealth); // Generates All basic accessor functions
+	
+	//~ Character's Max Mana (depends on Intelligence)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Secondary Attributes")
+	FGameplayAttributeData MaxMana;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, MaxMana); // Generates All basic accessor functions
+	
+	// Replication method for Armor
+	UFUNCTION()
+	void OnRep_Armor(const FGameplayAttributeData& OldArmor) const;
+	
+	// Replication method for ArmorPenetration
+	UFUNCTION()
+	void OnRep_ArmorPenetration(const FGameplayAttributeData& OldArmorPenetration) const;
+	
+	// Replication method for BlockChance
+	UFUNCTION()
+	void OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const;
+	
+	// Replication method for CriticalHitChance
+	UFUNCTION()
+	void OnRep_CriticalHitChance(const FGameplayAttributeData& OldCriticalHitChance) const;
+	
+	// Replication method for CriticalHitDamage
+	UFUNCTION()
+	void OnRep_CriticalHitDamage(const FGameplayAttributeData& OldCriticalHitDamage) const;
+	
+	// Replication method for CriticalHitResistance
+	UFUNCTION()
+	void OnRep_CriticalHitResistance(const FGameplayAttributeData& OldCriticalHitResistance) const;
+	
+	// Replication method for HealthRegeneration
+	UFUNCTION()
+	void OnRep_HealthRegeneration(const FGameplayAttributeData& OldHealthRegeneration) const;
+	
+	// Replication method for ManaRegeneration
+	UFUNCTION()
+	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldManaRegeneration) const;
+	
+	// Replication method for Max Health
+	UFUNCTION()
+	void OnRep_MaxHealth(const FGameplayAttributeData & OldMaxHealth) const;
+	
+	// Replication method for Max Mana
+	UFUNCTION()
+	void OnRep_MaxMana(const FGameplayAttributeData & OldMaxMana) const;
+	/*
+	 * End - Secondary Attributes
 	 */
 
 private:
