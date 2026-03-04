@@ -3,6 +3,8 @@
 
 #include "Character/AuraCharacterBase.h"
 
+#include "AbilitySystemComponent.h"
+
 AAuraCharacterBase::AAuraCharacterBase()
 {
  	// No tick for this class
@@ -26,4 +28,16 @@ void AAuraCharacterBase::InitCharacterAndComponents()
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AAuraCharacterBase::InitializePrimaryAttributes() const
+{
+	// Early checks
+	check(IsValid(GetAbilitySystemComponent()));
+	check(DefaultPrimaryAttributes)
+	
+	// Make a Gameplay Effect Spec to set the Primary Attributes
+	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes,1.f, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(),GetAbilitySystemComponent());
 }

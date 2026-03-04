@@ -48,6 +48,9 @@ void AAuraCharacter::InitCharacterAndComponents()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	
+	// Initialize Attribute values
+	InitializePrimaryAttributes();
+	
 	// Initialise the HUD since we have all required information
 	// Only pass check in Server or Owning client (other clients will fail check)
 	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))

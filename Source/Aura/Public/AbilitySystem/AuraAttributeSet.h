@@ -132,32 +132,32 @@ public:
 	FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Strength); // Generates All basic accessor functions
 	
-	// Replication method for Strength
-	UFUNCTION()
-	void OnRep_Strength(const FGameplayAttributeData & OldStrength) const;
-	
 	//~ Character's Intelligence
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing= OnRep_Intelligence, Category = "Primary Attributes")
 	FGameplayAttributeData Intelligence;
 	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Intelligence); // Generates All basic accessor functions
+
+	//~ Character's Resilience
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing= OnRep_Resilience, Category = "Primary Attributes")
+	FGameplayAttributeData Resilience;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Resilience); // Generates All basic accessor functions
+
+	//~ Character's Vigor
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing= OnRep_Vigor, Category = "Primary Attributes")
+	FGameplayAttributeData Vigor;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Vigor); // Generates All basic accessor functions
+	
+	// Replication method for Strength
+	UFUNCTION()
+	void OnRep_Strength(const FGameplayAttributeData & OldStrength) const;
 	
 	// Replication method for Intelligence
 	UFUNCTION()
 	void OnRep_Intelligence(const FGameplayAttributeData & OldIntelligence) const;
 	
-	//~ Character's Resilience
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing= OnRep_Resilience, Category = "Primary Attributes")
-	FGameplayAttributeData Resilience;
-	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Resilience); // Generates All basic accessor functions
-	
 	// Replication method for Resilience
 	UFUNCTION()
 	void OnRep_Resilience(const FGameplayAttributeData & OldResilience) const;
-	
-	//~ Character's Vigor
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing= OnRep_Vigor, Category = "Primary Attributes")
-	FGameplayAttributeData Vigor;
-	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Vigor); // Generates All basic accessor functions
 	
 	// Replication method for Vigor
 	UFUNCTION()
@@ -166,7 +166,6 @@ public:
 	/*
 	 * End - Primary Attributes
 	 */
-
 
 private:
 	
