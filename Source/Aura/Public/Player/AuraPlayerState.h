@@ -30,7 +30,7 @@ public:
 	
 protected:
 	// Pointer to the PlayerState's Ability System Component (If there is one)
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	
 	// Pointer to the PlayerState's Attribute Set (If there is one)
