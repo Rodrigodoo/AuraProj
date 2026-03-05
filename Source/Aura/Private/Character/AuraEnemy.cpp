@@ -60,6 +60,11 @@ void AAuraEnemy::UnHighlightActor()
 	}
 }
 
+int32 AAuraEnemy::GetCharacterLevel()
+{
+	return CharacterLevel;
+}
+
 void AAuraEnemy::InitCharacterAndComponents()
 {
 	// Initialises the Ability Actor Info

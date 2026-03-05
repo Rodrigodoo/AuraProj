@@ -28,6 +28,17 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationYaw = false;
 }
 
+int32 AAuraCharacter::GetCharacterLevel()
+{
+	// Retrieve the Player state
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	
+	// Retrieve the level from the player state
+	// For this character, its level is the same as the player level
+	return AuraPlayerState->GetPlayerLevel();
+}
+
 void AAuraCharacter::InitCharacterAndComponents()
 {
 	// Retrieve the Player state

@@ -19,6 +19,11 @@ class AURA_API AAuraCharacter : public AAuraCharacterBase
 public:
 	AAuraCharacter();
 	
+	//~ Begin - IAuraCombatInterface
+	// Get the player's level (the player level will be this character's level)
+	virtual int32 GetCharacterLevel() override;
+	//~ End - IAuraCombatInterface
+	
 	// Initializes the character and other components
 	// Init the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
 	// initializes the HUD and its Overlay
