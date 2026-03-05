@@ -79,33 +79,6 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
 	/*
-	 * Begin - Vital  Attributes
-	 */
-	
-	//~ Character's Health
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
-	FGameplayAttributeData Health;
-	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Health); // Generates All basic accessor functions
-	
-	// Replication method for Health
-	UFUNCTION()
-	void OnRep_Health(const FGameplayAttributeData & OldHealth) const;
-
-	//~ Character's Mana
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Vital Attributes")
-	FGameplayAttributeData Mana;
-	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Mana); // Generates All basic accessor functions
-
-	// Replication method for Mana
-	UFUNCTION()
-	void OnRep_Mana(const FGameplayAttributeData & OldMana) const;
-
-	/*
-	 * End - Vital  Attributes
-	 */
-	
-	
-	/*
 	 * Begin - Primary Attributes
 	 */
 	
@@ -244,6 +217,32 @@ public:
 	void OnRep_MaxMana(const FGameplayAttributeData & OldMaxMana) const;
 	/*
 	 * End - Secondary Attributes
+	 */
+	
+	/*
+	 * Begin - Vital  Attributes
+	 */
+	
+	//~ Character's Health
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
+	FGameplayAttributeData Health;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Health); // Generates All basic accessor functions
+	
+	// Replication method for Health
+	UFUNCTION()
+	void OnRep_Health(const FGameplayAttributeData & OldHealth) const;
+
+	//~ Character's Mana
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Vital Attributes")
+	FGameplayAttributeData Mana;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, Mana); // Generates All basic accessor functions
+
+	// Replication method for Mana
+	UFUNCTION()
+	void OnRep_Mana(const FGameplayAttributeData & OldMana) const;
+
+	/*
+	 * End - Vital  Attributes
 	 */
 
 private:

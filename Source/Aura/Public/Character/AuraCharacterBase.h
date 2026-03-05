@@ -56,6 +56,13 @@ protected:
 	// - These should be infinite gameplay effects
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+	
+	// Gameplay effect to define the initial values of the vital attributes
+	// NOTE: 
+	// - These attributes must be initialized AFTER DefaultSecondaryAttributes (They need MaxHealth and MaxMana)
+	// - These should be an instant gameplay effects
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 	// Initializes all default attributes for this character
 	void InitializeDefaultAttributes() const;

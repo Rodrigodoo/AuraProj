@@ -32,6 +32,8 @@ void AAuraCharacterBase::BeginPlay()
 
 void AAuraCharacterBase::InitializeDefaultAttributes() const
 {
+	// NOTE: The order of these calls is important and should be maintained!
+	
 	// Initialize the Primary Attributes
 	// By applying an instant Gameplay Effect to self
 	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
@@ -39,6 +41,10 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 	// Initialize the Secondary Attributes
 	// By applying an infinite Gameplay Effect to self
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
+	
+	// Initialize the Vital Attributes
+	// By applying an infinite Gameplay Effect to self
+	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
 
 void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffect, const float Level) const
