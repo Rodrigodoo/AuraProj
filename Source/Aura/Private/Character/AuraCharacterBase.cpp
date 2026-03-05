@@ -30,14 +30,25 @@ void AAuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AAuraCharacterBase::InitializePrimaryAttributes() const
+void AAuraCharacterBase::InitializeDefaultAttributes() const
+{
+	// Initialize the Primary Attributes
+	// By applying an instant Gameplay Effect to self
+	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
+	
+	// Initialize the Secondary Attributes
+	// By applying an infinite Gameplay Effect to self
+	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
+}
+
+void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffect, const float Level) const
 {
 	// Early checks
 	check(IsValid(GetAbilitySystemComponent()));
-	check(DefaultPrimaryAttributes)
+	check(GameplayEffect);
 	
-	// Make a Gameplay Effect Spec to set the Primary Attributes
+	// Apply a Gameplay Effect Spec to self
 	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
-	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes,1.f, ContextHandle);
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffect, Level, ContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(),GetAbilitySystemComponent());
 }

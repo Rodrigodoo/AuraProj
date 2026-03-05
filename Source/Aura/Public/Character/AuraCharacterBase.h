@@ -49,6 +49,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 	
-	// Method to initialize the Primary Attributes
-	void InitializePrimaryAttributes() const;
+	// Gameplay effect to define the relationship of the secondary attributes with their associated primary attributes
+	// NOTE: 
+	// - These attributes must be initialized AFTER DefaultPrimaryAttributes
+	// - These should be infinite gameplay effects
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
+	// Initializes all default attributes for this character
+	void InitializeDefaultAttributes() const;
+	
+	// Applies Gameplay Effect to self
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffect, float Level) const;
 };

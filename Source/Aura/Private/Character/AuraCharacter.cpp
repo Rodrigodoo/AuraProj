@@ -49,7 +49,7 @@ void AAuraCharacter::InitCharacterAndComponents()
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	
 	// Initialize Attribute values
-	InitializePrimaryAttributes();
+	InitializeDefaultAttributes();
 	
 	// Initialise the HUD since we have all required information
 	// Only pass check in Server or Owning client (other clients will fail check)
