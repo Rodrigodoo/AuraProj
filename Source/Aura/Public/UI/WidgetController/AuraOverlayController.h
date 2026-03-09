@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "UI/WidgetController/AuraWidgetController.h"
-#include "AuraOverlayWidgetController.generated.h"
+#include "AuraOverlayController.generated.h"
 
 struct FOnAttributeChangeData;
 
@@ -43,7 +43,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidge
  * Blueprintable - Can make a blueprint based on this class
  */
 UCLASS(BlueprintType, Blueprintable)
-class AURA_API UAuraOverlayWidgetController : public UAuraWidgetController
+class AURA_API UAuraOverlayController : public UAuraWidgetController
 {
 	GENERATED_BODY()
 	
@@ -90,7 +90,7 @@ protected:
 };
 
 template <typename T>
-T* UAuraOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+T* UAuraOverlayController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
 {
 	return DataTable->FindRow<T>(Tag.GetTagName(),TEXT(""));
 }

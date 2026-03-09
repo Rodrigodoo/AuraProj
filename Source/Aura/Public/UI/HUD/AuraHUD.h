@@ -8,7 +8,7 @@
 
 class UAttributeSet;
 class UAbilitySystemComponent;
-class UAuraOverlayWidgetController;
+class UAuraOverlayController;
 class UAuraUserWidget;
 struct FWidgetControllerParams;
 
@@ -25,15 +25,15 @@ public:
 	UPROPERTY()
 	TObjectPtr<UAuraUserWidget> OverlayWidget;
 	
-	// Get the Overlay Widget Controller if it doesn't exist makes one
+	// Get the Overlay Controller if it doesn't exist makes one
 	// Note: - Works like a singleton.
 	// - Initialise Controller (Sets up controller parameters and Binds delegates)
-	UAuraOverlayWidgetController* GetAuraOverlayWidgetController(const FWidgetControllerParams& WCParams);
+	UAuraOverlayController* GetAuraOverlayController(const FWidgetControllerParams& WCParams);
 	
 	// Initialise the Overlay.
-	// - Construct the OverlayWidgetController
+	// - Construct the OverlayController
 	// - Construct the OverlayWidget
-	// - Set the OverlayWidgetController in the OverlayWidget
+	// - Set the OverlayController in the OverlayWidget
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 	
 private:
@@ -44,12 +44,12 @@ private:
 	
 	//~ Begin Controller
 	
-	// Overlay Widget Controller
+	// Overlay Controller
 	UPROPERTY()
-	TObjectPtr<UAuraOverlayWidgetController> OverlayWidgetController;
+	TObjectPtr<UAuraOverlayController> OverlayController;
 	
 	// Overlay Widget Controller Class
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UAuraOverlayWidgetController> OverlayWidgetControllerClass;
+	TSubclassOf<UAuraOverlayController> OverlayControllerClass;
 	//~ End Controller
 };

@@ -1,12 +1,12 @@
 
 
 
-#include "UI/WidgetController/AuraOverlayWidgetController.h"
+#include "UI/WidgetController/AuraOverlayController.h"
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
-void UAuraOverlayWidgetController::BroadcastInitialValues()
+void UAuraOverlayController::BroadcastInitialValues()
 {
 	// Note: Make sure this method is only called after UAuraAttributeSet is valid!
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
@@ -18,7 +18,7 @@ void UAuraOverlayWidgetController::BroadcastInitialValues()
 	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
 }
 
-void UAuraOverlayWidgetController::BindCallbacksToDependencies()
+void UAuraOverlayController::BindCallbacksToDependencies()
 {
 	// Note: Make sure this method is only called after UAuraAttributeSet is valid!
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
