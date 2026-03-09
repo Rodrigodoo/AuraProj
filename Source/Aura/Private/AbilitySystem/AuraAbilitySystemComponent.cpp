@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
+#include "AuraGameplayTagsManager.h"
+
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
 	//~ Begin Bind delegates
@@ -10,10 +12,14 @@ void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 	// Called on server whenever a GE is applied to self.
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::EffectApplied);
 	//~ End Bind delegates
+	
+	// Retrieve a Native Gameplay tag
+	const FAuraGameplayTagsManager& GameplayTagsManager = FAuraGameplayTagsManager::Get();
+	GEngine->AddOnScreenDebugMessage(-1,10.f,FColor::Orange,FString::Printf(TEXT("Tag: %s"), *	GameplayTagsManager.Attributes_Secondary_Armor.ToString()));
 }
 
 void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComponent,
-                                                const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
+                                                const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const
 {
 	// Retrieve all the tags associated with this Effect 
 	FGameplayTagContainer TagContainer;

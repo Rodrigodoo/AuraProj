@@ -14,13 +14,20 @@ public:
 	// Returns the Instance of this manager
 	const static FAuraGameplayTagsManager& Get() { return Instance; };
 	
-	// Initializes the Gameplay Tags for this project
+	// Initialises the Gameplay Tags for this project
 	// Enrolls them in the UGameplayTagManager (Unreal Version)
 	static void InitializeNativeGameplayTags();
 	
+	//~ Begin - Internal references to Gameplay Tags
+	
+	// Attributes.Secondary.Armor
+	FGameplayTag Attributes_Secondary_Armor;
+	
+	//~ End - Internal references to Gameplay Tags 
 protected:
 	
 private:
+	// This Manager's Instance
 	static FAuraGameplayTagsManager Instance;
 	
 };
