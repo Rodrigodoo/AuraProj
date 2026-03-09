@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "AuraHUD.generated.h"
 
+class UAuraAttributeMenuController;
 class UAttributeSet;
 class UAbilitySystemComponent;
 class UAuraOverlayController;
@@ -21,35 +22,47 @@ class AURA_API AAuraHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
-	// Overlay Widget
-	UPROPERTY()
-	TObjectPtr<UAuraUserWidget> OverlayWidget;
-	
 	// Get the Overlay Controller if it doesn't exist makes one
 	// Note: - Works like a singleton.
 	// - Initialise Controller (Sets up controller parameters and Binds delegates)
 	UAuraOverlayController* GetAuraOverlayController(const FWidgetControllerParams& WCParams);
+	
+	// Get the Attribute Menu Controller if it doesn't exist makes one
+	// Note: - Works like a singleton.
+	// - Initialise Controller (Sets up controller parameters and Binds delegates)
+	UAuraAttributeMenuController* GetAuraAttributeMenuController(const FWidgetControllerParams& WCParams);
 	
 	// Initialise the Overlay.
 	// - Construct the OverlayController
 	// - Construct the OverlayWidget
 	// - Set the OverlayController in the OverlayWidget
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
-	
-private:
 
+private:
+	// Overlay Widget
+	UPROPERTY()
+	TObjectPtr<UAuraUserWidget> OverlayWidget;
+	
 	// Overlay Widget Class
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAuraUserWidget> OverlayWidgetClass;
 	
-	//~ Begin Controller
+	//~ Begin - Controllers
 	
 	// Overlay Controller
 	UPROPERTY()
 	TObjectPtr<UAuraOverlayController> OverlayController;
 	
-	// Overlay Widget Controller Class
+	// Overlay Controller Class
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAuraOverlayController> OverlayControllerClass;
-	//~ End Controller
+	
+	// Attribute Menu Controller
+	UPROPERTY()
+	TObjectPtr<UAuraAttributeMenuController> AttributeMenuController;
+	
+	// Attribute Menu Controller Class
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAuraAttributeMenuController> AttributeMenuControllerClass;
+	//~ End - Controllers
 };

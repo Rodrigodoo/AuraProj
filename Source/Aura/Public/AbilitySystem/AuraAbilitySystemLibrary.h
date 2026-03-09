@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
+class UAuraAttributeMenuController;
 class UAuraOverlayController;
 /**
  * Library in charge of auxiliary methods for the Aura Ability System
@@ -21,4 +22,9 @@ public:
 	// Assumes it's called from an autonomous client
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemController|WidgetController")
 	static UAuraOverlayController* GetOverlayController(const UObject* WorldContextObject);
+	
+	// Get the Overlay Controller
+	// Assumes it's called from an autonomous client
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemController|WidgetController")
+	static UAuraAttributeMenuController* GetAttributeMenuController(const UObject* WorldContextObject);
 };
