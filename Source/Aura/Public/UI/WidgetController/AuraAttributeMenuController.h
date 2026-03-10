@@ -6,6 +6,11 @@
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "AuraAttributeMenuController.generated.h"
 
+class UAuraAttributeInfoDataAsset;
+struct FAuraAttributeInfo;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoSignature, const FAuraAttributeInfo&, Info);
+
 /**
  * Attribute Menu Controller responsible for controlling the Aura Attribute Menu Widget
  * BlueprintType - Can be used as type in BP Event Graphs
@@ -25,5 +30,14 @@ public:
 	// Binds callbacks to dependencies of this controller
 	virtual void BindCallbacksToDependencies() override;
 	//~ End - UAuraWidgetController Overrides
+	
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FAttributeInfoSignature AttributeInfoDelegate;
+	
+protected:
+
+	// Reference to the Attribute Info data asset storing the attribute information
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAuraAttributeInfoDataAsset> AuraAttributeInfoDataAsset;
 	
 };

@@ -52,6 +52,7 @@ public:
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 	
 	// Call delegates to broadcast initial values
+	UFUNCTION(BlueprintCallable, Category = "Widget Controller")
 	virtual void BroadcastInitialValues();
 	
 	// Binds callbacks to dependencies of this controller
