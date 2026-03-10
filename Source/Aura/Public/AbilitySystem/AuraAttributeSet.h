@@ -7,6 +7,24 @@
 #include "AttributeSet.h"
 #include "AuraAttributeSet.generated.h"
 
+/*
+ * Begin - Educational code
+ */
+
+// AttributeFunctionPointer is a Function Pointer that returns an FGameplayAttribute and takes no inputs
+// Note: By Unreal's standards a typedef name must inherit the type key. 
+// We are using 'F' instead of 'T' because this function pointer is no longer a template but a FGameplayAttribute pointer
+//typedef TBaseStaticDelegateInstance<FGameplayAttribute(), FDefaultDelegateUserPolicy>::FFuncPtr FAttributeFunctionPointer;
+
+/*
+ * End - Educational code
+ */
+
+// TStaticFunctionPointer is a template Function Pointer that returns a T type and can take whatever inputs
+// Note: Read above its definition to find educational code for a specific function pointer declaration
+template<class T>
+using TStaticFunctionPointer = TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
+
 /**
  * Struct to store important information about a Gameplay effect
  */
@@ -75,8 +93,11 @@ public:
 	// Later modifications might affect this value even after clamping it
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	
-	// Called after a Gameplay Effect is exectuded
+	// Called after a Gameplay Effect is executed
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	
+	// Map between Gameplay Tags and accessor methods to Gameplay Attributes
+	TMap<FGameplayTag, TStaticFunctionPointer<FGameplayAttribute()>> TagToAttributes;
 	
 	/*
 	 * Begin - Primary Attributes
@@ -249,4 +270,7 @@ private:
 	
 	// Fill in the Effect Properties for this effect
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutEffectProperties) const;
+	
+	// Internal method to bind Gameplay Tags to Attributes
+	void MapGameplayTagsToAttributes();
 };

@@ -4,12 +4,15 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AuraGameplayTagsManager.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
+	// Map Gameplay Tags to the Attributes
+	MapGameplayTagsToAttributes();
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -260,4 +263,34 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 		// Using UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent is the best method to get it
 		OutEffectProperties.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OutEffectProperties.TargetAvatarActor);
 	}
+}
+
+void UAuraAttributeSet::MapGameplayTagsToAttributes()
+{
+	// Get reference to Aura's Gameplay Tag Manager
+	const FAuraGameplayTagsManager& GameplayTagsManager = FAuraGameplayTagsManager::Get();
+	
+	/*
+	 * Primary Attributes
+	 */
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Strength, GetStrengthAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Resilience, GetResilienceAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Vigor, GetVigorAttribute);
+
+	
+	/*
+	 * Secondary Attributes
+	 */
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_Armor, GetArmorAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_ArmorPenetration, GetArmorPenetrationAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_BlockChance, GetBlockChanceAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_CriticalHitResistance, GetCriticalHitResistanceAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
+	
 }
