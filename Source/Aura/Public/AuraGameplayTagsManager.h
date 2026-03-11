@@ -22,8 +22,6 @@ public:
 	 * Begin - Internal references to Gameplay Tags
 	 */
 	
-	//~ Begin - Internal references to Gameplay Tags
-	
 	//~ Begin - Attributes
 	//~ Begin - Attributes Primary
 	// Attributes.Primary.Strength
@@ -59,11 +57,25 @@ public:
 	FGameplayTag Attributes_Secondary_MaxMana;
 	//~ End - Attributes Secondary
 	//~ End - Attributes
+	
+	//~ Begin - Inputs
+	// InputTag.LMB
+	FGameplayTag InputTag_LMB;
+	// InputTag.RMB
+	FGameplayTag InputTag_RMB;
+	// InputTag.1
+	FGameplayTag InputTag_1;
+	// InputTag.2
+	FGameplayTag InputTag_2;
+	// InputTag.3
+	FGameplayTag InputTag_3;
+	// InputTag.4
+	FGameplayTag InputTag_4;
+	//~ End - Inputs
+	
 	/*
 	 * End - Internal references to Gameplay Tags
 	 */
-protected:
-	
 private:
 	// This Manager's Instance
 	static FAuraGameplayTagsManager Instance;
