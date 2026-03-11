@@ -23,6 +23,9 @@ public:
 	// Use this to bind delegates
 	void AbilityActorInfoSet();
 	
+	// Add Abilities to the character implementing this component
+	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
+	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTags;
 	

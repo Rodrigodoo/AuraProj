@@ -4,6 +4,7 @@
 #include "Character/AuraCharacterBase.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -58,4 +59,18 @@ void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> Ga
 	ContextHandle.AddSourceObject(this); // Add this as source object since it's applying the effect to self
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffect, Level, ContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(),GetAbilitySystemComponent());
+}
+
+void AAuraCharacterBase::AddCharacterAbilities()
+{
+	// This should only be run in the server
+	// As abilities should only be granted at server level
+	if (!HasAuthority())
+	{
+		return;
+	}
+	
+	// Add the startup Abilities to the character
+	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	AuraAbilitySystemComponent->AddCharacterAbilities(StartupAbilities);
 }

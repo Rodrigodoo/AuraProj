@@ -14,6 +14,22 @@ void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 	//~ End Bind delegates
 }
 
+void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities)
+{
+	// loop through the abilities and grant them to the character
+	for(const TSubclassOf<UGameplayAbility> Ability : Abilities)
+	{
+		// Create an Ability Spec for this ability
+		FGameplayAbilitySpec AbilitySpec(Ability, 1);
+		
+		// Grant the ability
+		//GiveAbility(AbilitySpec);
+		
+		// Grant Ability and Activate it once
+		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}
+
 void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComponent,
                                                 const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const
 {
