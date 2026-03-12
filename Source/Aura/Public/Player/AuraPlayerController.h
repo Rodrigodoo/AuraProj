@@ -7,6 +7,7 @@
 #include "AuraPlayerController.generated.h"
 
 
+class USplineComponent;
 class UAuraAbilitySystemComponent;
 class IAuraEnemyInterface;
 class UAuraInputConfigDataAsset;
@@ -75,6 +76,34 @@ private:
 	TObjectPtr<UAuraInputConfigDataAsset> AuraInputConfigDataAsset;
 	//~ End - Input and callbacks
 
+	//~ Begin - Click to Move
+	
+	// Destination coordinates (Either cursor location or Spline point)
+	FVector CachedDestination = FVector::ZeroVector;
+	
+	// The amount of time the character has been following the target destination (Cursor or Spline)
+	float FollowTime = 0.f;
+	
+	// Amount of time considered for a short press 
+	// Note: if bellow = Short Press [character should auto run] | if above = long press [character should follow cursor]
+	float ShortPressThreshold = 0.5f;
+	
+	// The character is running along a spline after a short press
+	bool bAutoRunning = false;
+	
+	// Radial distance to the target of the Auto Run at which the character will stop moving (reached destination)
+	UPROPERTY(EditDefaultsOnly)
+	float AutoRunAcceptanceRadius = 50.f;
+	
+	// Spline component that the character will follow when auto running
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USplineComponent> Spline;
+	//~ End - Click to Move
+	
 	// Traces objects under cursor
 	void CursorTrace();
+	
+	// Flag to control if the cursor is targeting an object/actor
+	// If false the cursor is targeting the enviroment
+	bool bTargeting = false;
 };

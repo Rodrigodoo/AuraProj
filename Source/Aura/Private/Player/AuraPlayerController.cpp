@@ -3,9 +3,11 @@
 
 #include "Player/AuraPlayerController.h"
 
-#include "AbilitySystemBlueprintLibrary.h"
-#include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AuraGameplayTagsManager.h"
+#include "Components/SplineComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/AuraEnemyInterface.h"
 
@@ -14,6 +16,9 @@ AAuraPlayerController::AAuraPlayerController()
 {
 	// Should replicate
 	bReplicates = true;
+	
+	// Create Spline
+	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
 }
 
 void AAuraPlayerController::PlayerTick(float DeltaTime)
@@ -113,7 +118,16 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
+	// If the LMB was pressed (used for moving)
+	if (InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB))
+	{
+		// If there is an object/actor under the cursor at the moment of pressing
+		// Then we are targeting and not pointing to the environment
+		bTargeting = CurrentActor ? true : false ;
 	
+		// A new possible destination was set so we should stop auto running
+		bAutoRunning = false;
+	}
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
@@ -131,15 +145,45 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 {
-	// Early exit
-	if (!GetAuraAbilitySystemComponent())
+	// If it is NOT the LMB being pressed (used for moving)
+	// Then check for Abilities
+	if (!InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB) || bTargeting)
 	{
-		return;
-		
+		// Get a valid Aura Ability System Component
+		if (GetAuraAbilitySystemComponent())
+		{
+			// Warn the Ability System Component that this Input is being held
+			// This will check if there are any abilities bound to it
+			GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
+			return;
+		}
 	}
 	
-	// Warn the Ability System Component that this Input is being held
-	GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
+	// If the LMB is being pressed and no object/actor is being targeted, 
+	// then the character should be moving.
+	
+	// Update the follow time (how long has the character been moving - heading to destination)
+	FollowTime += GetWorld()->GetDeltaSeconds();
+	
+	// Get the destination where the character should be moving
+	// It will be the world position under the cursor
+	FHitResult Hit;
+	if (GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit))
+	{
+		CachedDestination = Hit.ImpactPoint;
+	}
+	
+	// If controlling a pawn then move it to the destination
+	// This will be done via adding movement and not setting location
+	if (APawn* ControlledPawn = GetPawn<APawn>())
+	{
+		// Get the direction of the movement (destination position - current position),
+		// then normalise it for a unitary vector with the direction
+		const FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
+		
+		// Add a singular movement input into the direction of the destination
+		ControlledPawn->AddMovementInput(WorldDirection);
+	}
 }
 
 void AAuraPlayerController::CursorTrace()
