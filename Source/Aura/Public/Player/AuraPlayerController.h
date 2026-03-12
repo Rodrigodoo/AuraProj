@@ -7,6 +7,7 @@
 #include "AuraPlayerController.generated.h"
 
 
+class UAuraAbilitySystemComponent;
 class IAuraEnemyInterface;
 class UAuraInputConfigDataAsset;
 class UInputAction;
@@ -32,10 +33,14 @@ protected:
 	virtual void SetupInputComponent() override;
 	
 private:
+	//~ Begin - Ability System Component
+	// Ability System Component connected to this controller
+	UPROPERTY()
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
 	
-	
-	// Traces objects under cursor
-	void CursorTrace();
+	// Retrieves the Aura Ability system component connected to this controller
+	UAuraAbilitySystemComponent* GetAuraAbilitySystemComponent();
+	//~ End - Ability System Component
 	
 	//~ Begin - Track Enemies
 	
@@ -46,9 +51,12 @@ private:
 	//~ End - Track Enemies
 	
 	//~ Begin - Input and callbacks
+	
+	// Aura Input Mapping Context
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
 	
+	// Move Action Input
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 	
@@ -65,6 +73,8 @@ private:
 	// Input Config Data Asset that maps gameplay tags to actions
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UAuraInputConfigDataAsset> AuraInputConfigDataAsset;
-	
 	//~ End - Input and callbacks
+
+	// Traces objects under cursor
+	void CursorTrace();
 };

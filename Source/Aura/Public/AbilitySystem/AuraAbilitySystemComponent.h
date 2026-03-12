@@ -26,6 +26,14 @@ public:
 	// Add Abilities to the character implementing this component
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
 	
+	// Called when an Ability Action has been Pressed/Held
+	// InputTag - identifies the input Pressed/Held
+	void AbilityInputTagHeld(const FGameplayTag& InputTag);
+	
+	// Called when an Ability Action has been released
+	// InputTag - identifies the input Released
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTags;
 	

@@ -4,6 +4,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 #include "AuraGameplayTagsManager.h"
+#include "AbilitySystem/Abilities/AuraGameplayAbilityBase.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -16,17 +17,73 @@ void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 
 void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities)
 {
-	// loop through the abilities and grant them to the character
+	// Loop through the abilities and grant them to the character
 	for(const TSubclassOf<UGameplayAbility> Ability : Abilities)
 	{
 		// Create an Ability Spec for this ability
 		FGameplayAbilitySpec AbilitySpec(Ability, 1);
+
+		// If the Ability is of Aura Ability type we can add Startup Input tags to this spec
+		if (const UAuraGameplayAbilityBase* AuraAbility = Cast<UAuraGameplayAbilityBase>(AbilitySpec.Ability))
+		{
+			// Add the Startup Input Tag to the dynamic source tags of the Spec we are about to grant
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(AuraAbility->StartupInputTag);
+			
+			// Grant the ability
+			GiveAbility(AbilitySpec);
+		}
+	}
+}
+
+void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
+{
+	// Early check
+	if (!InputTag.IsValid())
+	{
+		return;
+	}
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		// If this Ability Spec does not have this Input tag, continue
+		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
+		{
+			continue;
+		}
 		
-		// Grant the ability
-		//GiveAbility(AbilitySpec);
+		// Inform the Ability Spec that this Ability Input was pressed
+		AbilitySpecInputPressed(AbilitySpec);
 		
-		// Grant Ability and Activate it once
-		GiveAbilityAndActivateOnce(AbilitySpec);
+		// If the Ability is already active, continue
+		if (AbilitySpec.IsActive())
+		{
+			continue;
+		}
+		
+		// This Ability has the Input tag and is not yet activated
+		// So try to activate it
+		TryActivateAbility(AbilitySpec.Handle);
+	}
+}
+
+void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
+{
+	// Early check
+	if (!InputTag.IsValid())
+	{
+		return;
+	}
+	
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		// If this Ability Spec does not have this Input tag, continue
+		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
+		{
+			continue;
+		}
+		
+		// Inform the Ability Spec that this Ability Input was released
+		AbilitySpecInputReleased(AbilitySpec);
 	}
 }
 

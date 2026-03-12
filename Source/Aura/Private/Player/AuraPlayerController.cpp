@@ -3,7 +3,9 @@
 
 #include "Player/AuraPlayerController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/AuraEnemyInterface.h"
 
@@ -67,6 +69,18 @@ void AAuraPlayerController::SetupInputComponent()
 		&ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
+UAuraAbilitySystemComponent* AAuraPlayerController::GetAuraAbilitySystemComponent()
+{
+	// If there's no valid AuraAbilitySystemComponent
+	if (!AuraAbilitySystemComponent)
+	{
+		// Get it from the UAbilitySystemBlueprintLibrary using the pawn connected to this controller
+		AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn()));
+	}
+	// Do note that this can still return null
+	return AuraAbilitySystemComponent;
+}
+
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
 	// Move the character
@@ -99,17 +113,33 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red, *InputTag.ToString());
+	
 }
 
-void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(2,3.f,FColor::Blue, *InputTag.ToString());
+	// Early exit
+	if (!GetAuraAbilitySystemComponent())
+	{
+		return;
+		
+	}
+	
+	// Warn the Ability System Component that this Input was released
+	GetAuraAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
 }
 
-void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3,3.f,FColor::Green, *InputTag.ToString());
+	// Early exit
+	if (!GetAuraAbilitySystemComponent())
+	{
+		return;
+		
+	}
+	
+	// Warn the Ability System Component that this Input is being held
+	GetAuraAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
 }
 
 void AAuraPlayerController::CursorTrace()
