@@ -3,8 +3,8 @@
 
 #include "Player/AuraPlayerController.h"
 
-#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Input/AuraInputComponent.h"
 #include "Interaction/AuraEnemyInterface.h"
 
 
@@ -53,11 +53,18 @@ void AAuraPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	
-	// Cast to UEnhancedInputComponent (crash if failed)
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+	// Our input component must be of UAuraInputComponent type! (crash if failed)
+	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
 	
-	// Bind input action
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	/*
+	 * Bindings
+	 */
+	// Bind move action
+	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	
+	// Bind Ability Actions
+	AuraInputComponent->BindAbilityActions(AuraInputConfigDataAsset,this, 
+		&ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
@@ -88,6 +95,21 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	// Right Direction was setup to the X axis [A/D]
 	ControlledPawn->AddMovementInput(ForwardDirection,InputAxisVector.Y);
 	ControlledPawn->AddMovementInput(RightDirection,InputAxisVector.X);
+}
+
+void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red, *InputTag.ToString());
+}
+
+void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(2,3.f,FColor::Blue, *InputTag.ToString());
+}
+
+void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(3,3.f,FColor::Green, *InputTag.ToString());
 }
 
 void AAuraPlayerController::CursorTrace()

@@ -8,8 +8,10 @@
 
 
 class IAuraEnemyInterface;
+class UAuraInputConfigDataAsset;
 class UInputAction;
 class UInputMappingContext;
+struct FGameplayTag;
 struct FInputActionValue;
 
 /**
@@ -30,6 +32,20 @@ protected:
 	virtual void SetupInputComponent() override;
 	
 private:
+	
+	
+	// Traces objects under cursor
+	void CursorTrace();
+	
+	//~ Begin - Track Enemies
+	
+	// Last Enemy
+	TScriptInterface<IAuraEnemyInterface> LastActor;
+	// Current Enemy
+	TScriptInterface<IAuraEnemyInterface> CurrentActor;
+	//~ End - Track Enemies
+	
+	//~ Begin - Input and callbacks
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
 	
@@ -39,13 +55,16 @@ private:
 	// Move the character 2D (XY)
 	void Move(const FInputActionValue& InputActionValue);
 	
-	// Traces objects under cursor
-	void CursorTrace();
+	// Callback method to deal with input pressed
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	// Callback method to deal with input released
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	// Callback method to deal with input held
+	void AbilityInputTagHeld(FGameplayTag InputTag);
 	
-	// Track Enemies
+	// Input Config Data Asset that maps gameplay tags to actions
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UAuraInputConfigDataAsset> AuraInputConfigDataAsset;
 	
-	// Last Enemy
-	TScriptInterface<IAuraEnemyInterface> LastActor;
-	// Current Enemy
-	TScriptInterface<IAuraEnemyInterface> CurrentActor;
+	//~ End - Input and callbacks
 };
