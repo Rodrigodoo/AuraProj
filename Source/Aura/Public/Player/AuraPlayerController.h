@@ -107,6 +107,9 @@ private:
 	// Traces objects under cursor
 	void CursorTrace();
 	
+	// Caches the hit result under the cursor every tick
+	FHitResult CursorHit;
+	
 	// Flag to control if the cursor is targeting an object/actor
 	// If false the cursor is targeting the enviroment
 	bool bTargeting = false;

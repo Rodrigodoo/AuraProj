@@ -38,7 +38,10 @@ public:
 	FEffectAssetTags EffectAssetTags;
 	
 protected:
-	// Method bound to bind to delegate OnGameplayEffectAppliedDelegateToSelf(FOnGameplayEffectAppliedDelegate)
+	// Method bound to delegate OnGameplayEffectAppliedDelegateToSelf(FOnGameplayEffectAppliedDelegate)
+	// This is a Client RPC so that it informs the owning client that an effect was applied (Reliable to make sure it runs on client)
+	// This is needed since OnGameplayEffectAppliedDelegateToSelf is only run on the server
+	UFUNCTION(Client, Reliable)
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const;
 	
 };

@@ -174,9 +174,6 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 			{
 				// Add them in World coordinates (could call AddSplineWorldPoint but this way we have one less call)
 				Spline->AddSplinePoint(PathPointLocation, ESplineCoordinateSpace::World);
-				
-				// Debugging
-				DrawDebugSphere(GetWorld(),PathPointLocation,8.f,8, FColor::Green, false, 5.f);
 			}
 			
 			// Since the CachedDestination might not be on a valid point on the NavMesh 
@@ -218,10 +215,9 @@ void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 	
 	// Get the destination where the character should be moving
 	// It will be the world position under the cursor
-	FHitResult Hit;
-	if (GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit))
+	if (CursorHit.bBlockingHit)
 	{
-		CachedDestination = Hit.ImpactPoint;
+		CachedDestination = CursorHit.ImpactPoint;
 	}
 	
 	// If controlling a pawn then move it to the destination
@@ -277,7 +273,6 @@ void AAuraPlayerController::AutoRun()
 void AAuraPlayerController::CursorTrace()
 {
 	// Get hit result under the cursor
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility,false,CursorHit);
 	if (!CursorHit.bBlockingHit)
 	{
@@ -288,48 +283,20 @@ void AAuraPlayerController::CursorTrace()
 	// Replace Current and Last Actor implementing IAuraEnemyInterface
 	LastActor = CurrentActor;
 	CurrentActor = CursorHit.GetActor();
-
-	/** -----!Highlight Logic!-----
-	 * Line Trace from cursor. There are several scenarios:
-	 *	A. LastActor = null & CurrentActor = null
-	 *		- Do nothing
-	 *	B. LastActor = null & CurrentActor = valid
-	 *		- Highlight the CurrentActor
-	 *	C. LastActor = valid & CurrentActor = null
-	 *		- Unhighlight the LastActor
-	 *	D. LastActor = valid & CurrentActor = valid & LastActor != CurrentActor
-	 *		- Unhighlight the LastActor & Highlight the CurrentActor
-	 *	E. LastActor = valid & CurrentActor = valid & LastActor == CurrentActor
-	 *		- Do nothing
-	 */
-	if (!LastActor)
+	
+	// Only need to change highlighting if the actors are different
+	if (LastActor != CurrentActor)
 	{
+		// If Last Actor is valid UnHighlight it
+		if (LastActor)
+		{
+			LastActor->UnHighlightActor();
+		}
+		
+		// If Current Actor is valid Highlight it
 		if (CurrentActor)
 		{
-			// Case B
 			CurrentActor->HighlightActor();
-		}
-		else
-		{
-			// Case A - Do Nothing
-		}
-	}
-	else // LastActor is valid
-	{
-		if (!CurrentActor)
-		{
-			// Case C
-			LastActor->UnHighlightActor();
-		}
-		else if (LastActor != CurrentActor)
-		{
-			// Case D
-			LastActor->UnHighlightActor();
-			CurrentActor->HighlightActor();
-		}
-		else
-		{
-			// Case E - do nothing
 		}
 	}
 }
