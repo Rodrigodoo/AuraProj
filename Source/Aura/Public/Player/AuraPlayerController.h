@@ -98,6 +98,10 @@ private:
 	// Spline component that the character will follow when auto running
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> Spline;
+	
+	// Executes the auto running movement
+	// Should be called every tick. (Should not run if bAutoRunning = false)
+	void AutoRun();
 	//~ End - Click to Move
 	
 	// Traces objects under cursor

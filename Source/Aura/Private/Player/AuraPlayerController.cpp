@@ -29,6 +29,9 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	
 	// Find object under cursor
 	CursorTrace();
+	
+	// Perform Auto Running if required
+	AutoRun();
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -176,6 +179,11 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 				DrawDebugSphere(GetWorld(),PathPointLocation,8.f,8, FColor::Green, false, 5.f);
 			}
 			
+			// Since the CachedDestination might not be on a valid point on the NavMesh 
+			// the character might never reach it and stop running.
+			// Therefore, need to update the CachedDestination to the last valid point on the Navigation Path/Spline
+			CachedDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
+			
 			// Flag that the character is now auto running
 			bAutoRunning = true;
 		}
@@ -226,6 +234,43 @@ void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 		
 		// Add a singular movement input into the direction of the destination
 		ControlledPawn->AddMovementInput(WorldDirection);
+	}
+}
+
+void AAuraPlayerController::AutoRun()
+{
+	// If we are not auto running return early
+	if (!bAutoRunning)
+	{
+		return;
+	}
+	
+	// If there is a Controlled Pawn move it towards the next point in the Spline with each tick
+	APawn* ControlledPawn = GetPawn<APawn>();
+	if (!IsValid(ControlledPawn))
+	{
+		return;
+	}
+	
+	// Find the location on the spline closest to the character
+	// Due to the nature of the movement the controlled character might not be in the exact spline location
+	const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		
+	// Retrieve the tangential direction of the spline at the closest point to the character
+	// The direction should follow the spline general direction (towards the destination)
+	const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+		
+	// With the direction of the Spline, add a singular movement input to the character towards that direction
+	ControlledPawn->AddMovementInput(Direction);
+		
+	// Now check if the character is within the acceptance radius of the destination 
+	// If so, it should stop moving (Arrived)
+		
+	// Check the distance from the spline point to the destination by getting the length of the vector between them 
+	const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
+	if (DistanceToDestination <= AutoRunAcceptanceRadius)
+	{
+		bAutoRunning = false;
 	}
 }
 
