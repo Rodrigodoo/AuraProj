@@ -78,10 +78,10 @@ private:
 
 	//~ Begin - Click to Move
 	
-	// Destination coordinates (Either cursor location or Spline point)
+	// Destination coordinates (Either cursor location or Spline end point)
 	FVector CachedDestination = FVector::ZeroVector;
 	
-	// The amount of time the character has been following the target destination (Cursor or Spline)
+	// The amount of time the character has been following a pressed cursor
 	float FollowTime = 0.f;
 	
 	// Amount of time considered for a short press 

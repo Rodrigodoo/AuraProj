@@ -8,6 +8,8 @@
 #include "AuraGameplayTagsManager.h"
 #include "Components/SplineComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "NavigationPath.h"
+#include "NavigationSystem.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/AuraEnemyInterface.h"
 
@@ -132,15 +134,56 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 {
-	// Early exit
-	if (!GetAuraAbilitySystemComponent())
+	// If it is NOT the LMB being pressed (used for moving)
+	// Then check for Abilities
+	if (!InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB) || bTargeting)
 	{
-		return;
-		
+		// Get a valid Aura Ability System Component
+		if (GetAuraAbilitySystemComponent())
+		{
+			// Warn the Ability System Component that this Input was released
+			// This will check if there are any abilities bound to it
+			GetAuraAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
+			return;
+		}
 	}
 	
-	// Warn the Ability System Component that this Input was released
-	GetAuraAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
+	// If the LMB is being pressed and no object/actor is being targeted, 
+	// then the character should be moving.
+	
+	// If this was a short press (FollowTime less than the threshold), then create a navigation path for the character to auto run
+	const APawn* ControlledPawn = GetPawn<APawn>(); 
+	if (ControlledPawn && FollowTime <= ShortPressThreshold)
+	{
+		// Find the path to the location synchronously, which should find all obstacles between 
+		// the character and the Cached Destination.
+		// It will create navigation point for the character to follow.
+		if (UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(
+			this, ControlledPawn->GetActorLocation(),CachedDestination))
+		{
+			// Add the navigation point to the Spline
+			
+			// Start by clearing any existing points
+			Spline->ClearSplinePoints();
+			
+			// Go through all the path points and add them to the Spline
+			for (const FVector& PathPointLocation :  NavigationPath->PathPoints)
+			{
+				// Add them in World coordinates (could call AddSplineWorldPoint but this way we have one less call)
+				Spline->AddSplinePoint(PathPointLocation, ESplineCoordinateSpace::World);
+				
+				// Debugging
+				DrawDebugSphere(GetWorld(),PathPointLocation,8.f,8, FColor::Green, false, 5.f);
+			}
+			
+			// Flag that the character is now auto running
+			bAutoRunning = true;
+		}
+	}
+	
+	// Reset follow time and targeting
+	FollowTime = 0.f;
+	bTargeting = false;
 }
 
 void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
