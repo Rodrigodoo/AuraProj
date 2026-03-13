@@ -10,6 +10,10 @@ AAuraProjectile::AAuraProjectile()
 {
  	// Actor won't tick
 	PrimaryActorTick.bCanEverTick = false;
+	
+	// This class must be replicated as it will spawn on the server 
+	// only then should it be passed down to the clients
+	bReplicates = true;
 
 	// Create Sphere Component and set it as the root
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");

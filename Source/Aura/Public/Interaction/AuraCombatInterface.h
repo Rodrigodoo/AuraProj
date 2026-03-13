@@ -23,4 +23,8 @@ class AURA_API IAuraCombatInterface
 public:
 	// Get the current level of the actor
 	virtual int32 GetCharacterLevel();
+	
+	// Retrieves the combat socket location, generally for weapons
+	// This can be used to spawn effects or actor like projectiles
+	virtual FVector GetCombatSocketLocation() const;
 };

@@ -31,6 +31,15 @@ void AAuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
+FVector AAuraCharacterBase::GetCombatSocketLocation() const
+{
+	check(Weapon);
+	
+	// Returns the socket location (world coordinates) of the weapon's tip
+	// If not found will return the component transform (world coordinates)
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
 void AAuraCharacterBase::InitializeDefaultAttributes() const
 {
 	// NOTE: The order of these calls is important and should be maintained!

@@ -35,9 +35,20 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
+	//~ Begin - IAuraCombatInterface overrides
+	
+	// Returns the location of the weapon's tip
+	virtual FVector GetCombatSocketLocation() const override;
+	//~ End - IAuraCombatInterface overrides
+	
 	// Skeletal mesh of weapon used by character
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
+	
+	// The weapon's tip socket name
+	// This will be used to spawn effects or actors like projectiles
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName WeaponTipSocketName;
 	
 	// Pointer to the character's Ability System Component (If there is one)
 	UPROPERTY()

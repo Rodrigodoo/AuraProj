@@ -6,6 +6,7 @@
 #include "AbilitySystem/Abilities/AuraGameplayAbilityBase.h"
 #include "AuraProjectileSpell.generated.h"
 
+class AAuraProjectile;
 /**
  * Spell to spawn projectiles
  */
@@ -20,5 +21,9 @@ protected:
 	// Define Ability behaviour
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, 
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-	//~ Begin - UGameplayAbility overrides
+	//~ End - UGameplayAbility overrides
+	
+	// Projectile class to spawn when ability is activated
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<AAuraProjectile> ProjectileClass;
 };
