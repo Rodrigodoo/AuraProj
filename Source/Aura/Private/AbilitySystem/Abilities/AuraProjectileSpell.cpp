@@ -6,15 +6,10 @@
 #include "Actor/AuraProjectile.h"
 #include "Interaction/AuraCombatInterface.h"
 
-void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-                                           const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-                                           const FGameplayEventData* TriggerEventData)
+void UAuraProjectileSpell::SpawnProjectile()
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	
 	// If we are not on the server then move along.
-	const bool bIsServer = HasAuthority(&ActivationInfo);
-	if (!bIsServer)
+	if (!GetAvatarActorFromActorInfo()->HasAuthority())
 	{
 		return;
 	}
@@ -51,4 +46,11 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	
 	// Finish spawning
 	Projectile->FinishSpawning(SpawnTransform);
+}
+
+void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+                                           const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                           const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }

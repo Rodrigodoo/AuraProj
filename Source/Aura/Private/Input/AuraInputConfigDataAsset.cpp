@@ -7,9 +7,9 @@ const UInputAction* UAuraInputConfigDataAsset::FindAbilityInputActionForTag(cons
 	const bool bLogNotFound) const
 {
 	// Loop through the AbilityInputActions and find if there is an Input Action associated with the given Gameplay Tag
-	for (const auto& [InputAction, InputTag] : AbilityInputActions)
+	for (const auto& [InputAction, InputActionTag] : AbilityInputActions)
 	{
-		if (InputAction && InputTag.MatchesTagExact(InputTag))
+		if (InputAction && InputActionTag.MatchesTagExact(InputTag))
 		{
 			// If a match was found return it
 			return InputAction;
