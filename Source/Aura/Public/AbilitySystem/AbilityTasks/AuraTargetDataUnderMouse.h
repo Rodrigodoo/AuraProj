@@ -36,5 +36,9 @@ private:
 	// Send the mouse cursor data to the Server
 	// Note: only use this on the client side
 	void SendMouseCursorData();
+	
+	// Callback for when the Target Data gets replicated
+	// Note: Called on the server only! (comes from an RPC)
+	void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle, FGameplayTag ActivationTag);
 
 };

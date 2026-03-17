@@ -3,6 +3,7 @@
 
 #include "AuraAssetManager.h"
 
+#include "AbilitySystemGlobals.h"
 #include "AuraGameplayTagsManager.h"
 
 UAuraAssetManager& UAuraAssetManager::Get()

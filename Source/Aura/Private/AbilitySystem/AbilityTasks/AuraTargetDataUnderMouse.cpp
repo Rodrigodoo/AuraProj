@@ -16,7 +16,7 @@ void UAuraTargetDataUnderMouse::Activate()
 	Super::Activate();
 	
 	// Check if Locally controlled 
-	// Note: using this methos instead of ActorInfo->IsLocallyControlled as it adds more checks, and it's not a critical method.
+	// Note: using this method instead of ActorInfo->IsLocallyControlled as it adds more checks, and it's not a critical method.
 	if (IsLocallyControlled())
 	{
 		// Client
@@ -25,10 +25,23 @@ void UAuraTargetDataUnderMouse::Activate()
 	else
 	{
 		//Server
-		// TODO: We are on the server, so listen for TargetData
+		const FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
+		const FPredictionKey PredictionKey = GetActivationPredictionKey();
+		
+		// Grab the delegate for AbilityTargetDataSet and bind it to OnTargetDataReplicatedCallback
+		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandle, PredictionKey).
+		AddUObject(this, &UAuraTargetDataUnderMouse::OnTargetDataReplicatedCallback);
+
+		// If the data has already arrived (before activation) ,
+		// Call again the delegate to retrieve the data
+		const bool bCalledDelegate = AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(SpecHandle, PredictionKey);
+		if (!bCalledDelegate)
+		{
+			// If the data has not yet arrived then the server needs to wait for it
+			SetWaitingOnRemotePlayerData();
+		}
 	}
 
-	
 }
 
 void UAuraTargetDataUnderMouse::SendMouseCursorData()
@@ -68,6 +81,22 @@ void UAuraTargetDataUnderMouse::SendMouseCursorData()
 		AbilitySystemComponent->ScopedPredictionKey);
 	
 	// Broadcast the data handle locally (on client)
+	// Note: should always call ShouldBroadcastAbilityTaskDelegates before broadcasting (read method description)
+	if (ShouldBroadcastAbilityTaskDelegates())
+	{
+		ValidData.Broadcast(TargetDataHandle);
+	}
+	
+}
+
+void UAuraTargetDataUnderMouse::OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle,
+                                                               FGameplayTag ActivationTag)
+{
+	// Inform the ASC that the data was received and there is no need to cache it any more
+	// Note: this should always be called on the server before consuming the data so ASC no longer keeps a reference to it.
+	AbilitySystemComponent->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());
+	
+	// Broadcast the data handle locally (on server)
 	// Note: should always call ShouldBroadcastAbilityTaskDelegates before broadcasting (read method description)
 	if (ShouldBroadcastAbilityTaskDelegates())
 	{
