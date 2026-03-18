@@ -3,8 +3,11 @@
 
 #include "Actor/AuraProjectile.h"
 
+#include "NiagaraFunctionLibrary.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AAuraProjectile::AAuraProjectile()
 {
@@ -39,13 +42,52 @@ void AAuraProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Set actor's life span
+	SetLifeSpan(LifeSpan);
+	
 	// Bind sphere overlap to AAuraProjectile::OnSphereOverlap
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraProjectile::OnSphereOverlap);
 	
+	// Spawn the sound attached to the root component and track it in FlyingAudioComponent
+	// This will allow it to be stopped later
+	check(FlyingSound) // If it's not valid the audio component will be null
+	FlyingAudioComponent = UGameplayStatics::SpawnSoundAttached(FlyingSound,GetRootComponent());
+}
+
+void AAuraProjectile::Destroyed()
+{
+	// If the actor did not overlap an actor, and it is a client
+	// Then stop the flight sound and play impact sound and spawn particle system
+	if (!bHit && !HasAuthority())
+	{
+		FlyingAudioComponent->Stop();
+		
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
+	}
+
+	Super::Destroyed();
 }
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                      UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// Stop the flying sound
+	FlyingAudioComponent->Stop();
+	
+	// Play impact sound and spawn particle system
+	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
+
+	// If we are the server then destroy the projectile
+	if (HasAuthority())
+	{
+		Destroy();
+	}
+	else
+	{
+		// Signal in the client that a target was hit
+		bHit = true;
+	}
 }
 

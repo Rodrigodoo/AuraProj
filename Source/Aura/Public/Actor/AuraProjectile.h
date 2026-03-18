@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AuraProjectile.generated.h"
 
+class UNiagaraSystem;
 class UProjectileMovementComponent;
 class USphereComponent;
 /*
@@ -25,13 +26,41 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
 	
 private:
-	
+
 	// Sphere component for projectile collisions
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;
 	
+	// The life span of this actor (seconds)
+	UPROPERTY(EditDefaultsOnly)
+	float LifeSpan = 15.f;
+	
+	//~ Begin - Effects
+	// Sound object while projectile is flying
+	// Note: should be a looping sound
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> FlyingSound;
+	
+	// Audio component to track any flying sound spawned
+	UPROPERTY()
+	TObjectPtr<UAudioComponent> FlyingAudioComponent;
+	
+	// Niagara system for the projectile impact
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UNiagaraSystem> ImpactEffect;
+	
+	// Sound object for impact sound
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> ImpactSound;
+	//~ End - Effects
+	
+	// If the actor overlapped a target
+	// Note: Only use on client!
+	bool bHit = false;
+
 	// To be called when the sphere is overlapped
 	UFUNCTION()
 	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, 
