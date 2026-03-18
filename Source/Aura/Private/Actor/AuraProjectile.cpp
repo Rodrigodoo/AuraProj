@@ -3,11 +3,12 @@
 
 #include "Actor/AuraProjectile.h"
 
-#include "NiagaraFunctionLibrary.h"
+#include "Aura/Aura.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
 
 AAuraProjectile::AAuraProjectile()
 {
@@ -23,6 +24,7 @@ AAuraProjectile::AAuraProjectile()
 	SetRootComponent(Sphere);
 	
 	// Setup Sphere setting (collision only with world or pawn)
+	Sphere->SetCollisionObjectType(ECC_PROJECTILE);
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	Sphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
