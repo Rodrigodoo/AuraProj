@@ -26,7 +26,7 @@ protected:
 	// Spawns the Fire Bolt projectile.
 	// This method should be called after the Gameplay Event triggers it in Blueprint
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void SpawnProjectile();
+	void SpawnProjectile(const FVector& ProjectileTargetLocation);
 	
 	// Projectile class to spawn when ability is activated
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

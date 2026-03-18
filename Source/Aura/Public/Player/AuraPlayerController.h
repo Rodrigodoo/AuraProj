@@ -61,8 +61,21 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 	
+	// Shift Action Input
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ShiftAction;
+	
+	// Flag to track if the Shift key is pressed
+	bool bShiftPressed = false;
+	
 	// Move the character 2D (XY)
 	void Move(const FInputActionValue& InputActionValue);
+	
+	// Signals that shift is pressed
+	void ShiftPressed() { bShiftPressed = true; };
+	
+	// Signals that shift is released
+	void ShiftReleased() { bShiftPressed = false; };
 	
 	// Callback method to deal with input pressed
 	void AbilityInputTagPressed(FGameplayTag InputTag);

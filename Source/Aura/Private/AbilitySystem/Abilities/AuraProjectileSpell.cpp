@@ -6,7 +6,7 @@
 #include "Actor/AuraProjectile.h"
 #include "Interaction/AuraCombatInterface.h"
 
-void UAuraProjectileSpell::SpawnProjectile()
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	// If we are not on the server then move along.
 	if (!GetAvatarActorFromActorInfo()->HasAuthority())
@@ -26,10 +26,16 @@ void UAuraProjectileSpell::SpawnProjectile()
 	// Get the socket location from the interface
 	const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
 	
-	// Spawn the projectile actor at the socket location
+	// Get the rotation of the projectile to point at the target location
+	// Vector from socket location to target location
+	FRotator SpawnRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+	// Make the projectile fly parallel to the ground
+	SpawnRotation.Pitch = 0.0f;
+	
+	// Spawn the projectile actor at the socket location and with the direction of the target
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SocketLocation);
-	// TODO: Set the Projectile Rotation
+	SpawnTransform.SetRotation(SpawnRotation.Quaternion());
 	
 	// Begin Spawning
 	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(

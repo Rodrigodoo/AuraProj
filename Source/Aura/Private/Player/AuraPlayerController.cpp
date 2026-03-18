@@ -74,6 +74,10 @@ void AAuraPlayerController::SetupInputComponent()
 	// Bind move action
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
 	
+	// Bind Shift action
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
+	
 	// Bind Ability Actions
 	AuraInputComponent->BindAbilityActions(AuraInputConfigDataAsset,this, 
 		&ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
@@ -139,7 +143,8 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 {
 	// If it is NOT the LMB being pressed (used for moving)
 	// Then check for Abilities
-	if (!InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB) || bTargeting)
+	// Exception: LMB while targeting || LMB and Shift pressed
+	if (!InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB) || bTargeting || bShiftPressed)
 	{
 		// Get a valid Aura Ability System Component
 		if (GetAuraAbilitySystemComponent())
@@ -151,7 +156,7 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 		}
 	}
 	
-	// If the LMB is being pressed and no object/actor is being targeted, 
+	// If the LMB is being pressed and no object/actor is being targeted or the Shift key pressed,
 	// then the character should be moving.
 	
 	// If this was a short press (FollowTime less than the threshold), then create a navigation path for the character to auto run
@@ -195,7 +200,8 @@ void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 {
 	// If it is NOT the LMB being pressed (used for moving)
 	// Then check for Abilities
-	if (!InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB) || bTargeting)
+	// Exception: LMB while targeting || LMB and Shift pressed
+	if (!InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB) || bTargeting || bShiftPressed)
 	{
 		// Get a valid Aura Ability System Component
 		if (GetAuraAbilitySystemComponent())
@@ -207,7 +213,7 @@ void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 		}
 	}
 	
-	// If the LMB is being pressed and no object/actor is being targeted, 
+	// If the LMB is being pressed and no object/actor is being targeted or the Shift pressed,
 	// then the character should be moving.
 	
 	// Update the follow time (how long has the character been moving - heading to destination)
