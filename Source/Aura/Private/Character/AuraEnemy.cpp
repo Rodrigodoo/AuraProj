@@ -75,4 +75,7 @@ void AAuraEnemy::InitCharacterAndComponents()
 		// This will bind delegates
 		AuraAbilitySystemComponent->AbilityActorInfoSet();
 	}
+	
+	// Initialize Default attributes in the character
+	InitializeDefaultAttributes();
 }

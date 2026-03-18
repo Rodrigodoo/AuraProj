@@ -31,4 +31,8 @@ protected:
 	// Projectile class to spawn when ability is activated
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
+	
+	// Damage Effect class to add to the projectile
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

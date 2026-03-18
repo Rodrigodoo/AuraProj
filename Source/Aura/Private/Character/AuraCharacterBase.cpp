@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
@@ -12,12 +13,15 @@ AAuraCharacterBase::AAuraCharacterBase()
  	// No tick for this class
 	PrimaryActorTick.bCanEverTick = false;
 	
+	//Make capsule ignore overlap events (this could double event generation with mesh)
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+	
 	// Make capsule and mesh ignore camera
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	
 	// Make projectile channel overlap and generate overlap event
-	GetMesh()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	GetMesh()->SetCollisionResponseToChannel(ECC_PROJECTILE, ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
 	
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
