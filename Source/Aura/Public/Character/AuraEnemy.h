@@ -3,12 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "Character/AuraCharacterBase.h"
 #include "Interaction/AuraEnemyInterface.h"
 #include "UI/WidgetController/AuraOverlayController.h"
 #include "AuraEnemy.generated.h"
 
 
+enum class EAuraCharacterClass : uint8;
 class UWidgetComponent;
 /**
  * Enemy Base Class. All enemy classes should inherit from this
@@ -50,6 +52,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
+	//~ Begin - AAuraCharacterBase Overrides
+	virtual void InitializeDefaultAttributes() const override;
+	//~ End - AAuraCharacterBase Overrides
+	
 	// The Enemy's Level
 	// This value works as an identifier of the enemy's difficulty
 	// It will influence its attribute calculations
@@ -57,6 +63,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Character Class Defaults")
 	int32  CharacterLevel = 1;
 	
+	// This Character's RPG Class
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Character Class Defaults")
+	EAuraCharacterClass CharacterClass = EAuraCharacterClass::Warrior;
+	
+	// Health Bar widget that hover over the character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Health Bar")
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComponent;
 };

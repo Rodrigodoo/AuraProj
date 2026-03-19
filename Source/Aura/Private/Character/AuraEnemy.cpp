@@ -4,6 +4,7 @@
 #include "Character/AuraEnemy.h"
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
@@ -63,6 +64,13 @@ void AAuraEnemy::BeginPlay()
 	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
 	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
 	
+}
+
+void AAuraEnemy::InitializeDefaultAttributes() const
+{
+	// Initializes the character information based on Level and RPG Class
+	UAuraAbilitySystemLibrary::InitializeDefaultAttributes(
+		this, CharacterClass, CharacterLevel,AbilitySystemComponent);
 }
 
 void AAuraEnemy::HighlightActor()
