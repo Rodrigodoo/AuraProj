@@ -266,6 +266,17 @@ public:
 	 * End - Vital  Attributes
 	 */
 
+	
+	/*
+	 * Begin - Meta  Attributes
+	 */
+	//~ Attribute to process all incoming damage
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, IncomingDamage);
+	/*
+	 * End - Meta  Attributes
+	 */
 private:
 	
 	// Fill in the Effect Properties for this effect
