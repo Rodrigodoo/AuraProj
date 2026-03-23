@@ -73,6 +73,11 @@ public:
 	FGameplayTag InputTag_4;
 	//~ End - Inputs
 	
+	//~ Begin - Abilities
+	// Damage
+	FGameplayTag Damage;
+	//~ End - Abilities
+	
 	/*
 	 * End - Internal references to Gameplay Tags
 	 */
