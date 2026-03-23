@@ -52,12 +52,14 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	if (const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo()))
 	{
 		// Create a Spec Handle to pass it to the Projectile
-		FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
 		
 		// Get the Gameplay Tags manager to set a Caller by Magnitude to this Spec
-		// Key will be Damage tag
+		// Key will be Damage tag && Value will be the Ability's damage at its current level
 		const FAuraGameplayTagsManager GameplayTagsManager = FAuraGameplayTagsManager::Get();
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,GameplayTagsManager.Damage,50.f);
+		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+			SpecHandle, GameplayTagsManager.Damage, ScaledDamage);
 		
 		// Pass the Spec Handle down to the Projectile
 		Projectile->DamageEffectSpecHandle = SpecHandle;

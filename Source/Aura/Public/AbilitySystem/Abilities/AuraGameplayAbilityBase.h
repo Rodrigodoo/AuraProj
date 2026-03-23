@@ -18,4 +18,9 @@ public:
 	// Input Gameplay Tag for the startup ability
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartupInputTag;
+	
+	// Damage done by this Ability
+	// Note: Abilities that do not cause damage will not use this variable
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	FScalableFloat Damage;
 };
