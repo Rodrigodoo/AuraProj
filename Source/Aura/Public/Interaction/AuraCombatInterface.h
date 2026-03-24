@@ -32,4 +32,8 @@ public:
 	// This can be used to set warping motions like translation or rotation
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& TargetLocation);
+	
+	// Retrieve the Hit React Montage for this object
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UAnimMontage* GetHitReactMontage();
 };

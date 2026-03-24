@@ -49,12 +49,24 @@ public:
 	// Delegate to receive max health changes
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
+	
+	// Flag to signal if this character is hit reacting
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	bool bHitReacting = false;
+	
+	// Base walking speed for the character.
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 250.f;
+	
 protected:
 	virtual void BeginPlay() override;
 	
 	//~ Begin - AAuraCharacterBase Overrides
 	virtual void InitializeDefaultAttributes() const override;
 	//~ End - AAuraCharacterBase Overrides
+	
+	// Delegate to be called when a Hit React Gameplay Tag is added or removed
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	
 	// The Enemy's Level
 	// This value works as an identifier of the enemy's difficulty

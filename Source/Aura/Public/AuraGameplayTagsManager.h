@@ -74,9 +74,14 @@ public:
 	//~ End - Inputs
 	
 	//~ Begin - Abilities
+	// Effects.HitReact
+	FGameplayTag Effects_HitReact;
+	//~ End - Abilities
+	
+	//~ Begin - Effects
 	// Damage
 	FGameplayTag Damage;
-	//~ End - Abilities
+	//~ End - Effects
 	
 	/*
 	 * End - Internal references to Gameplay Tags

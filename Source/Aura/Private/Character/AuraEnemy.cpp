@@ -3,11 +3,13 @@
 
 #include "Character/AuraEnemy.h"
 
+#include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "UI/Widget/AuraUserWidget.h"
 
 
@@ -35,9 +37,12 @@ void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Initialize character
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+	
 	// Initialize ASC
 	InitCharacterAndComponents();
-	
+
 	// Set the Health Bar Widget controller
 	// The Enemy actor will actually be the controller
 	if (UAuraUserWidget* HealthBarWidget = Cast<UAuraUserWidget>(HealthBarWidgetComponent->GetUserWidgetObject()))
@@ -60,6 +65,10 @@ void AAuraEnemy::BeginPlay()
 	}	
 	);
 	
+	// Bind to Effect.HitReact Gameplay Tag changes\
+	// Using EGameplayTagEventType::NewOrRemoved
+	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTagsManager::Get().Effects_HitReact).AddUObject(this, &AAuraEnemy::HitReactTagChanged);
+	
 	// Broadcast initial values
 	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
 	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
@@ -71,6 +80,21 @@ void AAuraEnemy::InitializeDefaultAttributes() const
 	// Initializes the character information based on Level and RPG Class
 	UAuraAbilitySystemLibrary::InitializeDefaultAttributes(
 		this, CharacterClass, CharacterLevel,AbilitySystemComponent);
+}
+
+void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	// Signal if character is hit reacting
+	bHitReacting = NewCount > 0;
+	if (!bHitReacting)
+	{
+		// Leave if there are no tags	
+		GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+		return;
+	}
+	
+	// Stun the character
+	GetCharacterMovement()->MaxWalkSpeed = 0.f;
 }
 
 void AAuraEnemy::HighlightActor()

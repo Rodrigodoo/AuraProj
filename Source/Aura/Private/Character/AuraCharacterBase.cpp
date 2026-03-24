@@ -53,6 +53,11 @@ FVector AAuraCharacterBase::GetCombatSocketLocation() const
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
 }
 
+UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 void AAuraCharacterBase::InitializeDefaultAttributes() const
 {
 	// NOTE: The order of these calls is important and should be maintained!
