@@ -42,6 +42,9 @@ void AAuraEnemy::BeginPlay()
 	
 	// Initialize ASC
 	InitCharacterAndComponents();
+	
+	// Grant Initial Abilities
+	UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 
 	// Set the Health Bar Widget controller
 	// The Enemy actor will actually be the controller

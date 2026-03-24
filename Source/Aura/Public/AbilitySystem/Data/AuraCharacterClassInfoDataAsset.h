@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "AuraCharacterClassInfoDataAsset.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 /*
  * Enum to define the available Aura RPG Classes
@@ -45,7 +46,6 @@ class AURA_API UAuraCharacterClassInfoDataAsset : public UDataAsset
 	GENERATED_BODY()
 	
 public:
-	
 	// Map to associate each Aura RPG Class to its information struct
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TMap<EAuraCharacterClass, FAuraCharacterClassDefaultInfo> CharacterClassInformation;
@@ -59,6 +59,10 @@ public:
 	// Vital Attribute calculation is shared between all classes
 	UPROPERTY(EditAnywhere, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
+	
+	// Abilities shared by all characters that inherit from this Data Asset
+	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 	
 	// Looks through the CharacterClassInformation map for the class Default Info for this class
 	// Note: It will assert if it doesn't find an entry

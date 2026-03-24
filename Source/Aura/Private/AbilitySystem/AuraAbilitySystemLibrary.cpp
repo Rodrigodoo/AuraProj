@@ -161,3 +161,28 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 		VitalAttributesContextHandle);
 	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }
+
+void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject,
+	UAbilitySystemComponent* AbilitySystemComponent)
+{
+	// Get the game mode and the Character Class Info Data Asset
+	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (!AuraGameMode)
+	{
+		// If this is called on the client it will fail since GameMode is only available on the server
+		return;
+	}
+	
+	const UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = AuraGameMode->CharacterClassInfoDataAsset;
+	check(CharacterClassInfoDataAsset)
+	
+	// Loop  through the common abilities and apply them to the Ability System Component's owner
+	for (const TSubclassOf<UGameplayAbility> Ability : CharacterClassInfoDataAsset->CommonAbilities)
+	{
+		// Create an Ability Spec for this ability
+		FGameplayAbilitySpec AbilitySpec(Ability, 1);
+		
+		// Grant the ability
+		AbilitySystemComponent->GiveAbility(AbilitySpec);
+	}
+}

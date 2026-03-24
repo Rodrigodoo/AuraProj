@@ -108,7 +108,12 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 			
 			// Signal that damage was fatal
-			const bool bFatal = NewHealth <= 0.f;
+			if (const bool bFatal = NewHealth <= 0.f; !bFatal)
+			{
+				// Activate any Ability that has the Hit React Tag
+				const FGameplayTagContainer AbilityTagContainer(FAuraGameplayTagsManager::Get().Effects_HitReact);
+				EffectProperties.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
+			}
 		}
 	}
 }
