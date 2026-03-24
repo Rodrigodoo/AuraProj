@@ -36,4 +36,7 @@ public:
 	// Retrieve the Hit React Montage for this object
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UAnimMontage* GetHitReactMontage();
+	
+	// Method to be called when object/actor is destroyed/dies
+	virtual void Die() = 0;
 };

@@ -57,7 +57,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		// Get the Gameplay Tags manager to set a Caller by Magnitude to this Spec
 		// Key will be Damage tag && Value will be the Ability's damage at its current level
 		const FAuraGameplayTagsManager GameplayTagsManager = FAuraGameplayTagsManager::Get();
-		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+		const float ScaledDamage = Damage.GetValueAtLevel(10/*GetAbilityLevel()*/);
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
 			SpecHandle, GameplayTagsManager.Damage, ScaledDamage);
 		

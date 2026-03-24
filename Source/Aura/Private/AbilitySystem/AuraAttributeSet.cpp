@@ -7,6 +7,7 @@
 #include "AuraGameplayTagsManager.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
+#include "Interaction/AuraCombatInterface.h"
 #include "Net/UnrealNetwork.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
@@ -107,8 +108,16 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 			
-			// Signal that damage was fatal
-			if (const bool bFatal = NewHealth <= 0.f; !bFatal)
+			// Damage was fatal
+			if (NewHealth <= 0.f)
+			{
+				// If the object dying has a combat interface call its Die method
+				if (IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(EffectProperties.TargetAvatarActor))
+				{
+					CombatInterface->Die();
+				}
+			}
+			else // No fatal damage
 			{
 				// Activate any Ability that has the Hit React Tag
 				const FGameplayTagContainer AbilityTagContainer(FAuraGameplayTagsManager::Get().Effects_HitReact);

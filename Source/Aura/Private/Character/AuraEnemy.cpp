@@ -133,6 +133,15 @@ int32 AAuraEnemy::GetCharacterLevel()
 	return CharacterLevel;
 }
 
+void AAuraEnemy::Die()
+{
+	// Establish Life Span
+	SetLifeSpan(LifeSpan);
+	
+	// Drop weapon and apply rag-dolling 
+	Super::Die();
+}
+
 void AAuraEnemy::InitCharacterAndComponents()
 {
 	// Initialises the Ability Actor Info

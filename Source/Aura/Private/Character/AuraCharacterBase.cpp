@@ -58,6 +58,30 @@ UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
 	return HitReactMontage;
 }
 
+void AAuraCharacterBase::Die()
+{
+	// Drop weapon (this is replicated)
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld,true));
+	
+	// Call on all clients
+	MulticastHandleDeath();
+}
+
+void AAuraCharacterBase::MulticastHandleDeath_Implementation()
+{
+	// Apply ragdoll for character and weapon
+	Weapon->SetSimulatePhysics(true);
+	Weapon->SetEnableGravity(true);
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block); // Make the mesh collide with the world
+	
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Disable capsule collision
+}
+
 void AAuraCharacterBase::InitializeDefaultAttributes() const
 {
 	// NOTE: The order of these calls is important and should be maintained!

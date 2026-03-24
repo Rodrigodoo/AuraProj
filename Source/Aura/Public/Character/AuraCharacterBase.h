@@ -42,7 +42,16 @@ protected:
 	
 	// Return the Hit reaction montage for this character
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	
+	// Process character's death (Only on server)
+	// Drop Weapon and Ragdoll
+	virtual void Die() override;
 	//~ End - IAuraCombatInterface overrides
+	
+	// To process on all clients and server when character dies
+	// Drop Weapon and Ragdoll
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
 	
 	// Skeletal mesh of weapon used by character
 	UPROPERTY(EditAnywhere, Category = "Combat")

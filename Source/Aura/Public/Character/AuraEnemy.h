@@ -33,6 +33,10 @@ public:
 	//~ Begin - IAuraCombatInterface
 	// Get this enemy's level
 	virtual int32 GetCharacterLevel() override;
+	
+	// Process character's death (Only on server)
+	// Drop Weapon and Ragdoll
+	virtual void Die() override;
 	//~ End - IAuraCombatInterface
 	
 	//~ Begin -AAuraCharacterBase overrides
@@ -57,6 +61,10 @@ public:
 	// Base walking speed for the character.
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float BaseWalkSpeed = 250.f;
+	
+	// Base walking speed for the character.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float LifeSpan = 5.f;
 	
 protected:
 	virtual void BeginPlay() override;
