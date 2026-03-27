@@ -80,6 +80,9 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block); // Make the mesh collide with the world
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Disable capsule collision
+	
+	// Begins Dissolve effect
+	Dissolve();
 }
 
 void AAuraCharacterBase::InitializeDefaultAttributes() const
@@ -124,4 +127,28 @@ void AAuraCharacterBase::AddCharacterAbilities()
 	// Add the startup Abilities to the character
 	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	AuraAbilitySystemComponent->AddCharacterAbilities(StartupAbilities);
+}
+
+void AAuraCharacterBase::Dissolve()
+{
+	// Mesh
+	if (IsValid(DissolveMaterialInstance))
+	{
+		// Create a dynamic material instance and set it on the mesh
+		UMaterialInstanceDynamic* DynamicMaterialInstance = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+		GetMesh()->SetMaterial(0, DynamicMaterialInstance);
+	
+		// Start the timeline
+		StartDissolveTimeline(DynamicMaterialInstance);
+	}
+	// Weapon
+	if (IsValid(WeaponDissolveMaterialInstance))
+	{
+		// Create a dynamic material instance and set it on the weapon
+		UMaterialInstanceDynamic* DynamicMaterialInstance = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+		Weapon->SetMaterial(0, DynamicMaterialInstance);
+	
+		// Start the timeline
+		StartWeaponDissolveTimeline(DynamicMaterialInstance);
+	}
 }

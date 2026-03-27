@@ -97,6 +97,29 @@ protected:
 	// Add abilities to the character
 	void AddCharacterAbilities();
 	
+	//~ Begin - Dissolve Effects
+	
+	// Replaces the mesh and weapon materials upon death with their dissolve counterparts
+	void Dissolve();
+	
+	// Starts a Dissolve timeline for the mesh
+	UFUNCTION(BlueprintImplementableEvent, Category = "Dissolve Effects")
+	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	
+	// Starts a Dissolve timeline for the weapon
+	UFUNCTION(BlueprintImplementableEvent, Category = "Dissolve Effects")
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	
+	// Dissolve Material Instance to be used on death
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dissolve Effects")
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+	
+	// Weapon Dissolve Material Instance to be used on death
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dissolve Effects")
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+	
+	//~ End - Dissolve Effects
+	
 private:
 	
 	// Abilities the character should have from the start of the game
