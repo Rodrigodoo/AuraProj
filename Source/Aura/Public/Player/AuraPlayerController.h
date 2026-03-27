@@ -7,6 +7,7 @@
 #include "AuraPlayerController.generated.h"
 
 
+class UAuraDamageTextWidgetComponent;
 class USplineComponent;
 class UAuraAbilitySystemComponent;
 class IAuraEnemyInterface;
@@ -28,6 +29,11 @@ public:
 	AAuraPlayerController();
 	
 	virtual void PlayerTick(float DeltaTime) override;
+	
+	// RPC to be called from the server to display damage values
+	// Take the damage to display and the character where it will be displayed
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
 
 protected:
 	virtual void BeginPlay() override;
@@ -126,4 +132,8 @@ private:
 	// Flag to control if the cursor is targeting an object/actor
 	// If false the cursor is targeting the enviroment
 	bool bTargeting = false;
+	
+	// Damage Text Widget Component Class to display damage above the target hit
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UAuraDamageTextWidgetComponent> DamageTextWidgetComponentClass;
 };

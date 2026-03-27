@@ -9,6 +9,7 @@
 #include "GameFramework/Character.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/AuraPlayerController.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -123,6 +124,9 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				const FGameplayTagContainer AbilityTagContainer(FAuraGameplayTagsManager::Get().Effects_HitReact);
 				EffectProperties.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
 			}
+
+			// Display the Damage applied to the Target
+			ShowDamageAsFloatingText(EffectProperties, LocalIncomingDamage);
 		}
 	}
 }
@@ -239,7 +243,7 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 	if (IsValid(OutEffectProperties.SourceAbilitySystemComponent))
 	{
 		// Check info inside AbilityActorInfo
-		if (OutEffectProperties.SourceAbilitySystemComponent ->AbilityActorInfo.IsValid())
+		if (OutEffectProperties.SourceAbilitySystemComponent->AbilityActorInfo.IsValid())
 		{
 			//~ Source Avatar Actor
 			// Could also use SourceAsc->AbilityActorInfo->AvatarActor, but this is a better method. Otherwise, add checks.
@@ -247,7 +251,7 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 
 			//~ Source Controller
 			// in this case we do not have an accessor function so we need to do the proper checks
-			if (OutEffectProperties.SourceAbilitySystemComponent ->AbilityActorInfo->PlayerController.IsValid())
+			if (OutEffectProperties.SourceAbilitySystemComponent->AbilityActorInfo->PlayerController.IsValid())
 			{
 				OutEffectProperties.SourceController = OutEffectProperties.SourceAbilitySystemComponent->AbilityActorInfo->PlayerController.Get();
 			}
@@ -329,4 +333,20 @@ void UAuraAttributeSet::MapGameplayTagsToAttributes()
 	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
 	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
 	
+}
+
+void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, float Damage)
+{
+	// Early checks
+	if (EffectProperties.SourceCharacter == EffectProperties.TargetCharacter)
+	{
+		return;
+	}
+	
+	// If the damage is not being applied to Self
+	// Then display the damage applied to the Target
+	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(EffectProperties.SourceController))
+	{
+		AuraPlayerController->ShowDamageNumber(Damage, EffectProperties.TargetCharacter);
+	}
 }

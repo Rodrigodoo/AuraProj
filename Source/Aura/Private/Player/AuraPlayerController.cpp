@@ -10,8 +10,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/AuraEnemyInterface.h"
+#include "UI/Widget/AuraDamageTextWidgetComponent.h"
 
 
 AAuraPlayerController::AAuraPlayerController()
@@ -32,6 +34,25 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	
 	// Perform Auto Running if required
 	AutoRun();
+}
+
+void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+{
+	// Early checks
+	if (!IsValid(TargetCharacter) || !DamageTextWidgetComponentClass)
+	{
+		return;
+	}
+	
+	// Dynamically create a Damage Text Widget Component and 
+	// Attach and Detach it to/from the target. This will allow for the widget to be spawned above the target but not follow it
+	UAuraDamageTextWidgetComponent* DamageTextWidgetComponent = NewObject<UAuraDamageTextWidgetComponent>(TargetCharacter, DamageTextWidgetComponentClass);
+	DamageTextWidgetComponent->RegisterComponent();
+	DamageTextWidgetComponent->AttachToComponent(TargetCharacter->GetRootComponent(),FAttachmentTransformRules::KeepRelativeTransform);
+	DamageTextWidgetComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	
+	// Set the damage to be displayed
+	DamageTextWidgetComponent->SetDamageText(DamageAmount);
 }
 
 void AAuraPlayerController::BeginPlay()

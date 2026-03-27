@@ -284,4 +284,7 @@ private:
 	
 	// Internal method to bind Gameplay Tags to Attributes
 	void MapGameplayTagsToAttributes();
+	
+	// Internal method to display damage as a floating text above the Target Character
+	void ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, float Damage);
 };
