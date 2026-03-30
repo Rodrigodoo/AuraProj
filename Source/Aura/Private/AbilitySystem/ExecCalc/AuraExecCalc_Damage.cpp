@@ -4,15 +4,21 @@
 #include "AbilitySystem/ExecCalc/AuraExecCalc_Damage.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
 // Internal struct to store Attribute Capture Definitions
 struct AuraDamageStatics
 {
+	// Attribute Capture Declarations 
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
+	
 	AuraDamageStatics()
 	{
+		// Attribute Capture Definitions 
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, Armor, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
 	}
 };
 
@@ -28,6 +34,7 @@ UAuraExecCalc_Damage::UAuraExecCalc_Damage()
 {
 	// Add Attributes to Capture from the Damage Statics
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
+	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
 }
 
 void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
@@ -51,14 +58,26 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	EvaluationParameters.SourceTags = SourceTag;
 	EvaluationParameters.TargetTags = TargetTag;
 	
-	// Calculate the Captured Attributes' magnitude
-	float ArmorMagnitude = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters,ArmorMagnitude);
-	ArmorMagnitude = FMath::Max(0.f, ArmorMagnitude);
-	++ArmorMagnitude;
+	/*
+	 * Damage Calculation
+	 */
+	
+	// Get Damage Set by Caller Magnitude (Damage coming from Source)
+	float Damage = EffectSpec.GetSetByCallerMagnitude(FAuraGameplayTagsManager::Get().Damage);
+	
+	// Capture Block Chance on Target, and determine if there was a successful Block
+	// If Block, halve the damage
+	float TargetBlockChanceMagnitude = 0.f; // Percentage
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChanceMagnitude);
+	TargetBlockChanceMagnitude = FMath::Clamp(TargetBlockChanceMagnitude, 0.f, 100.f);
+	if (FMath::RandRange(1.f, 100.f) < TargetBlockChanceMagnitude)
+	{
+		// There was a block. Halve the damage
+		Damage /= 2.f;
+	}
 	
 	// Build the Execution Output
 	// Add any output modifier that need change
-	const FGameplayModifierEvaluatedData EvaluatedData(DamageStatics().ArmorProperty, EGameplayModOp::Additive, ArmorMagnitude);
+	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
