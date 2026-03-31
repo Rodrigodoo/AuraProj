@@ -128,7 +128,7 @@ void AAuraEnemy::UnHighlightActor()
 	}
 }
 
-int32 AAuraEnemy::GetCharacterLevel()
+int32 AAuraEnemy::GetCharacterLevel() const
 {
 	return CharacterLevel;
 }

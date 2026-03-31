@@ -64,6 +64,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 	
+	// Damage Coefficients Curve Table - Used for Damage Calculations
+	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults|Damage")
+	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
+	
 	// Looks through the CharacterClassInformation map for the class Default Info for this class
 	// Note: It will assert if it doesn't find an entry
 	FAuraCharacterClassDefaultInfo GetClassDefaultInfo(EAuraCharacterClass CharacterClass) const;

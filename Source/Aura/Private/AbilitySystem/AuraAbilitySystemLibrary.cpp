@@ -115,16 +115,13 @@ UAuraAttributeMenuController* UAuraAbilitySystemLibrary::GetAttributeMenuControl
 void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, const EAuraCharacterClass CharacterClass, float Level, UAbilitySystemComponent*
                                                             AbilitySystemComponent)
 {
-	// Get the game mode and the Character Class Info Data Asset
-	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (!AuraGameMode)
+	// Get Character Class Info Data Asset
+	const UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = GetCharacterClassInfoDataAsset(WorldContextObject);
+	if (!CharacterClassInfoDataAsset)
 	{
 		// If this is called on the client it will fail since GameMode is only available on the server
 		return;
 	}
-	
-	const UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = AuraGameMode->CharacterClassInfoDataAsset;
-	check(CharacterClassInfoDataAsset)
 	
 	// Retrieve the Character Class Info for this specific RPG Class
 	const auto [PrimaryAttributes] = CharacterClassInfoDataAsset->GetClassDefaultInfo(CharacterClass);
@@ -165,16 +162,13 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject,
 	UAbilitySystemComponent* AbilitySystemComponent)
 {
-	// Get the game mode and the Character Class Info Data Asset
-	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (!AuraGameMode)
+	// Get Character Class Info Data Asset
+	const UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = GetCharacterClassInfoDataAsset(WorldContextObject);
+	if (!CharacterClassInfoDataAsset)
 	{
 		// If this is called on the client it will fail since GameMode is only available on the server
 		return;
 	}
-	
-	const UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = AuraGameMode->CharacterClassInfoDataAsset;
-	check(CharacterClassInfoDataAsset)
 	
 	// Loop  through the common abilities and apply them to the Ability System Component's owner
 	for (const TSubclassOf<UGameplayAbility> Ability : CharacterClassInfoDataAsset->CommonAbilities)
@@ -185,4 +179,18 @@ void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
 		// Grant the ability
 		AbilitySystemComponent->GiveAbility(AbilitySpec);
 	}
+}
+
+UAuraCharacterClassInfoDataAsset* UAuraAbilitySystemLibrary::GetCharacterClassInfoDataAsset(const UObject* WorldContextObject)
+{
+	// Get the game mode and the Character Class Info Data Asset
+	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (!AuraGameMode)
+	{
+		// If this is called on the client it will fail since GameMode is only available on the server
+		return nullptr;
+	}
+	
+	check(AuraGameMode->CharacterClassInfoDataAsset);
+	return AuraGameMode->CharacterClassInfoDataAsset;
 }

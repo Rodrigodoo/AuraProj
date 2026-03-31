@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
+class UAuraCharacterClassInfoDataAsset;
 enum class EAuraCharacterClass : uint8;
 class UAuraAttributeMenuController;
 class UAuraOverlayController;
@@ -36,7 +37,13 @@ public:
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, EAuraCharacterClass CharacterClass, float Level, UAbilitySystemComponent*
 	                                        AbilitySystemComponent);
 	
-	// Give to the ability system component's owner its startup abilities
+	// Give to the ability system component's owner its startup abilities 
+	// Note: Should be called on Server
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemController|Character Class Defaults")
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* AbilitySystemComponent);
+	
+	// Retrieves the Character Class Info Data Asset
+	// Note: Should be called on Server
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemController|Character Class Defaults")
+	static UAuraCharacterClassInfoDataAsset* GetCharacterClassInfoDataAsset(const UObject* WorldContextObject);
 };

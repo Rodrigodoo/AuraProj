@@ -28,7 +28,7 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationYaw = false;
 }
 
-int32 AAuraCharacter::GetCharacterLevel()
+int32 AAuraCharacter::GetCharacterLevel() const
 {
 	// Retrieve the Player state
 	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();

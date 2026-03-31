@@ -21,7 +21,7 @@ public:
 	
 	//~ Begin - IAuraCombatInterface
 	// Get the player's level (the player level will be this character's level)
-	virtual int32 GetCharacterLevel() override;
+	virtual int32 GetCharacterLevel() const override;
 	//~ End - IAuraCombatInterface
 	
 	// Initializes the character and other components

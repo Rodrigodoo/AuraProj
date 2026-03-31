@@ -5,7 +5,10 @@
 
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTagsManager.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
+#include "Interaction/AuraCombatInterface.h"
 
 // Internal struct to store Attribute Capture Definitions
 struct AuraDamageStatics
@@ -48,6 +51,33 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	
 	const AActor* SourceAvatar = SourceAbilitySystemComponent ? SourceAbilitySystemComponent->GetAvatarActor() : nullptr;
 	const AActor* TargetAvatar = TargetAbilitySystemComponent ? TargetAbilitySystemComponent->GetAvatarActor() : nullptr;
+	const IAuraCombatInterface* SourceCombatInterface = Cast<IAuraCombatInterface>(SourceAvatar);
+	const IAuraCombatInterface* TargetCombatInterface = Cast<IAuraCombatInterface>(TargetAvatar);
+
+	//~  Begin - Early checks
+	//
+	// Reasons for failure:
+	// - No valid Source or Target Ability System Component
+	// - No valid Source or Target Avatar Actors
+	// - Source or Target Avatar Actors are not using a Combat Interface
+	// - Called from Client
+	// - No Character Class Info DataAsset -> No Damage Calculation Coefficients Curve Table -> No Curves set
+	check(SourceCombatInterface);
+	check(TargetCombatInterface);
+	UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = 
+		UAuraAbilitySystemLibrary::GetCharacterClassInfoDataAsset(SourceAvatar);
+	if (!CharacterClassInfoDataAsset)
+	{
+		// Likely called from the client. Need to call from server!
+		return;
+	}
+	const UCurveTable* DamageCalculationCoefficients = CharacterClassInfoDataAsset->DamageCalculationCoefficients;
+	check(DamageCalculationCoefficients); // Need to set up the damage Calculation Coefficient Curve Table
+	const FRealCurve* ArmorPenetrationCurve = DamageCalculationCoefficients->FindCurve(FName("ArmorPenetration"), FString());
+	check(ArmorPenetrationCurve); // Need to set up ArmorPenetration Curve
+	const FRealCurve* EffectiveArmorCurve = DamageCalculationCoefficients->FindCurve(FName("EffectiveArmor"), FString());
+	check(EffectiveArmorCurve);// Need to set up EffectiveArmor Curve
+	//~  End - Early checks
 	
 	// Get the Effect Spect
 	const FGameplayEffectSpec& EffectSpec = ExecutionParams.GetOwningSpec();
@@ -62,7 +92,7 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	EvaluationParameters.TargetTags = TargetTag;
 	
 	/*
-	 * Damage Calculation - Block Chance -> Armor
+	 * Damage Calculation - Block Chance -> Effective Armor (Armor + Armor Penetration)
 	 */
 	
 	// Get Damage Set by Caller Magnitude (Damage coming from Source)
@@ -89,13 +119,20 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	// Capture ArmorPenetration on Source - Ignores % of Target's Armor
 	float SourceArmorPenetrationMagnitude = 0.f; // Percentage
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetrationMagnitude);
-	SourceArmorPenetrationMagnitude = FMath::Clamp(SourceArmorPenetrationMagnitude, 0.f, 400.f);
+	SourceArmorPenetrationMagnitude = FMath::Max(SourceArmorPenetrationMagnitude, 0.f);
 	
-	// Armor calculation (Armor * (1 - Armor Penetration)) [Armor Penetration scales by 25% - i.e. needs 4 point to lower 1% of Armor]
-	const float EffectiveArmor = TargetArmorMagnitude *= (100.f - SourceArmorPenetrationMagnitude * 0.25f) / 100.f;
+	// Capture Armor Penetration coefficient
+	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetCharacterLevel());
 	
-	// Apply Armor to Damage (3 point of Effect Armor lowers 1% of Damage)
-	Damage *= (100.f - EffectiveArmor * 0.333f) / 100.f;
+	// Effective Armor calculation - (Armor * (1 - (Armor Penetration * Coefficient)))
+	const float EffectiveArmor = TargetArmorMagnitude * 
+		(100.f - SourceArmorPenetrationMagnitude * ArmorPenetrationCoefficient) / 100.f;
+	
+	// Capture Effective Armor coefficient
+	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetCharacterLevel());
+	
+	// Apply Armor to Damage - (Damage * (1 - (Effective Armor * Coefficient)))
+	Damage *= (100.f - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
 	
 	// Build the Execution Output
 	// Add any output modifier that need change
