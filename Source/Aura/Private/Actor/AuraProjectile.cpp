@@ -64,7 +64,10 @@ void AAuraProjectile::Destroyed()
 	// Then stop the flight sound and play impact sound and spawn particle system
 	if (!bHit && !HasAuthority())
 	{
-		FlyingAudioComponent->Stop();
+		if (IsValid(FlyingAudioComponent))
+		{
+			FlyingAudioComponent->Stop();
+		}
 		
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
