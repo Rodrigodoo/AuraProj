@@ -338,7 +338,7 @@ void UAuraAttributeSet::MapGameplayTagsToAttributes()
 	
 }
 
-void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, float Damage, const bool bBlockedHit, const bool bCriticalHit)
+void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, const float Damage, const bool bBlockedHit, const bool bCriticalHit)
 {
 	// Early checks
 	if (EffectProperties.SourceCharacter == EffectProperties.TargetCharacter)

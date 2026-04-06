@@ -183,7 +183,7 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	Damage = bCriticalHit ? (Damage * 2.f) + SourceCriticalHitDamageMagnitude : Damage;
 	
 	// Signal the Gameplay Effect Context if it was a Critical Hit
-	UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bCriticalHit);
+	UAuraAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bCriticalHit);
 	
 	// Build the Execution Output
 	// Add any output modifier that need change
