@@ -286,5 +286,5 @@ private:
 	void MapGameplayTagsToAttributes();
 	
 	// Internal method to display damage as a floating text above the Target Character
-	void ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, float Damage);
+	void ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, float Damage, bool bBlockedHit, bool bCriticalHit);
 };

@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTagsManager.h"
 #include "GameplayEffectExtension.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "GameFramework/Character.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Net/UnrealNetwork.h"
@@ -126,7 +127,9 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			}
 
 			// Display the Damage applied to the Target
-			ShowDamageAsFloatingText(EffectProperties, LocalIncomingDamage);
+			const bool bBlockedHit = UAuraAbilitySystemLibrary::IsBlockedHit(EffectProperties.EffectContextHandle);
+			const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
+			ShowDamageAsFloatingText(EffectProperties, LocalIncomingDamage, bBlockedHit, bCriticalHit);
 		}
 	}
 }
@@ -335,7 +338,7 @@ void UAuraAttributeSet::MapGameplayTagsToAttributes()
 	
 }
 
-void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, float Damage)
+void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, float Damage, const bool bBlockedHit, const bool bCriticalHit)
 {
 	// Early checks
 	if (EffectProperties.SourceCharacter == EffectProperties.TargetCharacter)

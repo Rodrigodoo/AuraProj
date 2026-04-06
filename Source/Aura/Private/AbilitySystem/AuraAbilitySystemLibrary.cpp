@@ -4,6 +4,7 @@
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraAbilityTypes.h"
 #include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "Game/AuraGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
@@ -193,4 +194,37 @@ UAuraCharacterClassInfoDataAsset* UAuraAbilitySystemLibrary::GetCharacterClassIn
 	
 	check(AuraGameMode->CharacterClassInfoDataAsset);
 	return AuraGameMode->CharacterClassInfoDataAsset;
+}
+
+bool UAuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and check if it was a Blocked Hit
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->IsBlockedHit() : false; 
+}
+
+bool UAuraAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and check if it was a Critical Hit
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->IsCriticalHit() : false; 
+}
+
+void UAuraAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsBlockedHit)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Blocked Hit flag
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetIsBlockedHit(bInIsBlockedHit);
+	}
+}
+
+void UAuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle,
+	const bool bInIsCriticalHit)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Critical Hit flag
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+	}
 }

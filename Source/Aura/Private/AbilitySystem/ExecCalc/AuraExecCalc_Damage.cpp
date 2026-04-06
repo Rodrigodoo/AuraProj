@@ -4,6 +4,7 @@
 #include "AbilitySystem/ExecCalc/AuraExecCalc_Damage.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraAbilityTypes.h"
 #include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
@@ -102,6 +103,9 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	EvaluationParameters.SourceTags = SourceTag;
 	EvaluationParameters.TargetTags = TargetTag;
 	
+	// Get the Effect Context Handle to pass information into the Effect
+	FGameplayEffectContextHandle EffectContextHandle = EffectSpec.GetContext();
+	
 	/*
 	 * Damage Calculation (By Order):
 	 * - Block Chance
@@ -122,6 +126,9 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	// If Block, halve the damage
 	const bool bBlocked = FMath::RandRange(1.f, 100.f) < TargetBlockChanceMagnitude;
 	Damage = bBlocked ? Damage / 2.f : Damage;
+	
+	// Signal the Gameplay Effect Context if it was a Blocked Hit
+	UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
 	
 	//~ Armor & Armor Penetration
 	
@@ -174,6 +181,9 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	// If it was a Critical Hit - Double damage and add Critical Hit Damage bonus
 	const bool bCriticalHit = FMath::RandRange(1.f, 100.f) < EffectiveCriticalHitChance;
 	Damage = bCriticalHit ? (Damage * 2.f) + SourceCriticalHitDamageMagnitude : Damage;
+	
+	// Signal the Gameplay Effect Context if it was a Critical Hit
+	UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bCriticalHit);
 	
 	// Build the Execution Output
 	// Add any output modifier that need change
