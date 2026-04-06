@@ -32,8 +32,9 @@ public:
 	
 	// RPC to be called from the server to display damage values
 	// Take the damage to display and the character where it will be displayed
+	// bBlockedHit and bCriticalHit will change the color of the text
 	UFUNCTION(Client, Reliable)
-	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit);
 
 protected:
 	virtual void BeginPlay() override;

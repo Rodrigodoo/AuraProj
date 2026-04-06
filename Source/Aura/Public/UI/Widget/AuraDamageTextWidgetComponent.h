@@ -16,6 +16,7 @@ class AURA_API UAuraDamageTextWidgetComponent : public UWidgetComponent
 	
 public:
 	// Set damage text in the used widget
+	// bBlockedHit and bCriticalHit will change the color of the text
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void SetDamageText(float Damage);
+	void SetDamageText(float Damage, bool bBlockedHit, bool bCriticalHit);
 };

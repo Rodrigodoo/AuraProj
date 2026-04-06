@@ -350,6 +350,6 @@ void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& Effect
 	// Then display the damage applied to the Target
 	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(EffectProperties.SourceController))
 	{
-		AuraPlayerController->ShowDamageNumber(Damage, EffectProperties.TargetCharacter);
+		AuraPlayerController->ShowDamageNumber(Damage, EffectProperties.TargetCharacter, bBlockedHit, bCriticalHit);
 	}
 }

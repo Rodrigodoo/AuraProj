@@ -36,7 +36,7 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	AutoRun();
 }
 
-void AAuraPlayerController::ShowDamageNumber_Implementation(const float DamageAmount, ACharacter* TargetCharacter)
+void AAuraPlayerController::ShowDamageNumber_Implementation(const float DamageAmount, ACharacter* TargetCharacter, const bool bBlockedHit, const bool bCriticalHit)
 {
 	// Early checks
 	if (!IsValid(TargetCharacter) || !DamageTextWidgetComponentClass)
@@ -52,7 +52,7 @@ void AAuraPlayerController::ShowDamageNumber_Implementation(const float DamageAm
 	DamageTextWidgetComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	
 	// Set the damage to be displayed
-	DamageTextWidgetComponent->SetDamageText(DamageAmount);
+	DamageTextWidgetComponent->SetDamageText(DamageAmount, bBlockedHit, bCriticalHit);
 }
 
 void AAuraPlayerController::BeginPlay()
