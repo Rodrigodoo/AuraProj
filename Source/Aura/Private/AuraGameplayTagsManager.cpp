@@ -2,130 +2,123 @@
 
 
 #include "AuraGameplayTagsManager.h"
-#include "GameplayTagsManager.h"
 
-FAuraGameplayTagsManager FAuraGameplayTagsManager::Instance;
-
-void FAuraGameplayTagsManager::InitializeNativeGameplayTags()
+namespace AuraGameplayTagsManager
 {
 	/*
 	 * Primary Attributes
 	 */
 	// Attributes.Secondary.Strength
-	Instance.Attributes_Primary_Strength = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Strength"), 
-		FString("Increases physical damage"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Strength, "Attributes.Primary.Strength", 
+		"Increases physical damage");
 	// Attributes.Primary.Intelligence
-	Instance.Attributes_Primary_Intelligence = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Intelligence"), 
-		FString("Increases magical damage, maximum mana, and mana regeneration"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Intelligence, "Attributes.Primary.Intelligence", 
+		"Increases magical damage, maximum mana, and mana regeneration");
 	// Attributes.Primary.Resilience
-	Instance.Attributes_Primary_Resilience = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Resilience"), 
-		FString("Increases armor and armor penetration"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Resilience, "Attributes.Primary.Resilience", 
+		"Increases armor and armor penetration");
 	// Attributes.Primary.Vigor
-	Instance.Attributes_Primary_Vigor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Primary.Vigor"), 
-		FString("Increases max health and health regeneration"));
-
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Primary_Vigor, "Attributes.Primary.Vigor", 
+		"Increases max health and health regeneration");
+ 
 	/*
 	 * Secondary Attributes
 	 */
 	// Attributes.Secondary.Armor
-	Instance.Attributes_Secondary_Armor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.Armor"), 
-		FString("Reduces damage taken, improves block chance"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_Armor, "Attributes.Secondary.Armor", 
+		"Reduces damage taken, improves block chance");
 	// Attributes.Secondary.ArmorPenetration
-	Instance.Attributes_Secondary_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.ArmorPenetration"), 
-		FString("Ignores enemy's armor, increases critical hit chance"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_ArmorPenetration, "Attributes.Secondary.ArmorPenetration", 
+		"Ignores enemy's armor, increases critical hit chance");
 	// Attributes.Secondary.BlockChance
-	Instance.Attributes_Secondary_BlockChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.BlockChance"), 
-		FString("Chance to cut incoming damage by half"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_BlockChance, "Attributes.Secondary.BlockChance", 
+		"Chance to cut incoming damage by half");
 	// Attributes.Secondary.CriticalHitChance
-	Instance.Attributes_Secondary_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.CriticalHitChance"), 
-		FString("Chance to double damage plus a critical hit bonus"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_CriticalHitChance, "Attributes.Secondary.CriticalHitChance", 
+		"Chance to double damage plus a critical hit bonus");
 	// Attributes.Secondary.CriticalHitDamage
-	Instance.Attributes_Secondary_CriticalHitDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.CriticalHitDamage"), 
-		FString("Bonus damage when a critical hit is scored"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_CriticalHitDamage, "Attributes.Secondary.CriticalHitDamage", 
+		"Bonus damage when a critical hit is scored");
 	// Attributes.Secondary.CriticalHitResistance
-	Instance.Attributes_Secondary_CriticalHitResistance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.CriticalHitResistance"), 
-		FString("Reduces the critical hit chance of attacking enemies"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_CriticalHitResistance, "Attributes.Secondary.CriticalHitResistance", 
+		"Reduces the critical hit chance of attacking enemies");
 	// Attributes.Secondary.HealthRegeneration
-	Instance.Attributes_Secondary_HealthRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.HealthRegeneration"), 
-		FString("Amount of health regenerated every second"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_HealthRegeneration, "Attributes.Secondary.HealthRegeneration", 
+		"Amount of health regenerated every second");
 	// Attributes.Secondary.ManaRegeneration
-	Instance.Attributes_Secondary_ManaRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.ManaRegeneration"), 
-		FString("Amount of mana regenerated every second"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_ManaRegeneration, "Attributes.Secondary.ManaRegeneration", 
+		"Amount of mana regenerated every second");
 	// Attributes.Secondary.MaxHealth
-	Instance.Attributes_Secondary_MaxHealth = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxHealth"), 
-		FString("Maximum amount of health obtainable"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_MaxHealth, "Attributes.Secondary.MaxHealth", 
+		"Maximum amount of health obtainable");
 	// Attributes.Secondary.MaxMana
-	Instance.Attributes_Secondary_MaxMana = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxMana"), 
-		FString("Maximum amount of mana obtainable"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Secondary_MaxMana, "Attributes.Secondary.MaxMana", 
+		"Maximum amount of mana obtainable");
 	
 	/*
 	 * Resistances Attributes
 	 */
 	// Attributes.Resistance.Fire
-	Instance.Attributes_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Fire"), 
-		FString("Resistance to Fire Damage"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Resistance_Fire, "Attributes.Resistance.Fire", 
+		"Resistance to Fire Damage");
 	// Attributes.Resistance.Lightning
-	Instance.Attributes_Resistance_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Lightning"), 
-		FString("Resistance to Lightning Damage"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Resistance_Lightning, "Attributes.Resistance.Lightning", 
+		"Resistance to Lightning Damage");
 	// Attributes.Resistance.Arcane
-	Instance.Attributes_Resistance_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Arcane"), 
-		FString("Resistance to Arcane Damage"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Resistance_Arcane, "Attributes.Resistance.Arcane", 
+		"Resistance to Arcane Damage");
 	// Attributes.Resistance.Physical
-	Instance.Attributes_Resistance_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Physical"), 
-		FString("Resistance to Physical Damage"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Resistance_Physical, "Attributes.Resistance.Physical", 
+		"Resistance to Physical Damage");
 	
 	/*
 	 * Input
 	 */
 	// InputTag.LMB
-	Instance.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.LMB"), 
-		FString("Input Tag for Left Mouse Button"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_LMB, "InputTag.LMB", "Input Tag for Left Mouse Button");
 	// InputTag.RMB
-	Instance.InputTag_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.RMB"), 
-		FString("Input Tag for Right Mouse Button"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_RMB, "InputTag.RMB", "Input Tag for Right Mouse Button");
 	// InputTag.1
-	Instance.InputTag_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.1"), 
-		FString("Input Tag for 1 key"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_1, "InputTag.1", "Input Tag for 1 key");
 	// InputTag.2
-	Instance.InputTag_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.2"), 
-		FString("Input Tag for 2 key"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_2, "InputTag.2", "Input Tag for 2 key");
 	// InputTag.3
-	Instance.InputTag_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.3"), 
-		FString("Input Tag for 3 key"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_3, "InputTag.3", "Input Tag for 3 key");
 	// InputTag.4
-	Instance.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.4"), 
-		FString("Input Tag for 4 key"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_4, "InputTag.4", "Input Tag for 4 key");
 	
 	/*
 	 * Damage & Damage Types
 	 */
 	// Damage
-	Instance.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"),FString("Damage"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "Damage", "Damage");
 	// Damage.Fire
-	Instance.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fire"),FString("Fire Damage Type"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Fire, "Damage.Fire", "ire Damage Type");
 	// Damage.Lightning
-	Instance.Damage_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Lightning"),FString("Lightning Damage Type"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Lightning, "Damage.Lightning", "Lightning Damage Type");
 	// Damage.Arcane
-	Instance.Damage_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Arcane"),FString("Arcane Damage Type"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Arcane, "Damage.Arcane", "Arcane Damage Type");
 	// Damage.Physical
-	Instance.Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Physical"),FString("Physical Damage Type"));
-
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Physical, "Damage.Physical", "Physical Damage Type");
+	
 	/*
 	 * Effects
 	 */
 	// Effects.HitReact
-	Instance.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"),
-		FString("Effect to be called upon hit"));
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effects_HitReact, "Effects.HitReact", "Effect to be called upon hit");
 	
 	/*
 	 * Mapping of Damage Types to Resistances
 	 */
-	// Fire Damage - Fire Resistance
-	Instance.DamageTypesToResistances.Add(Instance.Damage_Fire, Instance.Attributes_Resistance_Fire);
-	// Lightning Damage - Lightning Resistance
-	Instance.DamageTypesToResistances.Add(Instance.Damage_Lightning, Instance.Attributes_Resistance_Lightning);
-	// Arcane Damage - Arcane Resistance
-	Instance.DamageTypesToResistances.Add(Instance.Damage_Arcane, Instance.Attributes_Resistance_Arcane);
-	// Physical Damage - Physical Resistance
-	Instance.DamageTypesToResistances.Add(Instance.Damage_Physical, Instance.Attributes_Resistance_Physical);
+	const TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances = 
+	{
+		// Fire Damage - Fire Resistance
+		{Damage_Fire, Attributes_Resistance_Fire},
+		// Lightning Damage - Lightning Resistance
+		{Damage_Lightning, Attributes_Resistance_Lightning},
+		// Arcane Damage - Arcane Resistance
+		{Damage_Arcane, Attributes_Resistance_Arcane},
+		// Physical Damage - Physical Resistance
+		{Damage_Physical, Attributes_Resistance_Physical}
+	};
 }

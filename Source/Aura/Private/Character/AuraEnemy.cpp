@@ -70,7 +70,7 @@ void AAuraEnemy::BeginPlay()
 	
 	// Bind to Effect.HitReact Gameplay Tag changes\
 	// Using EGameplayTagEventType::NewOrRemoved
-	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTagsManager::Get().Effects_HitReact).AddUObject(this, &AAuraEnemy::HitReactTagChanged);
+	AbilitySystemComponent->RegisterGameplayTagEvent(AuraGameplayTagsManager::Effects_HitReact).AddUObject(this, &AAuraEnemy::HitReactTagChanged);
 	
 	// Broadcast initial values
 	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());

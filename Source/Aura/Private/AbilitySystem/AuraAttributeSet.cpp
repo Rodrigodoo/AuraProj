@@ -130,7 +130,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			else // No fatal damage
 			{
 				// Activate any Ability that has the Hit React Tag
-				const FGameplayTagContainer AbilityTagContainer(FAuraGameplayTagsManager::Get().Effects_HitReact);
+				const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Effects_HitReact);
 				EffectProperties.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
 			}
 
@@ -342,38 +342,35 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 
 void UAuraAttributeSet::MapGameplayTagsToAttributes()
 {
-	// Get reference to Aura's Gameplay Tag Manager
-	const FAuraGameplayTagsManager& GameplayTagsManager = FAuraGameplayTagsManager::Get();
-	
 	/*
 	 * Primary Attributes
 	 */
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Strength, GetStrengthAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Resilience, GetResilienceAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Vigor, GetVigorAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Primary_Strength, GetStrengthAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Primary_Intelligence, GetIntelligenceAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Primary_Resilience, GetResilienceAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Primary_Vigor, GetVigorAttribute);
 
 	/*
 	 * Secondary Attributes
 	 */
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_Armor, GetArmorAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_ArmorPenetration, GetArmorPenetrationAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_BlockChance, GetBlockChanceAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_CriticalHitResistance, GetCriticalHitResistanceAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_Armor, GetArmorAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_ArmorPenetration, GetArmorPenetrationAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_BlockChance, GetBlockChanceAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_CriticalHitResistance, GetCriticalHitResistanceAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_HealthRegeneration, GetHealthRegenerationAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_ManaRegeneration, GetManaRegenerationAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Secondary_MaxMana, GetMaxManaAttribute);
 	
 	/*
 	 * Resistance Attributes
 	 */
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Resistance_Fire, GetFireResistanceAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Resistance_Lightning, GetLightningResistanceAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Resistance_Arcane, GetArcaneResistanceAttribute);
-	TagToAttributes.Add(GameplayTagsManager.Attributes_Resistance_Physical, GetPhysicalResistanceAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Resistance_Fire, GetFireResistanceAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Resistance_Lightning, GetLightningResistanceAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Resistance_Arcane, GetArcaneResistanceAttribute);
+	TagToAttributes.Add(AuraGameplayTagsManager::Attributes_Resistance_Physical, GetPhysicalResistanceAttribute);
 }
 
 void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, const float Damage, const bool bBlockedHit, const bool bCriticalHit)

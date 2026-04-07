@@ -149,7 +149,7 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	// If the LMB was pressed (used for moving)
-	if (InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB))
+	if (InputTag.MatchesTagExact(AuraGameplayTagsManager::InputTag_LMB))
 	{
 		// If there is an object/actor under the cursor at the moment of pressing
 		// Then we are targeting and not pointing to the environment
@@ -165,7 +165,7 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 	// If it is NOT the LMB being pressed (used for moving)
 	// Then check for Abilities
 	// Exception: LMB while targeting || LMB and Shift pressed
-	if (!InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB) || bTargeting || bShiftPressed)
+	if (!InputTag.MatchesTagExact(AuraGameplayTagsManager::InputTag_LMB) || bTargeting || bShiftPressed)
 	{
 		// Get a valid Aura Ability System Component
 		if (GetAuraAbilitySystemComponent())
@@ -222,7 +222,7 @@ void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 	// If it is NOT the LMB being pressed (used for moving)
 	// Then check for Abilities
 	// Exception: LMB while targeting || LMB and Shift pressed
-	if (!InputTag.MatchesTagExact(FAuraGameplayTagsManager::Get().InputTag_LMB) || bTargeting || bShiftPressed)
+	if (!InputTag.MatchesTagExact(AuraGameplayTagsManager::InputTag_LMB) || bTargeting || bShiftPressed)
 	{
 		// Get a valid Aura Ability System Component
 		if (GetAuraAbilitySystemComponent())

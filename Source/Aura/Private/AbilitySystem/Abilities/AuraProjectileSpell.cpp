@@ -64,10 +64,6 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		
 		// Create a Spec Handle to pass it to the Projectile
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
-		
-		// Get the Gameplay Tags manager to set a Caller by Magnitude to this Spec
-		// Key will be Damage tag && Value will be the Ability's damage at its current level
-		const FAuraGameplayTagsManager GameplayTagsManager = FAuraGameplayTagsManager::Get();
 
 		// Go through the damage types and set them by caller using their tags
 		// Key: FGameplayTag | Value: FScalableFloat 

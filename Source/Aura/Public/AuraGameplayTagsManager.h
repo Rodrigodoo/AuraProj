@@ -2,114 +2,93 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include "NativeGameplayTags.h"
 
 /**
- * Contains and manages all the Aura project's Gameplay Tags (Singleton)
+ * Contains and manages all the Aura project's Gameplay Tags
  */
-struct FAuraGameplayTagsManager
+namespace AuraGameplayTagsManager
 {
-public:
-	// Returns the Instance of this manager
-	const static FAuraGameplayTagsManager& Get() { return Instance; };
-	
-	// Initialises the Gameplay Tags for this project
-	// Enrolls them in the UGameplayTagManager (Unreal Version)
-	static void InitializeNativeGameplayTags();
-	
-	/*
-	 * Begin - Internal references to Gameplay Tags
-	 */
-	
 	//~ Begin - Attributes
 	//~ Begin - Attributes Primary
 	// Attributes.Primary.Strength
-	FGameplayTag Attributes_Primary_Strength;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Primary_Strength);
 	// Attributes.Primary.Intelligence
-	FGameplayTag Attributes_Primary_Intelligence;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Primary_Intelligence);
 	// Attributes.Primary.Resilience
-	FGameplayTag Attributes_Primary_Resilience;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Primary_Resilience);
 	// Attributes.Primary.Vigor
-	FGameplayTag Attributes_Primary_Vigor;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Primary_Vigor);
 	//~ End - Attributes Primary
 	
 	//~ Begin - Attributes Secondary
 	// Attributes.Secondary.Armor
-	FGameplayTag Attributes_Secondary_Armor;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_Armor);
 	// Attributes.Secondary.ArmorPenetration
-	FGameplayTag Attributes_Secondary_ArmorPenetration;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_ArmorPenetration);
 	// Attributes.Secondary.BlockChance
-	FGameplayTag Attributes_Secondary_BlockChance;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_BlockChance);
 	// Attributes.Secondary.CriticalHitChance
-	FGameplayTag Attributes_Secondary_CriticalHitChance;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_CriticalHitChance);
 	// Attributes.Secondary.CriticalHitDamage
-	FGameplayTag Attributes_Secondary_CriticalHitDamage;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_CriticalHitDamage);
 	// Attributes.Secondary.CriticalHitResistance
-	FGameplayTag Attributes_Secondary_CriticalHitResistance;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_CriticalHitResistance);
 	// Attributes.Secondary.HealthRegeneration
-	FGameplayTag Attributes_Secondary_HealthRegeneration;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_HealthRegeneration);
 	// Attributes.Secondary.ManaRegeneration
-	FGameplayTag Attributes_Secondary_ManaRegeneration;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_ManaRegeneration);
 	// Attributes.Secondary.MaxHealth
-	FGameplayTag Attributes_Secondary_MaxHealth;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_MaxHealth);
 	// Attributes.Secondary.MaxMana
-	FGameplayTag Attributes_Secondary_MaxMana;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Secondary_MaxMana);
 	//~ End - Attributes Secondary
 	
 	//~ Begin - Attributes Resistance
 	// Attributes.Resistance.Fire
-	FGameplayTag Attributes_Resistance_Fire;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Resistance_Fire);
 	// Attributes.Resistance.Lightning
-	FGameplayTag Attributes_Resistance_Lightning;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Resistance_Lightning);
 	// Attributes.Resistance.Arcane
-	FGameplayTag Attributes_Resistance_Arcane;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Resistance_Arcane);
 	// Attributes.Resistance.Physical
-	FGameplayTag Attributes_Resistance_Physical;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Resistance_Physical);
 	//~ End - Attributes Resistances
 	//~ End - Attributes
 	
 	//~ Begin - Inputs
 	// InputTag.LMB
-	FGameplayTag InputTag_LMB;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_LMB);
 	// InputTag.RMB
-	FGameplayTag InputTag_RMB;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_RMB);
 	// InputTag.1
-	FGameplayTag InputTag_1;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_1);
 	// InputTag.2
-	FGameplayTag InputTag_2;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_2);
 	// InputTag.3
-	FGameplayTag InputTag_3;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_3);
 	// InputTag.4
-	FGameplayTag InputTag_4;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_4);
 	//~ End - Inputs
 	
 	//~ Begin - Effects
 	// Effects.HitReact
-	FGameplayTag Effects_HitReact;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effects_HitReact);
 	//~ End - Effects
 	
 	//~ Begin - Damage & Damage Types
 	// Damage
-	FGameplayTag Damage;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage);
 	// Damage.Fire
-	FGameplayTag Damage_Fire;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Fire);
 	// Damage.Lightning
-	FGameplayTag Damage_Lightning;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Lightning);
 	// Damage.Arcane
-	FGameplayTag Damage_Arcane;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Arcane);
 	// Damage.Physical
-	FGameplayTag Damage_Physical;
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Physical);
 	//~ End - Damage & Damage Types
 	
-	/*
-	 * End - Internal references to Gameplay Tags
-	 */
-	
 	// Stores all Damage Types tags and relates them to resistances
-	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
-private:
-	// This Manager's Instance
-	static FAuraGameplayTagsManager Instance;
-	
-};
+	extern const TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+}
