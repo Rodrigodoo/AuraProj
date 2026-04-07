@@ -56,6 +56,17 @@ public:
 	// Attributes.Secondary.MaxMana
 	FGameplayTag Attributes_Secondary_MaxMana;
 	//~ End - Attributes Secondary
+	
+	//~ Begin - Attributes Resistance
+	// Attributes.Resistance.Fire
+	FGameplayTag Attributes_Resistance_Fire;
+	// Attributes.Resistance.Lightning
+	FGameplayTag Attributes_Resistance_Lightning;
+	// Attributes.Resistance.Arcane
+	FGameplayTag Attributes_Resistance_Arcane;
+	// Attributes.Resistance.Physical
+	FGameplayTag Attributes_Resistance_Physical;
+	//~ End - Attributes Resistances
 	//~ End - Attributes
 	
 	//~ Begin - Inputs
@@ -83,14 +94,20 @@ public:
 	FGameplayTag Damage;
 	// Damage.Fire
 	FGameplayTag Damage_Fire;
-	
-	// Stores all Damage Types tags
-	TArray<FGameplayTag> DamageTypes;
+	// Damage.Lightning
+	FGameplayTag Damage_Lightning;
+	// Damage.Arcane
+	FGameplayTag Damage_Arcane;
+	// Damage.Physical
+	FGameplayTag Damage_Physical;
 	//~ End - Damage & Damage Types
 	
 	/*
 	 * End - Internal references to Gameplay Tags
 	 */
+	
+	// Stores all Damage Types tags and relates them to resistances
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 private:
 	// This Manager's Instance
 	static FAuraGameplayTagsManager Instance;

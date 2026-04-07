@@ -7,7 +7,8 @@
 #include "AuraDamageGameplayAbility.generated.h"
 
 /**
- * Ability specialized on dealing damage
+ * Base Ability specialized on dealing damage
+ * Note: Inherit from this Ability if your Ability inflicts Damage
  */
 UCLASS()
 class AURA_API UAuraDamageGameplayAbility : public UAuraGameplayAbilityBase
