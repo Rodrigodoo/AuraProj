@@ -241,6 +241,48 @@ public:
 	 */
 	
 	/*
+	 * Begin - Resistance Attributes
+	 */
+	//~ Character's Fire Resistance (depends on Resilience)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData FireResistance;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, FireResistance); // Generates All basic accessor functions
+
+	//~ Character's Lightning Resistance (depends on Resilience)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData LightningResistance;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, LightningResistance); // Generates All basic accessor functions
+	
+	//~ Character's Arcane Resistance (depends on Resilience)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ArcaneResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData ArcaneResistance;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, ArcaneResistance); // Generates All basic accessor functions
+	
+	//~ Character's Physical Resistance (depends on Resilience)
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData PhysicalResistance;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, PhysicalResistance); // Generates All basic accessor functions
+	
+	// Replication method for Fire Resistance
+	UFUNCTION()
+	void OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const;
+	
+	// Replication method for Lightning Resistance
+	UFUNCTION()
+	void OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const;
+	
+	// Replication method for Arcane Resistance
+	UFUNCTION()
+	void OnRep_ArcaneResistance(const FGameplayAttributeData& OldArcaneResistance) const;
+	
+	// Replication method for Physical Resistance
+	UFUNCTION()
+	void OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const;
+	/*
+	 * End - Resistance Attributes
+	 */
+	
+	/*
 	 * Begin - Vital  Attributes
 	 */
 	

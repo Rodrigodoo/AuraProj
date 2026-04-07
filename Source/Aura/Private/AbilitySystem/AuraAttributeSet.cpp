@@ -50,6 +50,14 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	
 	/*
+	 * Resistance Attributes
+	 */
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, FireResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, LightningResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ArcaneResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, PhysicalResistance, COND_None, REPNOTIFY_Always);
+	
+	/*
 	 * Vital Attributes (These should only be initialized after MaxHealth & MaxMana)
 	 */
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Health, COND_None, REPNOTIFY_Always);
@@ -132,6 +140,30 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			ShowDamageAsFloatingText(EffectProperties, LocalIncomingDamage, bBlockedHit, bCriticalHit);
 		}
 	}
+}
+
+void UAuraAttributeSet::OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const
+{
+	// Notifies the Gameplay Attribute System of the change on this attribute
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, FireResistance, OldFireResistance);
+}
+
+void UAuraAttributeSet::OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const
+{
+	// Notifies the Gameplay Attribute System of the change on this attribute
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, LightningResistance, OldLightningResistance);
+}
+
+void UAuraAttributeSet::OnRep_ArcaneResistance(const FGameplayAttributeData& OldArcaneResistance) const
+{
+	// Notifies the Gameplay Attribute System of the change on this attribute
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ArcaneResistance, OldArcaneResistance);
+}
+
+void UAuraAttributeSet::OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const
+{
+	// Notifies the Gameplay Attribute System of the change on this attribute
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, PhysicalResistance, OldPhysicalResistance);
 }
 
 void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
@@ -321,7 +353,6 @@ void UAuraAttributeSet::MapGameplayTagsToAttributes()
 	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Resilience, GetResilienceAttribute);
 	TagToAttributes.Add(GameplayTagsManager.Attributes_Primary_Vigor, GetVigorAttribute);
 
-	
 	/*
 	 * Secondary Attributes
 	 */
@@ -336,6 +367,13 @@ void UAuraAttributeSet::MapGameplayTagsToAttributes()
 	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
 	TagToAttributes.Add(GameplayTagsManager.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
 	
+	/*
+	 * Resistance Attributes
+	 */
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Resistance_Fire, GetFireResistanceAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Resistance_Lightning, GetLightningResistanceAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Resistance_Arcane, GetArcaneResistanceAttribute);
+	TagToAttributes.Add(GameplayTagsManager.Attributes_Resistance_Physical, GetPhysicalResistanceAttribute);
 }
 
 void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, const float Damage, const bool bBlockedHit, const bool bCriticalHit)
