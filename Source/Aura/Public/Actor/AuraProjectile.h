@@ -49,10 +49,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> FlyingSound;
 	
-	// Audio component to track any flying sound spawned
-	UPROPERTY()
-	TObjectPtr<UAudioComponent> FlyingAudioComponent;
-	
 	// Niagara system for the projectile impact
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UNiagaraSystem> ImpactEffect;

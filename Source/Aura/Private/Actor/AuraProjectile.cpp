@@ -53,9 +53,10 @@ void AAuraProjectile::BeginPlay()
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraProjectile::OnSphereOverlap);
 	
 	// Spawn the sound attached to the root component and track it in FlyingAudioComponent
-	// This will allow it to be stopped later
+	// This sound will stop when the attached component is destroyed
 	check(FlyingSound) // If it's not valid the audio component will be null
-	FlyingAudioComponent = UGameplayStatics::SpawnSoundAttached(FlyingSound,GetRootComponent());
+	UGameplayStatics::SpawnSoundAttached(FlyingSound, GetRootComponent(), NAME_None, 
+		FVector::Zero(), FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, true);
 }
 
 void AAuraProjectile::Destroyed()
@@ -64,11 +65,6 @@ void AAuraProjectile::Destroyed()
 	// Then stop the flight sound and play impact sound and spawn particle system
 	if (!bHit && !HasAuthority())
 	{
-		if (IsValid(FlyingAudioComponent))
-		{
-			FlyingAudioComponent->Stop();
-		}
-		
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
 	}
@@ -79,12 +75,20 @@ void AAuraProjectile::Destroyed()
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                       UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// Stop the flying sound
-	FlyingAudioComponent->Stop();
-	
-	// Play impact sound and spawn particle system
-	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
+	// If the causer of the effect is hitting itself, ignore!
+	if (DamageEffectSpecHandle.Data.IsValid() && 
+		OtherActor == DamageEffectSpecHandle.Data.Get()->GetEffectContext().GetEffectCauser())
+	{
+		return;
+	}
+
+	// If no hit has been registered, spawn sound and effect at impact point
+	if (!bHit)
+	{
+		// Play impact sound and spawn particle system
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
+	}
 
 	// If we are the server
 	if (HasAuthority())

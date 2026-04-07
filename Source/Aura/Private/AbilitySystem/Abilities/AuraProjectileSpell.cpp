@@ -31,9 +31,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	
 	// Get the rotation of the projectile to point at the target location
 	// Vector from socket location to target location
-	FRotator SpawnRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
-	// Make the projectile fly parallel to the ground
-	SpawnRotation.Pitch = 0.0f;
+	const FRotator SpawnRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 	
 	// Spawn the projectile actor at the socket location and with the direction of the target
 	FTransform SpawnTransform;

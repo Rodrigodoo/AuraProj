@@ -42,9 +42,13 @@ void AAuraEnemy::BeginPlay()
 	
 	// Initialize ASC
 	InitCharacterAndComponents();
-	
-	// Grant Initial Abilities
-	UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+
+	// If running on the server
+	if (HasAuthority())
+	{
+		// Grant Initial Abilities
+		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+	}
 
 	// Set the Health Bar Widget controller
 	// The Enemy actor will actually be the controller
@@ -152,7 +156,11 @@ void AAuraEnemy::InitCharacterAndComponents()
 		// This will bind delegates
 		AuraAbilitySystemComponent->AbilityActorInfoSet();
 	}
-	
-	// Initialize Default attributes in the character
-	InitializeDefaultAttributes();
+
+	// If running on the server
+	if (HasAuthority())
+	{
+		// Initialize Default attributes in the character
+		InitializeDefaultAttributes();
+	}
 }

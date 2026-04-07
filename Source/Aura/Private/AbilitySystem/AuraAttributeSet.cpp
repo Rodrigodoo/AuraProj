@@ -103,6 +103,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	}
 	
 	// Process any Incoming Damage
+	// Note: This only gets called on the server
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		// Get the incoming damage
