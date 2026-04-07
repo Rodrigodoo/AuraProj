@@ -114,7 +114,14 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	 */
 	
 	// Get Damage Set by Caller Magnitude (Damage coming from Source)
-	float Damage = EffectSpec.GetSetByCallerMagnitude(FAuraGameplayTagsManager::Get().Damage);
+	// Incoming Damage is the sum of all incoming damage types
+	float Damage = 0.f;
+	for (FGameplayTag DamageTypeTag : FAuraGameplayTagsManager::Get().DamageTypes)
+	{
+		// If value not found it returns 0.f, so it's safe to just add it without checking
+		const float DamageTypeValue = EffectSpec.GetSetByCallerMagnitude(DamageTypeTag);
+		Damage += DamageTypeValue;
+	}
 
 	//~ Block Chance
 	

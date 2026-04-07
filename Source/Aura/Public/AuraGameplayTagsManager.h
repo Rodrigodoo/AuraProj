@@ -73,15 +73,20 @@ public:
 	FGameplayTag InputTag_4;
 	//~ End - Inputs
 	
-	//~ Begin - Abilities
+	//~ Begin - Effects
 	// Effects.HitReact
 	FGameplayTag Effects_HitReact;
-	//~ End - Abilities
+	//~ End - Effects
 	
-	//~ Begin - Effects
+	//~ Begin - Damage & Damage Types
 	// Damage
 	FGameplayTag Damage;
-	//~ End - Effects
+	// Damage.Fire
+	FGameplayTag Damage_Fire;
+	
+	// Stores all Damage Types tags
+	TArray<FGameplayTag> DamageTypes;
+	//~ End - Damage & Damage Types
 	
 	/*
 	 * End - Internal references to Gameplay Tags
