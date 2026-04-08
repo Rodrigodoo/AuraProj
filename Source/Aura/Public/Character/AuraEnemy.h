@@ -10,6 +10,8 @@
 #include "AuraEnemy.generated.h"
 
 
+class AAuraAIController;
+class UBehaviorTree;
 enum class EAuraCharacterClass : uint8;
 class UWidgetComponent;
 /**
@@ -21,6 +23,11 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IAuraEnemyInterfac
 	GENERATED_BODY()
 public:
 	AAuraEnemy();
+
+	//~ Begin - ACharacter Overrides
+	// Called whenever this character gets possessed by a controller
+	virtual void PossessedBy(AController* NewController) override;
+	//~ End - ACharacter Overrides
 
 	//~ Begin - IAuraEnemyInterface
 	// Highlights the enemy
@@ -90,4 +97,14 @@ protected:
 	// Health Bar widget that hover over the character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Health Bar")
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComponent;
+	
+	// Behaviour Tree for this actor
+	// Defines actions and behaviors this actor can have
+	UPROPERTY(EditAnywhere, Category= "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+	
+	// Controller for this actor
+	// Responsible fo executing the actions this actor can make
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
 };

@@ -24,16 +24,22 @@ public:
 	virtual int32 GetCharacterLevel() const override;
 	//~ End - IAuraCombatInterface
 	
+	//~ Begin - AAuraCharacterBase Overrides
 	// Initializes the character and other components
 	// Init the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
 	// initializes the HUD and its Overlay
 	virtual void InitCharacterAndComponents() override;
+	//~ End - AAuraCharacterBase Overrides
 	
+	//~ Begin - ACharacter Overrides
 	// Called whenever this character gets possessed by a controller
 	virtual void PossessedBy(AController* NewController) override;
+	//~ End - ACharacter Overrides
 	
+	//~ Begin - APawn Overrides
 	// Called when the Player State gets replicated 
 	virtual void OnRep_PlayerState() override;
+	//~ End - APawn Overrides
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Rotation")

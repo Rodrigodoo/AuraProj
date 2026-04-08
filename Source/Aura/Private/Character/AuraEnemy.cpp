@@ -7,7 +7,10 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AI/AuraAIController.h"
 #include "Aura/Aura.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "UI/Widget/AuraUserWidget.h"
@@ -31,6 +34,26 @@ AAuraEnemy::AAuraEnemy()
 	// Create the Health Bar Widget Component
 	HealthBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("HealthBarWidgetComponent");
 	HealthBarWidgetComponent->SetupAttachment(GetRootComponent());
+}
+
+void AAuraEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
+	// AI Controllers only matter on server.
+	// Should NOT be run on clients!
+	// P.S. This check is redundant as PossessedBy only runs on server but leaving it here for educational purposes
+	if (!HasAuthority())
+	{
+		return;
+	}
+	
+	// Get reference to Aura's AI Controller
+	AuraAIController = Cast<AAuraAIController>(NewController);
+	
+	// Run the behaviour tree
+	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->GetBlackboardAsset());
+	AuraAIController->RunBehaviorTree(BehaviorTree);
 }
 
 void AAuraEnemy::BeginPlay()
