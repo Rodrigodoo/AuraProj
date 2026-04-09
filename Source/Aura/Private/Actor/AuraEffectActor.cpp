@@ -23,7 +23,7 @@ void AAuraEffectActor::BeginPlay()
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, const TSubclassOf<UGameplayEffect> GameplayEffect)
 {
 	// Check if the target actor is an Enemy, and return if effect should not be applied to it.
-	if (TargetActor->ActorHasTag(AuraGameplayTagsManager::EnemyTag) && !bApplyEffectsToEnemies)
+	if (TargetActor->ActorHasTag(ACTOR_ENEMY_TAG) && !bApplyEffectsToEnemies)
 	{
 		return;
 	}
@@ -69,7 +69,7 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, const TSubclassO
 void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 {
 	// Check if the target actor is an Enemy, and return if effect should not be applied to it.
-	if (TargetActor->ActorHasTag(AuraGameplayTagsManager::EnemyTag) && !bApplyEffectsToEnemies)
+	if (TargetActor->ActorHasTag(ACTOR_ENEMY_TAG) && !bApplyEffectsToEnemies)
 	{
 		return;
 	}
@@ -99,7 +99,7 @@ void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 {
 	// Check if the target actor is an Enemy, and return if effect should not be applied to it.
-	if (TargetActor->ActorHasTag(AuraGameplayTagsManager::EnemyTag) && !bApplyEffectsToEnemies)
+	if (TargetActor->ActorHasTag(ACTOR_ENEMY_TAG) && !bApplyEffectsToEnemies)
 	{
 		return;
 	}

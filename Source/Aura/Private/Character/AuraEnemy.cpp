@@ -60,6 +60,9 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 	// Run the behaviour tree
 	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->GetBlackboardAsset());
 	AuraAIController->RunBehaviorTree(BehaviorTree);
+	
+	// Set Enemy Type on Blackboard (Both Ranger and Elementalists are ranged)
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != EAuraCharacterClass::Warrior);
 }
 
 void AAuraEnemy::BeginPlay()
@@ -122,15 +125,9 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 {
 	// Signal if character is hit reacting
 	bHitReacting = NewCount > 0;
-	if (!bHitReacting)
-	{
-		// Leave if there are no tags	
-		GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
-		return;
-	}
-	
-	// Stun the character
-	GetCharacterMovement()->MaxWalkSpeed = 0.f;
+	// If Hit Reacting, stun the character, otherwise let it move. (Also signal the blackboard key)
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f: BaseWalkSpeed;
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void AAuraEnemy::HighlightActor()

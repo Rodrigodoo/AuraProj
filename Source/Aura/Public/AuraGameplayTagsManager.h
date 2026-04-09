@@ -4,6 +4,12 @@
 
 #include "NativeGameplayTags.h"
 
+// Tag used to signal an actor is a Player
+#define ACTOR_PlAYER_TAG "Player" 
+
+// Tag used to signal an actor is an Enemy
+#define ACTOR_ENEMY_TAG "Enemy"
+
 /**
  * Contains and manages all the Aura project's Gameplay Tags
  */
@@ -91,10 +97,4 @@ namespace AuraGameplayTagsManager
 	
 	// Stores all Damage Types tags and relates them to resistances
 	extern const TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
-	
-	// Tag used to signal an actor is an Enemy
-	static FName EnemyTag = "Enemy";
-	
-	// Tag used to signal an actor is a Player
-	static FName PlayerTag = "Player";
 }
