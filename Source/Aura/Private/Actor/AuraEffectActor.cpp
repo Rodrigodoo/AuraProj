@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTagsManager.h"
 
 
 AAuraEffectActor::AAuraEffectActor()
@@ -21,6 +22,12 @@ void AAuraEffectActor::BeginPlay()
 
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, const TSubclassOf<UGameplayEffect> GameplayEffect)
 {
+	// Check if the target actor is an Enemy, and return if effect should not be applied to it.
+	if (TargetActor->ActorHasTag(AuraGameplayTagsManager::EnemyTag) && !bApplyEffectsToEnemies)
+	{
+		return;
+	}
+	
 	// Better getter function as it will cast for the IAbilitySystemInterface, 
 	// and if it doesn't work will then look for all the actor's components to find the ASC
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor); 
@@ -51,10 +58,22 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, const TSubclassO
 		// If the effect is Infinite then store the active handle in a map for later (possible) termination
 		ActiveEffectHanles.Add(ActiveGameplayEffectHandle,TargetASC);
 	}
+
+	// If it is NOT an Infinite effect and is marked for destroy on application, then destroy it.
+	if (!bIsInfinite && bDestroyOnEffectApplication)
+	{
+		Destroy();
+	}
 }
 
 void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 {
+	// Check if the target actor is an Enemy, and return if effect should not be applied to it.
+	if (TargetActor->ActorHasTag(AuraGameplayTagsManager::EnemyTag) && !bApplyEffectsToEnemies)
+	{
+		return;
+	}
+	
 	// Check if the Instant Application Policy is set to ApplyOnOverlap
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
 	{
@@ -79,6 +98,12 @@ void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 
 void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 {
+	// Check if the target actor is an Enemy, and return if effect should not be applied to it.
+	if (TargetActor->ActorHasTag(AuraGameplayTagsManager::EnemyTag) && !bApplyEffectsToEnemies)
+	{
+		return;
+	}
+	
 	// Check if the Instant Application Policy is set to ApplyOnOverlap
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
 	{

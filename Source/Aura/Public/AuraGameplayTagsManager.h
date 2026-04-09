@@ -91,4 +91,10 @@ namespace AuraGameplayTagsManager
 	
 	// Stores all Damage Types tags and relates them to resistances
 	extern const TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+	
+	// Tag used to signal an actor is an Enemy
+	static FName EnemyTag = "Enemy";
+	
+	// Tag used to signal an actor is a Player
+	static FName PlayerTag = "Player";
 }

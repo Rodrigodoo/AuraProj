@@ -21,6 +21,12 @@ AAuraEnemy::AAuraEnemy()
 	// Set collision to block visibility
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility,ECR_Block);
 	
+	// Set up movement
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	
 	// Construct and setup the Ability System Component
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
-//#include "GameplayEffectTypes.h"
 #include "GameFramework/Actor.h"
 
 #include "AuraEffectActor.generated.h"
@@ -61,8 +60,13 @@ protected:
 	void OnEndOverlap(AActor* TargetActor);
 	
 	// Should the actor be destroyed when the effect is removed
+	// Note: Does NOT work on Infinite effects!
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
-	bool bDestroyOnEffectRemoval = false;
+	bool bDestroyOnEffectApplication = false;
+	
+	// Should the actor be destroyed when the effect is removed
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
+	bool bApplyEffectsToEnemies = false;
 	
 	//~ Begin Instant Gameplay Effect
 	// Gameplay Effect class to apply Instantly
