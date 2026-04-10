@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "Aura/Aura.h"
 #include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/AuraEnemyInterface.h"
@@ -184,7 +185,58 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 	const APawn* ControlledPawn = GetPawn<APawn>(); 
 	if (ControlledPawn && FollowTime <= ShortPressThreshold)
 	{
-		// Find the path to the location synchronously, which should find all obstacles between 
+		// Check if there is point under the cursor that is a valid navigation point
+		FHitResult NavChannelCursorHitResult;
+		GetHitResultUnderCursor(ECC_NAVIGATION, false, NavChannelCursorHitResult);
+		UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
+		if (NavChannelCursorHitResult.bBlockingHit && NavSystem)
+		{
+			// Projecting a point from the cursor impact point to the NavMesh with a larger-than-default
+			// Query Extent, so there are better chances to reach for the NavMesh and return a point,
+			// then generating a path from the pawn location to this point (only if found).
+			
+			FNavLocation ImpactPointNavLocation;
+			// NOTE: Default Query Extend = FVector(50.0f, 50.0f, 250.0f)
+			const FVector QueryingExtent = FVector(400.0f, 400.0f, 250.0f);
+			const FNavAgentProperties& NavAgentProps = GetNavAgentPropertiesRef();
+
+			// Project the point to the Navigation Mesh
+			const bool bNavLocationFound = NavSystem->ProjectPointToNavigation(NavChannelCursorHitResult.ImpactPoint, 
+				ImpactPointNavLocation, QueryingExtent, &NavAgentProps);
+			if (bNavLocationFound)
+			{
+				// If there was a valid point on the NavMesh then find the path to the location synchronously,
+				// which should find all obstacles between the character and the Impact Point.
+				// It will create navigation point for the character to follow.
+				UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(
+					this, ControlledPawn->GetActorLocation(), ImpactPointNavLocation);
+				if (NavigationPath && !NavigationPath->PathPoints.IsEmpty())
+				{
+					// Add the navigation point to the Spline
+			
+					// Start by clearing any existing points
+					Spline->ClearSplinePoints();
+			
+					// Go through all the path points and add them to the Spline
+					for (const FVector& PathPointLocation :  NavigationPath->PathPoints)
+					{
+						// Add them in World coordinates (could call AddSplineWorldPoint but this way we have one less call)
+						Spline->AddSplinePoint(PathPointLocation, ESplineCoordinateSpace::World);
+					}
+
+					// Since the CachedDestination might not be on a valid point on the NavMesh 
+					// the character might never reach it and stop running.
+					// Therefore, need to update the CachedDestination to the last valid point on the Navigation Path/Spline
+					CachedDestination = NavigationPath->PathPoints.Last();
+			
+					// Flag that the character is now auto running
+					bAutoRunning = true;
+				}
+			}
+		}
+		
+		
+		/*// Find the path to the location synchronously, which should find all obstacles between 
 		// the character and the Cached Destination.
 		// It will create navigation point for the character to follow.
 		if (UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(
@@ -201,15 +253,18 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 				// Add them in World coordinates (could call AddSplineWorldPoint but this way we have one less call)
 				Spline->AddSplinePoint(PathPointLocation, ESplineCoordinateSpace::World);
 			}
+
+			if (!NavigationPath->PathPoints.IsEmpty())
+			{
+				// Since the CachedDestination might not be on a valid point on the NavMesh 
+				// the character might never reach it and stop running.
+				// Therefore, need to update the CachedDestination to the last valid point on the Navigation Path/Spline
+				CachedDestination = NavigationPath->PathPoints.Last();
 			
-			// Since the CachedDestination might not be on a valid point on the NavMesh 
-			// the character might never reach it and stop running.
-			// Therefore, need to update the CachedDestination to the last valid point on the Navigation Path/Spline
-			CachedDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
-			
-			// Flag that the character is now auto running
-			bAutoRunning = true;
-		}
+				// Flag that the character is now auto running
+				bAutoRunning = true;
+			}
+		}*/
 	}
 	
 	// Reset follow time and targeting
