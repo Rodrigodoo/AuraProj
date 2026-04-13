@@ -19,15 +19,14 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	
 	// If the Avatar implements a combat interface, 
 	// then get the weapon's socket location to spawn the projectile
-	IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(GetAvatarActorFromActorInfo());
-	if (!CombatInterface)
+	if (!GetAvatarActorFromActorInfo()->Implements<UAuraCombatInterface>())
 	{
 		// Otherwise, for now we will not spawn the projectile
 		return;
 	}
 	
 	// Get the socket location from the interface
-	const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
+	const FVector SocketLocation = IAuraCombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
 	
 	// Get the rotation of the projectile to point at the target location
 	// Vector from socket location to target location

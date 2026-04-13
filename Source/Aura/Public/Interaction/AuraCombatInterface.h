@@ -26,7 +26,8 @@ public:
 	
 	// Retrieves the combat socket location, generally for weapons
 	// This can be used to spawn effects or actor like projectiles
-	virtual FVector GetCombatSocketLocation() const;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FVector GetCombatSocketLocation() const;
 	
 	// Updates the Warp Motion Facing Target location.
 	// This can be used to set warping motions like translation or rotation

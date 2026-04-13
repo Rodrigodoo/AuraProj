@@ -38,7 +38,7 @@ protected:
 	//~ Begin - IAuraCombatInterface overrides
 	
 	// Returns the location of the weapon's tip
-	virtual FVector GetCombatSocketLocation() const override;
+	virtual FVector GetCombatSocketLocation_Implementation() const override;
 	
 	// Return the Hit reaction montage for this character
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
