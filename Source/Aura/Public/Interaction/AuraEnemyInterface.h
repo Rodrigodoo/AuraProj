@@ -28,4 +28,12 @@ public:
 	
 	// Unhighlights the actor
 	virtual void UnHighlightActor() = 0;
+	
+	// Blueprint native event to set this enemy's combat target
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Combat")
+	void SetCombatTarget(AActor* InCombatTarget);
+	
+	// Blueprint native event to get this enemy's combat target
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Combat")
+	AActor* GetCombatTarget();
 };

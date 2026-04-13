@@ -35,6 +35,12 @@ public:
 	
 	// Unhighlights the enemy
 	virtual void UnHighlightActor() override;
+	
+	// Set this enemy's combat target
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	
+	// Get this enemy's combat target
+	virtual AActor* GetCombatTarget_Implementation() override;
 	//~ End - IAuraEnemyInterface
 	
 	//~ Begin - IAuraCombatInterface
@@ -72,6 +78,11 @@ public:
 	// Base walking speed for the character.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float LifeSpan = 5.f;
+	
+	// Target actor this character if fighting.
+	// Used to track where this character should be facing (Facing CombatTarget actor)
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
 	
 protected:
 	virtual void BeginPlay() override;
