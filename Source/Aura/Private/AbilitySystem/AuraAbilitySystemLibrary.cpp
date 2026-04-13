@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraAbilityTypes.h"
 #include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
+#include "Engine/OverlapResult.h"
 #include "Game/AuraGameModeBase.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -246,5 +247,45 @@ void UAuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& E
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		AuraGameplayEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+	}
+}
+
+void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldContextObject,
+	TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius,
+	const FVector& OriginPoint)
+{
+	// Create the collision query parameters and signal the ignored actors
+	FCollisionQueryParams SphereParams;
+	SphereParams.AddIgnoredActors(ActorsToIgnore);
+
+	// Query scene for overlapping actors
+	TArray<FOverlapResult> Overlaps;
+	if (const UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		World->OverlapMultiByObjectType(
+			Overlaps, 
+			OriginPoint, 
+			FQuat::Identity, FCollisionObjectQueryParams(FCollisionObjectQueryParams::InitType::AllDynamicObjects), 
+			FCollisionShape::MakeSphere(Radius), 
+			SphereParams);
+	
+	}
+	
+	// Register all overlapped actors on the out vector that:
+	// - Implement the AuraCombatInterface
+	// - Are NOT dead
+	for (const FOverlapResult& Overlap : Overlaps)
+	{
+		AActor* OverlappedActor = Overlap.GetActor();
+		if (!OverlappedActor)
+		{
+			continue;
+		}
+		
+		// Check if it implements the AuraCombatInterface and is not dead
+		if (OverlappedActor->Implements<UAuraCombatInterface>() && !IAuraCombatInterface::Execute_IsDead(OverlappedActor))
+		{
+			OutOverlappingActors.AddUnique(OverlappedActor);
+		}
 	}
 }

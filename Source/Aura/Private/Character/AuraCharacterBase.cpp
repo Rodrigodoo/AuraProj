@@ -67,6 +67,16 @@ void AAuraCharacterBase::Die()
 	MulticastHandleDeath();
 }
 
+bool AAuraCharacterBase::IsDead_Implementation() const
+{
+	return bIsDead;
+}
+
+AActor* AAuraCharacterBase::GetAvatar_Implementation()
+{
+	return this;
+}
+
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	// Apply ragdoll for character and weapon
@@ -83,6 +93,9 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	
 	// Begins Dissolve effect
 	Dissolve();
+	
+	// Mark the character as dead
+	bIsDead = true;
 }
 
 void AAuraCharacterBase::InitializeDefaultAttributes() const

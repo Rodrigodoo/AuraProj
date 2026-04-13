@@ -46,6 +46,12 @@ protected:
 	// Process character's death (Only on server)
 	// Drop Weapon and Ragdoll
 	virtual void Die() override;
+	
+	// Checks if this actor is dead
+	virtual bool IsDead_Implementation() const override;
+	
+	// Get a reference to this actor
+	virtual AActor* GetAvatar_Implementation() override;
 	//~ End - IAuraCombatInterface overrides
 	
 	// To process on all clients and server when character dies
@@ -120,6 +126,8 @@ protected:
 	
 	//~ End - Dissolve Effects
 	
+	// Flag to signal this character has died
+	bool bIsDead = false;
 private:
 	
 	// Abilities the character should have from the start of the game
@@ -129,4 +137,5 @@ private:
 	// Hit Ract montage to play when Character is hit
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+	
 };

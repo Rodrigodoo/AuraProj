@@ -40,4 +40,12 @@ public:
 	
 	// Method to be called when object/actor is destroyed/dies
 	virtual void Die() = 0;
+	
+	// Checks if this interface owner is dead
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool IsDead() const;
+	
+	// Get a reference to this interface owner
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	AActor* GetAvatar();
 };
