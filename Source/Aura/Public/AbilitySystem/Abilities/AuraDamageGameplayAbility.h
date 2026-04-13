@@ -15,6 +15,12 @@ class AURA_API UAuraDamageGameplayAbility : public UAuraGameplayAbilityBase
 {
 	GENERATED_BODY()
 	
+public:
+	// Causes damage to the TargetActor
+	// Goes through all available damage types to set by caller magnitude
+	UFUNCTION(BlueprintCallable)
+	void CauseDamage(AActor* TargetActor);
+	
 protected:
 	// Damage Effect class to add to the projectile
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
