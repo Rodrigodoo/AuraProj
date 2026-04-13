@@ -72,6 +72,13 @@ namespace AuraGameplayTagsManager
 		"Resistance to Physical Damage");
 	
 	/*
+	 * Abilities
+	 */
+	// Abilities.Attack
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Attack, "Abilities.Attack", 
+		"Attack Ability Tag");
+	
+	/*
 	 * Input
 	 */
 	// InputTag.LMB

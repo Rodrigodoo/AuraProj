@@ -42,7 +42,7 @@ public:
 	// Give to the ability system component's owner its startup abilities 
 	// Note: Should be called on Server
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
-	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* AbilitySystemComponent);
+	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* AbilitySystemComponent, EAuraCharacterClass CharacterClass);
 	
 	// Retrieves the Character Class Info Data Asset
 	// Note: Should be called on Server

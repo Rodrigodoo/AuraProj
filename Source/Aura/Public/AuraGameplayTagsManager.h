@@ -62,6 +62,11 @@ namespace AuraGameplayTagsManager
 	//~ End - Attributes Resistances
 	//~ End - Attributes
 	
+	//~ Begin - Abilities
+	// Abilities.Attack
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Attack);
+	//~ End - Abilities
+	
 	//~ Begin - Inputs
 	// InputTag.LMB
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_LMB);

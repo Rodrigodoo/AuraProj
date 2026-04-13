@@ -79,7 +79,7 @@ void AAuraEnemy::BeginPlay()
 	if (HasAuthority())
 	{
 		// Grant Initial Abilities
-		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
 	}
 
 	// Set the Health Bar Widget controller

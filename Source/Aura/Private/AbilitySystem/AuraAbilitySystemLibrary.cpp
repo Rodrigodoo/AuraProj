@@ -7,6 +7,7 @@
 #include "AuraAbilityTypes.h"
 #include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "Game/AuraGameModeBase.h"
+#include "Interaction/AuraCombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/HUD/AuraHUD.h"
@@ -32,7 +33,7 @@ UAuraOverlayController* UAuraAbilitySystemLibrary::GetOverlayController(const UO
 		return	nullptr;
 	}
 	
-	// Get required data to initialize a Overlay Controller
+	// Get required data to initialize an Overlay Controller
 	// Need to construct a FWidgetControllerParams (requirements):
 	// - Player Controller
 	// - Player State
@@ -83,7 +84,7 @@ UAuraAttributeMenuController* UAuraAbilitySystemLibrary::GetAttributeMenuControl
 		return	nullptr;
 	}
 	
-	// Get required data to initialize a Overlay Controller
+	// Get required data to initialize an Overlay Controller
 	// Need to construct a FWidgetControllerParams (requirements):
 	// - Player Controller
 	// - Player State
@@ -125,7 +126,7 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 	}
 	
 	// Retrieve the Character Class Info for this specific RPG Class
-	const auto [PrimaryAttributes] = CharacterClassInfoDataAsset->GetClassDefaultInfo(CharacterClass);
+	const FAuraCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfoDataAsset->GetClassDefaultInfo(CharacterClass);
 	
 	// Apply the Gameplay Effects to the provided Ability System Component
 	
@@ -136,7 +137,7 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 	FGameplayEffectContextHandle PrimaryAttributesContextHandle = AbilitySystemComponent->MakeEffectContext();
 	PrimaryAttributesContextHandle.AddSourceObject(AvatarActor);
 	const FGameplayEffectSpecHandle PrimaryAttributesSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(
-		PrimaryAttributes, 
+		ClassDefaultInfo.PrimaryAttributes, 
 		Level, 
 		PrimaryAttributesContextHandle);
 	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data.Get());
@@ -161,7 +162,7 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 }
 
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject,
-	UAbilitySystemComponent* AbilitySystemComponent)
+                                                     UAbilitySystemComponent* AbilitySystemComponent, EAuraCharacterClass CharacterClass)
 {
 	// Get Character Class Info Data Asset
 	const UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = GetCharacterClassInfoDataAsset(WorldContextObject);
@@ -171,15 +172,34 @@ void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
 		return;
 	}
 	
+	// Get the character level to initialize the Abilities at the right level
+	int32 CharacterLevel = 1;
+	if (IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(AbilitySystemComponent->GetAvatarActor()))
+	{
+		CharacterLevel = CombatInterface->GetCharacterLevel();
+	}
+	
 	// Loop  through the common abilities and apply them to the Ability System Component's owner
 	for (const TSubclassOf<UGameplayAbility> Ability : CharacterClassInfoDataAsset->CommonAbilities)
 	{
 		// Create an Ability Spec for this ability
-		FGameplayAbilitySpec AbilitySpec(Ability, 1);
+		FGameplayAbilitySpec AbilitySpec(Ability, CharacterLevel);
 		
 		// Grant the ability
 		AbilitySystemComponent->GiveAbility(AbilitySpec);
 	}
+	
+	// Go through the Character Class' specific startup abilities and apply them to the Ability System Component's owner
+	FAuraCharacterClassDefaultInfo DefaultCharacterClassInfo = CharacterClassInfoDataAsset->GetClassDefaultInfo(CharacterClass);
+	for (const TSubclassOf<UGameplayAbility> Ability : DefaultCharacterClassInfo.StartupAbilities)
+	{
+		// Create an Ability Spec for this ability
+		FGameplayAbilitySpec AbilitySpec(Ability, CharacterLevel);
+		
+		// Grant the ability
+		AbilitySystemComponent->GiveAbility(AbilitySpec);
+	}
+
 }
 
 UAuraCharacterClassInfoDataAsset* UAuraAbilitySystemLibrary::GetCharacterClassInfoDataAsset(const UObject* WorldContextObject)

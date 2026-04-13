@@ -29,8 +29,12 @@ struct FAuraCharacterClassDefaultInfo
 	
 	// Gameplay effect to set the default Primary Attributes
 	// Only Primary Attributes are class specific
-	UPROPERTY(EditAnywhere, Category = "Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TSubclassOf<UGameplayEffect> PrimaryAttributes;
+	
+	// Abilities used by this RPG Class
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 };
 
 /**
