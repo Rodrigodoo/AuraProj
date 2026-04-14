@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AuraAbilityTypes.h"
+#include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "Engine/OverlapResult.h"
 #include "Game/AuraGameModeBase.h"
@@ -288,4 +289,20 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldCo
 			OutOverlappingActors.AddUnique(OverlappedActor);
 		}
 	}
+}
+
+bool UAuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondActor)
+{
+	// If by any chance the same actor was supplied, then it is friendly
+	if (FirstActor == SecondActor)
+	{
+		return false;
+	}
+	
+	// Check if the actors are players
+	const bool bFirstIsPlayer = FirstActor->ActorHasTag(ACTOR_PlAYER_TAG);
+	const bool bSecondIsPlayer = SecondActor->ActorHasTag(ACTOR_PlAYER_TAG);
+
+	// If the actors are not both players, both enemies, or both don't have tags, then they are not friends!
+	return bFirstIsPlayer != bSecondIsPlayer;
 }
