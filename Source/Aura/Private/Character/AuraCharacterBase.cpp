@@ -77,6 +77,11 @@ AActor* AAuraCharacterBase::GetAvatar_Implementation()
 	return this;
 }
 
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation() const
+{
+	return AttackMontages;
+}
+
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	// Apply ragdoll for character and weapon

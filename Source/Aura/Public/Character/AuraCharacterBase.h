@@ -31,8 +31,7 @@ public:
 	// Initializes the character and other components
 	// Init the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
 	virtual void InitCharacterAndComponents();
-
-protected:
+	
 	virtual void BeginPlay() override;
 	
 	//~ Begin - IAuraCombatInterface overrides
@@ -52,6 +51,9 @@ protected:
 	
 	// Get a reference to this actor
 	virtual AActor* GetAvatar_Implementation() override;
+	
+	// Retrieves all attack montages used by this character
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() const override;
 	//~ End - IAuraCombatInterface overrides
 	
 	// To process on all clients and server when character dies
@@ -59,6 +61,11 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
 	
+	// Montages to be played while attacking
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<FTaggedMontage> AttackMontages;
+
+protected:
 	// Skeletal mesh of weapon used by character
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -137,5 +144,4 @@ private:
 	// Hit Ract montage to play when Character is hit
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
-	
 };
