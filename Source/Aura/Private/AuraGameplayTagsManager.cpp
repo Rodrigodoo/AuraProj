@@ -95,12 +95,18 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_4, "InputTag.4", "Input Tag for 4 key");
 	
 	/*
+	 * Effects
+	 */
+	// Effects.HitReact
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effects_HitReact, "Effects.HitReact", "Effect to be called upon hit");
+	
+	/*
 	 * Damage & Damage Types
 	 */
 	// Damage
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "Damage", "Damage");
 	// Damage.Fire
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Fire, "Damage.Fire", "ire Damage Type");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Fire, "Damage.Fire", "Fire Damage Type");
 	// Damage.Lightning
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Lightning, "Damage.Lightning", "Lightning Damage Type");
 	// Damage.Arcane
@@ -109,10 +115,14 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Physical, "Damage.Physical", "Physical Damage Type");
 	
 	/*
-	 * Effects
+	 * Montages
 	 */
-	// Effects.HitReact
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effects_HitReact, "Effects.HitReact", "Effect to be called upon hit");
+	// Montage.Attack.Weapon
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_Weapon, "Montage.Attack.Weapon", "Weapon");
+	// Montage.Attack.RightHand
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_RightHand, "Montage.Attack.RightHand", "Right Hand");
+	// Montage.Attack.LeftHand
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_LeftHand, "Montage.Attack.LeftHand", "Left Hand");
 	
 	/*
 	 * Mapping of Damage Types to Resistances

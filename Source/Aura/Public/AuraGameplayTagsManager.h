@@ -100,6 +100,15 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Physical);
 	//~ End - Damage & Damage Types
 	
+	//~ Begin - Montages
+	// Montage.Attack.Weapon
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_Weapon);
+	// Montage.Attack.RightHand
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_RightHand);
+	// Montage.Attack.LeftHand
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_LeftHand);
+	//~ End - Montages 
+	
 	// Stores all Damage Types tags and relates them to resistances
 	extern const TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 }
