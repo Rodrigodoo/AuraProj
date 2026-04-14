@@ -72,7 +72,7 @@ public:
 	bool bHitReacting = false;
 	
 	// Base walking speed for the character.
-	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float BaseWalkSpeed = 250.f;
 	
 	// Base walking speed for the character.
