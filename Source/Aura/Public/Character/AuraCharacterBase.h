@@ -36,8 +36,8 @@ public:
 	
 	//~ Begin - IAuraCombatInterface overrides
 	
-	// Returns the location of the weapon's tip
-	virtual FVector GetCombatSocketLocation_Implementation() const override;
+	// Returns the location of the combat socket depending on the montage being played
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const override;
 	
 	// Return the Hit reaction montage for this character
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
@@ -67,14 +67,15 @@ public:
 
 protected:
 	// Skeletal mesh of weapon used by character
+	// Note: Not all character may have a weapon so always check validity!
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 	
-	// The weapon's tip socket name
-	// This will be used to spawn effects or actors like projectiles
+	// Map to associate montage gameplay tags with socket names
+	// This will be used by GetCombatSocketLocation_Implementation
 	UPROPERTY(EditAnywhere, Category = "Combat")
-	FName WeaponTipSocketName;
-	
+	TMap<FGameplayTag,FName> MontageTagsToSocketName;
+
 	// Pointer to the character's Ability System Component (If there is one)
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -136,6 +137,9 @@ protected:
 	// Flag to signal this character has died
 	bool bIsDead = false;
 private:
+	// Finds the socket name first in the Character's mesh, then on the weapon if it exists
+	// If no socket was found returns the Mesh Component Transform (following GetSocketLocation logic)
+	FVector FindSocketLocation(FName SocketName) const;
 	
 	// Abilities the character should have from the start of the game
 	UPROPERTY(EditAnywhere, Category = "Abilities")

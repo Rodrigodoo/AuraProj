@@ -25,8 +25,9 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		return;
 	}
 	
-	// Get the socket location from the interface
-	const FVector SocketLocation = IAuraCombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
+	// Get the socket location from the interface (for the weapon)
+	const FVector SocketLocation = IAuraCombatInterface::Execute_GetCombatSocketLocation(
+		GetAvatarActorFromActorInfo(), AuraGameplayTagsManager::Montage_Attack_Weapon);
 	
 	// Get the rotation of the projectile to point at the target location
 	// Vector from socket location to target location

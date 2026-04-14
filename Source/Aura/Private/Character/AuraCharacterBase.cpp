@@ -44,13 +44,18 @@ void AAuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation() const
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const
 {
-	check(Weapon);
-	
-	// Returns the socket location (world coordinates) of the weapon's tip
-	// If not found will return the component transform (world coordinates)
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	// Find the correct socket name for the montage being played
+	if (MontageTagsToSocketName.Contains(MontageTag))
+	{
+		// Returns the socket location (world coordinates) of the combat point for the montage being played
+		// If all failed returns the Mesh Component Transform (following GetSocketLocation)
+		return FindSocketLocation(*MontageTagsToSocketName.Find(MontageTag));
+	}
+
+	// If all failed, returns the Mesh Component Transform (following GetSocketLocation logic)
+	return GetMesh()->GetComponentTransform().GetTranslation();
 }
 
 UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
@@ -61,8 +66,11 @@ UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
 void AAuraCharacterBase::Die()
 {
 	// Drop weapon (this is replicated)
-	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld,true));
-	
+	if (IsValid(Weapon))
+	{
+		Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld,true));
+	}
+
 	// Call on all clients
 	MulticastHandleDeath();
 }
@@ -85,10 +93,13 @@ TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation() co
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	// Apply ragdoll for character and weapon
-	Weapon->SetSimulatePhysics(true);
-	Weapon->SetEnableGravity(true);
-	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	
+	if (IsValid(Weapon))
+	{
+		Weapon->SetSimulatePhysics(true);
+		Weapon->SetEnableGravity(true);
+		Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	}
+
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetEnableGravity(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
@@ -160,7 +171,7 @@ void AAuraCharacterBase::Dissolve()
 		StartDissolveTimeline(DynamicMaterialInstance);
 	}
 	// Weapon
-	if (IsValid(WeaponDissolveMaterialInstance))
+	if (IsValid(Weapon) && IsValid(WeaponDissolveMaterialInstance))
 	{
 		// Create a dynamic material instance and set it on the weapon
 		UMaterialInstanceDynamic* DynamicMaterialInstance = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
@@ -169,4 +180,22 @@ void AAuraCharacterBase::Dissolve()
 		// Start the timeline
 		StartWeaponDissolveTimeline(DynamicMaterialInstance);
 	}
+}
+
+FVector AAuraCharacterBase::FindSocketLocation(const FName SocketName) const
+{
+	// If there is a mesh, search for the provided socket
+	if (GetMesh()->DoesSocketExist(SocketName))
+	{
+		return GetMesh()->GetSocketLocation(SocketName);
+	}
+	
+	// If the socket was not on the mesh then search in the weapon, if it exists
+	if (IsValid(Weapon) && Weapon->DoesSocketExist(SocketName))
+	{
+		return Weapon->GetSocketLocation(SocketName);
+	}
+	
+	// If all failed, returns the Mesh Component Transform (following GetSocketLocation logic)
+	return GetMesh()->GetComponentTransform().GetTranslation();
 }

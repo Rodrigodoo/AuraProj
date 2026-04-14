@@ -39,10 +39,10 @@ public:
 	// Get the current level of the actor
 	virtual int32 GetCharacterLevel() const;
 	
-	// Retrieves the combat socket location, generally for weapons
-	// This can be used to spawn effects or actor like projectiles
+	// Retrieves the combat socket location, generally for weapons, but depends on the montage being played
+	// This can be used to spawn effects, actor like projectiles, or apply damage.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	FVector GetCombatSocketLocation() const;
+	FVector GetCombatSocketLocation(const FGameplayTag& MontageTag) const;
 	
 	// Updates the Warp Motion Facing Target location.
 	// This can be used to set warping motions like translation or rotation
