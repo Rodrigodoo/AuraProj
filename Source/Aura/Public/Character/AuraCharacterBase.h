@@ -61,7 +61,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
 	
-	// Montages to be played while attacking
+	// Montages to be played while attacking and which socket to use for said attack
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
 
@@ -70,11 +70,6 @@ protected:
 	// Note: Not all character may have a weapon so always check validity!
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
-	
-	// Map to associate montage gameplay tags with socket names
-	// This will be used by GetCombatSocketLocation_Implementation
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	TMap<FGameplayTag,FName> MontageTagsToSocketName;
 
 	// Pointer to the character's Ability System Component (If there is one)
 	UPROPERTY()

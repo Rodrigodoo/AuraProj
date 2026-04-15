@@ -9,16 +9,23 @@
 
 // Structure to associate a montage to a GameplayTag
 // This will be used to decide what montages are played and which tags are triggered on those montages
+// there will also be a socket associated with this montage to 
 USTRUCT(blueprintType)
 struct FTaggedMontage
 {
 	GENERATED_BODY()
 	
+	// Montage to play
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TaggedMontage")
 	UAnimMontage* Montage = nullptr;
 	
+	// Montage tag
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TaggedMontage")
 	FGameplayTag MontageTag = FGameplayTag();
+	
+	// Socket to be used by this montage
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TaggedMontage")
+	FName SocketName;
 };
 
 // This class does not need to be modified.

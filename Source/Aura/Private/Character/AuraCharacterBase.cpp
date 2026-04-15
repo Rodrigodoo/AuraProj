@@ -47,11 +47,15 @@ void AAuraCharacterBase::BeginPlay()
 FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const
 {
 	// Find the correct socket name for the montage being played
-	if (MontageTagsToSocketName.Contains(MontageTag))
+	auto MontageTagMatches = [&MontageTag](const FTaggedMontage& InTaggedMontage)
+	{
+		return InTaggedMontage.MontageTag.MatchesTagExact(MontageTag);
+	};
+	if (const FTaggedMontage* TaggedMontage = AttackMontages.FindByPredicate(MontageTagMatches))
 	{
 		// Returns the socket location (world coordinates) of the combat point for the montage being played
 		// If all failed returns the Mesh Component Transform (following GetSocketLocation)
-		return FindSocketLocation(*MontageTagsToSocketName.Find(MontageTag));
+		return FindSocketLocation(TaggedMontage->SocketName);
 	}
 
 	// If all failed, returns the Mesh Component Transform (following GetSocketLocation logic)
