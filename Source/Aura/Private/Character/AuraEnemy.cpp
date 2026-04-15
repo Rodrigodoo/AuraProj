@@ -180,6 +180,13 @@ int32 AAuraEnemy::GetCharacterLevel() const
 
 void AAuraEnemy::Die()
 {
+	
+	// Stop the behavior tree
+	if (AuraAIController)
+	{
+		AuraAIController->GetBrainComponent()->StopLogic(TEXT("Died!"));
+	}
+
 	// Establish Life Span
 	SetLifeSpan(LifeSpan);
 	

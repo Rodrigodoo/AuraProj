@@ -11,6 +11,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 AAuraProjectile::AAuraProjectile()
 {
@@ -75,6 +76,24 @@ void AAuraProjectile::Destroyed()
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                       UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	AActor* Instigator = GetInstigator();
+	if (!IsValid(Instigator))
+	{
+		// If the Instigator is invalid, destroy this projectile (without causing damage or executing the VFX/SFX).
+		// NOTE: This handles the case when Destroy() has already being called on the Instigator (we currently set
+		// a brief lifespan on death for enemies), so it's either pending kill or null.
+		// FIXME: Find a way to allow for a projectile with a dead Instigator to do damage.
+		// Currently, the Instigator is being used for friendly fire validation.
+		bHit = true;
+		Destroy();
+		return;
+	}
+	// Ignore the Instigator if it's hitting hitself and prevent friendly fire
+	if (OtherActor == Instigator || !UAuraAbilitySystemLibrary::IsNotFriend(OtherActor, Instigator))
+	{
+		return;
+	}
+	
 	// If the causer of the effect is hitting itself, ignore!
 	if (DamageEffectSpecHandle.Data.IsValid() && 
 		OtherActor == DamageEffectSpecHandle.Data.Get()->GetEffectContext().GetEffectCauser())
@@ -91,7 +110,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 
 	// If we are the server
-	if (HasAuthority())
+	if (HasAuthority() && DamageEffectSpecHandle != nullptr)
 	{
 		// If the other actor as an ASC then apply the Gameplay Effect to it
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))

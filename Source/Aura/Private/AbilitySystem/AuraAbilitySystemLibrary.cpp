@@ -299,10 +299,12 @@ bool UAuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondAc
 		return false;
 	}
 	
-	// Check if the actors are players
-	const bool bFirstIsPlayer = FirstActor->ActorHasTag(ACTOR_PlAYER_TAG);
-	const bool bSecondIsPlayer = SecondActor->ActorHasTag(ACTOR_PlAYER_TAG);
-
-	// If the actors are not both players, both enemies, or both don't have tags, then they are not friends!
-	return bFirstIsPlayer != bSecondIsPlayer;
+	// Check if the actors are players or enemies
+	const bool bBothArePlayers = FirstActor->ActorHasTag(ACTOR_PlAYER_TAG) && SecondActor->ActorHasTag(ACTOR_PlAYER_TAG);
+	const bool bBothAreEnemies = FirstActor->ActorHasTag(ACTOR_ENEMY_TAG) && SecondActor->ActorHasTag(ACTOR_ENEMY_TAG);
+	const bool bFriends = bBothArePlayers || bBothAreEnemies;
+	
+	// If the actors are not both players or both enemies, then they are not friends!
+	// This encompasses the case where they both do not have tags (they will be considered hostile)
+	return !bFriends;
 }
