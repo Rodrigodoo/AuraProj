@@ -94,6 +94,18 @@ TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation() co
 	return AttackMontages;
 }
 
+bool AAuraCharacterBase::GetRandomAttackMontage_Implementation(FTaggedMontage& RandomMontage) const
+{
+	if (AttackMontages.IsEmpty())
+	{
+		return false;
+	}
+	
+	// Get a random TaggedMontage struct from the array
+	RandomMontage = AttackMontages[FMath::RandRange(0, AttackMontages.Num() - 1)];
+	return true;
+}
+
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	// Apply ragdoll for character and weapon

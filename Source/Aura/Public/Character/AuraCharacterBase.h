@@ -54,6 +54,9 @@ public:
 	
 	// Retrieves all attack montages used by this character
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() const override;
+	
+	// Retrieves a random attack montage used by this character
+	virtual bool GetRandomAttackMontage_Implementation(FTaggedMontage& RandomMontage) const override;
 	//~ End - IAuraCombatInterface overrides
 	
 	// To process on all clients and server when character dies

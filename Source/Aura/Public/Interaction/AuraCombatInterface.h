@@ -74,4 +74,9 @@ public:
 	// Retrieves all attack montages used by this actor
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	TArray<FTaggedMontage> GetAttackMontages() const;
+	
+	// Retrieves a random attack montage used by this actor
+	// Returns true if a valid montage was found
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool GetRandomAttackMontage(FTaggedMontage& RandomMontage) const;
 };
