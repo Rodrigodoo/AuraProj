@@ -55,7 +55,6 @@ void AAuraProjectile::BeginPlay()
 	
 	// Spawn the sound attached to the root component and track it in FlyingAudioComponent
 	// This sound will stop when the attached component is destroyed
-	check(FlyingSound) // If it's not valid the audio component will be null
 	UGameplayStatics::SpawnSoundAttached(FlyingSound, GetRootComponent(), NAME_None, 
 		FVector::Zero(), FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, true);
 }
@@ -76,8 +75,8 @@ void AAuraProjectile::Destroyed()
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                       UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	AActor* Instigator = GetInstigator();
-	if (!IsValid(Instigator))
+	AActor* ProjectileInstigator = GetInstigator();
+	if (!IsValid(ProjectileInstigator))
 	{
 		// If the Instigator is invalid, destroy this projectile (without causing damage or executing the VFX/SFX).
 		// NOTE: This handles the case when Destroy() has already being called on the Instigator (we currently set
@@ -89,7 +88,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		return;
 	}
 	// Ignore the Instigator if it's hitting hitself and prevent friendly fire
-	if (OtherActor == Instigator || !UAuraAbilitySystemLibrary::IsNotFriend(OtherActor, Instigator))
+	if (OtherActor == ProjectileInstigator || !UAuraAbilitySystemLibrary::IsNotFriend(OtherActor, ProjectileInstigator))
 	{
 		return;
 	}

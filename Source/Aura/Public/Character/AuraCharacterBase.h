@@ -71,7 +71,7 @@ public:
 protected:
 	// Skeletal mesh of weapon used by character
 	// Note: Not all character may have a weapon so always check validity!
-	UPROPERTY(EditAnywhere, Category = "Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	// Pointer to the character's Ability System Component (If there is one)
