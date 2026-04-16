@@ -121,7 +121,11 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block); // Make the mesh collide with the world
 	
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Disable capsule collision
+	// Disable capsule collision
+	// For some just disabling the capsule collision was making the health bar on enemies just fall on the floor
+	// This might warrant some more investigation
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block); 
 	
 	// Begins Dissolve effect
 	Dissolve();

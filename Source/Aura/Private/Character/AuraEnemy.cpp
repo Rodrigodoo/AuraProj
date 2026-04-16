@@ -180,8 +180,7 @@ int32 AAuraEnemy::GetCharacterLevel() const
 
 void AAuraEnemy::Die()
 {
-	
-	// Stop the behavior tree
+	// Stop the behavior tree when dead
 	if (AuraAIController)
 	{
 		AuraAIController->GetBrainComponent()->StopLogic(TEXT("Died!"));

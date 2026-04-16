@@ -87,15 +87,10 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		Destroy();
 		return;
 	}
-	// Ignore the Instigator if it's hitting hitself and prevent friendly fire
-	if (OtherActor == ProjectileInstigator || !UAuraAbilitySystemLibrary::IsNotFriend(OtherActor, ProjectileInstigator))
-	{
-		return;
-	}
-	
-	// If the causer of the effect is hitting itself, ignore!
-	if (DamageEffectSpecHandle.Data.IsValid() && 
-		OtherActor == DamageEffectSpecHandle.Data.Get()->GetEffectContext().GetEffectCauser())
+	// If the causer of the effect is invalid, is trying to hit itself, or it's trying to do friendly fire, then ignore!
+	if (!DamageEffectSpecHandle.Data.IsValid() 
+		|| OtherActor == DamageEffectSpecHandle.Data.Get()->GetEffectContext().GetEffectCauser() 
+		|| !UAuraAbilitySystemLibrary::IsNotFriend(OtherActor, ProjectileInstigator))
 	{
 		return;
 	}
@@ -109,7 +104,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 
 	// If we are the server
-	if (HasAuthority() && DamageEffectSpecHandle != nullptr)
+	if (HasAuthority())
 	{
 		// If the other actor as an ASC then apply the Gameplay Effect to it
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
