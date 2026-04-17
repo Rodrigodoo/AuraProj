@@ -56,8 +56,13 @@ public:
 	// Retrieves all attack montages used by this character
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() const override;
 	
-	// Retrieves a random attack montage used by this character
-	virtual bool GetRandomAttackMontage_Implementation(FTaggedMontage& RandomMontage) const override;
+	// Finds a random attack montage used by this character
+	// Returns true if a valid attack montage was found
+	virtual bool FindRandomAttackMontage_Implementation(FTaggedMontage& RandomMontage) const override;
+	
+	// Finds the attack montage that uses the provided montage tag
+	// Returns true if a valid attack montage was found
+	virtual bool FindTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag, FTaggedMontage& OutTaggedMontage) const override;
 	
 	// Retrieves the blood effect for this character
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;

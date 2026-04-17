@@ -47,17 +47,16 @@ void AAuraCharacterBase::BeginPlay()
 FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const
 {
 	// Find the correct socket name for the montage being played
-	auto MontageTagMatches = [&MontageTag](const FTaggedMontage& InTaggedMontage)
+	for (const FTaggedMontage& TaggedMontage : AttackMontages)
 	{
-		return InTaggedMontage.MontageTag.MatchesTagExact(MontageTag);
-	};
-	if (const FTaggedMontage* TaggedMontage = AttackMontages.FindByPredicate(MontageTagMatches))
-	{
-		// Returns the socket location (world coordinates) of the combat point for the montage being played
-		// If all failed returns the Mesh Component Transform (following GetSocketLocation)
-		return FindSocketLocation(TaggedMontage->SocketName);
+		if (TaggedMontage.MontageTag.MatchesTagExact(MontageTag))
+		{
+			// If found, returns the socket location (world coordinates) of the combat point for the montage being played
+			// If all failed returns the Mesh Component Transform (following GetSocketLocation)
+			return FindSocketLocation(TaggedMontage.SocketName);
+		}
 	}
-
+	
 	// If all failed, returns the Mesh Component Transform (following GetSocketLocation logic)
 	return GetMesh()->GetComponentTransform().GetTranslation();
 }
@@ -94,7 +93,7 @@ TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation() co
 	return AttackMontages;
 }
 
-bool AAuraCharacterBase::GetRandomAttackMontage_Implementation(FTaggedMontage& RandomMontage) const
+bool AAuraCharacterBase::FindRandomAttackMontage_Implementation(FTaggedMontage& RandomMontage) const
 {
 	if (AttackMontages.IsEmpty())
 	{
@@ -104,6 +103,25 @@ bool AAuraCharacterBase::GetRandomAttackMontage_Implementation(FTaggedMontage& R
 	// Get a random TaggedMontage struct from the array
 	RandomMontage = AttackMontages[FMath::RandRange(0, AttackMontages.Num() - 1)];
 	return true;
+}
+
+bool AAuraCharacterBase::FindTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag,
+                                                               FTaggedMontage& OutTaggedMontage) const
+{
+	// Find the correct TaggedMontage by montage tag
+	for (const FTaggedMontage& TaggedMontage : AttackMontages)
+	{
+		if (TaggedMontage.MontageTag.MatchesTagExact(MontageTag))
+		{
+			// If a valid TaggedMontage was found then return it
+			OutTaggedMontage = TaggedMontage;
+			return true;
+		}
+	}
+	
+	// If none was found return an empty struct
+	OutTaggedMontage = FTaggedMontage();
+	return false;
 }
 
 UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()

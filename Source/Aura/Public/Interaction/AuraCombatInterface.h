@@ -83,7 +83,12 @@ public:
 	// Retrieves a random attack montage used by this actor
 	// Returns true if a valid montage was found
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	bool GetRandomAttackMontage(FTaggedMontage& RandomMontage) const;
+	bool FindRandomAttackMontage(FTaggedMontage& RandomMontage) const;
+	
+	// Retrieves the tagged montage that uses the provided montage tag
+	// Returns true if a valid montage was found
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool FindTaggedMontageByTag(const FGameplayTag& MontageTag, FTaggedMontage& OutTaggedMontage) const;
 	
 	// Retrieves the Blood Effect for this actor
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
