@@ -106,6 +106,11 @@ bool AAuraCharacterBase::GetRandomAttackMontage_Implementation(FTaggedMontage& R
 	return true;
 }
 
+UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	// Apply ragdoll for character and weapon

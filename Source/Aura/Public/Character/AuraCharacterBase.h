@@ -8,6 +8,7 @@
 #include "Interaction/AuraCombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
 class UAbilitySystemComponent;
@@ -57,6 +58,9 @@ public:
 	
 	// Retrieves a random attack montage used by this character
 	virtual bool GetRandomAttackMontage_Implementation(FTaggedMontage& RandomMontage) const override;
+	
+	// Retrieves the blood effect for this character
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	//~ End - IAuraCombatInterface overrides
 	
 	// To process on all clients and server when character dies
@@ -64,7 +68,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
 	
-	// Montages to be played while attacking and which socket to use for said attack
+	// Montages to be played while attacking, which socket to use for said attack and what sound to play on impact.
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
 
@@ -134,6 +138,10 @@ protected:
 	
 	// Flag to signal this character has died
 	bool bIsDead = false;
+	
+	// Blood effect to be spawned when taking damage
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UNiagaraSystem> BloodEffect;
 private:
 	// Finds the socket name first in the Character's mesh, then on the weapon if it exists
 	// If no socket was found returns the Mesh Component Transform (following GetSocketLocation logic)

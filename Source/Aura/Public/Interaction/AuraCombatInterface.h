@@ -7,9 +7,10 @@
 #include "UObject/Interface.h"
 #include "AuraCombatInterface.generated.h"
 
-// Structure to associate a montage to a GameplayTag
-// This will be used to decide what montages are played and which tags are triggered on those montages
-// there will also be a socket associated with this montage to 
+class UNiagaraSystem;
+// Structure to associate a Montage info to a GameplayTag
+// This will be used to decide what montages are played, which sockets are used, sounds to be played,
+// and which tags are going to trigger those montages.
 USTRUCT(blueprintType)
 struct FTaggedMontage
 {
@@ -25,7 +26,11 @@ struct FTaggedMontage
 	
 	// Socket to be used by this montage
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TaggedMontage")
-	FName SocketName;
+	FName SocketName = NAME_None;
+	
+	// Sound to be played on impact caused by this montage
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "TaggedMontage")
+	USoundBase* ImpactSound = nullptr;
 };
 
 // This class does not need to be modified.
@@ -79,4 +84,8 @@ public:
 	// Returns true if a valid montage was found
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool GetRandomAttackMontage(FTaggedMontage& RandomMontage) const;
+	
+	// Retrieves the Blood Effect for this actor
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UNiagaraSystem* GetBloodEffect();
 };
