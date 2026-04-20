@@ -252,8 +252,8 @@ void UAuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& E
 }
 
 void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldContextObject,
-	TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius,
-	const FVector& OriginPoint)
+                                                          TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius,
+                                                          const FVector& OriginPoint, const bool DebugSphere /*= false*/)
 {
 	// Create the collision query parameters and signal the ignored actors
 	FCollisionQueryParams SphereParams;
@@ -270,6 +270,11 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldCo
 			FCollisionShape::MakeSphere(Radius), 
 			SphereParams);
 	
+		// If there is a need to debug the testing region
+		if (DebugSphere)
+		{
+			DrawDebugSphere(World, OriginPoint, Radius,12,FColor::Red,false, 3.f);
+		}
 	}
 	
 	// Register all overlapped actors on the out vector that:

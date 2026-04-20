@@ -123,6 +123,10 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_RightHand, "Montage.Attack.RightHand", "Right Hand Attack Montage");
 	// Montage.Attack.LeftHand
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_LeftHand, "Montage.Attack.LeftHand", "Left Hand Attack Montage");
+	// Montage.Attack.RightTailSwipe
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_RightTailSwipe, "Montage.Attack.RightTailSwipe", "Right Tail Attack Montage");
+	// Montage.Attack.LeftTailSwipe
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_LeftTailSwipe, "Montage.Attack.LeftTailSwipe", "Left Tail Attack Montage");
 	
 	/*
 	 * Mapping of Damage Types to Resistances

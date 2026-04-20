@@ -36,13 +36,14 @@ public:
 	// Initializes the Default Attributes relating to this RPG Class
 	// It reads this information from the UAuraCharacterClassInfoDataAsset stored in the AuraGameMode 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
-	static void InitializeDefaultAttributes(const UObject* WorldContextObject, EAuraCharacterClass CharacterClass, float Level, UAbilitySystemComponent*
-	                                        AbilitySystemComponent);
+	static void InitializeDefaultAttributes(const UObject* WorldContextObject, EAuraCharacterClass CharacterClass, 
+		float Level, UAbilitySystemComponent*AbilitySystemComponent);
 	
 	// Give to the ability system component's owner its startup abilities 
 	// Note: Should be called on Server
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
-	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* AbilitySystemComponent, EAuraCharacterClass CharacterClass);
+	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* AbilitySystemComponent, 
+		EAuraCharacterClass CharacterClass);
 	
 	// Retrieves the Character Class Info Data Asset
 	// Note: Should be called on Server
@@ -67,7 +68,8 @@ public:
 	
 	// Searches for live players within a certain radius from an origin point
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
-	static void GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& OriginPoint);
+	static void GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, 
+		const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& OriginPoint, bool DebugSphere = false);
 	
 	// Checks if the actors are not friendly towards each-other
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")

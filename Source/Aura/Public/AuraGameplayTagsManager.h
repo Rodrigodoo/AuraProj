@@ -107,6 +107,10 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_RightHand);
 	// Montage.Attack.LeftHand
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_LeftHand);
+	// Montage.Attack.RightTailSwipe
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_RightTailSwipe);
+	// Montage.Attack.LeftTailSwipe
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_LeftTailSwipe);
 	//~ End - Montages 
 	
 	// Stores all Damage Types tags and relates them to resistances
