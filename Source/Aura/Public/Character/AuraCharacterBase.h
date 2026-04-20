@@ -147,6 +147,10 @@ protected:
 	// Blood effect to be spawned when taking damage
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<UNiagaraSystem> BloodEffect;
+	
+	// Sound to be played when character dies
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<USoundBase> DeathSound;
 private:
 	// Finds the socket name first in the Character's mesh, then on the weapon if it exists
 	// If no socket was found returns the Mesh Component Transform (following GetSocketLocation logic)

@@ -7,6 +7,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -131,6 +132,9 @@ UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
+	// Play death sound
+	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
+	
 	// Apply ragdoll for character and weapon
 	if (IsValid(Weapon))
 	{
