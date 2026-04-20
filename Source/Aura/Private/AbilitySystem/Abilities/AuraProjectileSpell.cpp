@@ -9,7 +9,7 @@
 #include "Actor/AuraProjectile.h"
 #include "Interaction/AuraCombatInterface.h"
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& MontageTag)
 {
 	// If we are not on the server then move along.
 	if (!GetAvatarActorFromActorInfo()->HasAuthority())
@@ -25,9 +25,9 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		return;
 	}
 	
-	// Get the socket location from the interface (for the weapon)
+	// Get the socket location from the interface (for the montage playing)
 	const FVector SocketLocation = IAuraCombatInterface::Execute_GetCombatSocketLocation(
-		GetAvatarActorFromActorInfo(), AuraGameplayTagsManager::Montage_Attack_Weapon);
+		GetAvatarActorFromActorInfo(), MontageTag);
 	
 	// Get the rotation of the projectile to point at the target location
 	// Vector from socket location to target location
