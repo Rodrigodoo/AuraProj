@@ -38,4 +38,9 @@ public:
 	// Degree of spread for spawning minions (minions will be spawn in front of the caster in area limited by this spread)
 	UPROPERTY(EditAnywhere, Category = "Summoning")
 	float SpawnSpread = 90.f;
+	
+private:
+	// Internal method to guarantee a valid spawn location 
+	// This is done be casting a line trace from the sky to below the SpawnLocation
+	void SetValidSpawnLocation(FVector& SpawnLocation) const;
 };

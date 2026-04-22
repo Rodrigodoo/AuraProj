@@ -5,7 +5,6 @@
 
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 {
@@ -19,16 +18,20 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 	// Location to Spawn around the forward vector
 	TArray<FVector> SpawnLocations;
 	
+	// Lambda to store the spawn locations
+	auto AddSpawnLocation = [&](const FVector& SpawnDirection)
+	{
+		FVector SpawnLocation = UAuraAbilitySystemLibrary::GetRandomLocationInLine(
+			CasterLocation, SpawnDirection, MinSpawnDistance, MaxSpawnDistance);
+		SetValidSpawnLocation(SpawnLocation);
+		SpawnLocations.Add(SpawnLocation);
+	};
+	
 	// If Odd (Spawn first in the forward vector then around it until the spread limit)
 	if (NumMinionsToSpawn % 2)
 	{
-		// Spawn in random location Forward Vector
-		UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(),
-		CasterLocation, CasterLocation + CasterForwardVector * MaxSpawnDistance, 4.f, FColor::Blue, 3.f);
-		FVector SpawnLocation = UAuraAbilitySystemLibrary::GetRandomLocationInLine(
-			CasterLocation, CasterForwardVector, MinSpawnDistance, MaxSpawnDistance);
-		DrawDebugSphere(GetWorld(), SpawnLocation, 15.f, 12, FColor::Cyan, false, 3.f);
-		SpawnLocations.Add(SpawnLocation);
+		// Spawn in random location in the Forward Vector
+		AddSpawnLocation(CasterForwardVector);
 		
 		// Spawn the remaining minions (using safe divide as there might only be one minion)
 		const float DeltaSpread = UKismetMathLibrary::SafeDivide(SpawnSpread, (NumMinionsToSpawn - 1));
@@ -39,22 +42,10 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 			const float DeltaAngle = DeltaSpread + DeltaSpread * i;
 			
 			// Spawn in a random location in the Right Direction
-			const FVector SpawnDirectionRight = CasterForwardVector.RotateAngleAxis(DeltaAngle, FVector::UpVector);
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(),
-			CasterLocation, CasterLocation + SpawnDirectionRight * MaxSpawnDistance, 4.f, FColor::Blue, 3.f);
-			SpawnLocation = UAuraAbilitySystemLibrary::GetRandomLocationInLine(
-			CasterLocation, SpawnDirectionRight, MinSpawnDistance, MaxSpawnDistance);
-			DrawDebugSphere(GetWorld(), SpawnLocation, 15.f, 12, FColor::Cyan, false, 3.f);
-			SpawnLocations.Add(SpawnLocation);
+			AddSpawnLocation(CasterForwardVector.RotateAngleAxis(DeltaAngle, FVector::UpVector));
 			
 			// Spawn in a random location in the Left Direction
-			const FVector SpawnDirectionLeft = CasterForwardVector.RotateAngleAxis(-DeltaAngle, FVector::UpVector);
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(),
-			CasterLocation, CasterLocation + SpawnDirectionLeft * MaxSpawnDistance, 4.f, FColor::Blue, 3.f);
-			SpawnLocation = UAuraAbilitySystemLibrary::GetRandomLocationInLine(
-			CasterLocation, SpawnDirectionLeft, MinSpawnDistance, MaxSpawnDistance);
-			DrawDebugSphere(GetWorld(), SpawnLocation, 15.f, 12, FColor::Cyan, false, 3.f);
-			SpawnLocations.Add(SpawnLocation);
+			AddSpawnLocation(CasterForwardVector.RotateAngleAxis(-DeltaAngle, FVector::UpVector));
 		}
 	}
 	else // If even (Spawn around the forward vector it until the spread limit - will not spawn on the forward vector)
@@ -64,28 +55,31 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 		const float NumMinionsToSpawnOnEachSide = NumMinionsToSpawn / 2;
 		for (int32 i = 0; i < NumMinionsToSpawnOnEachSide; i++)
 		{
-			FVector SpawnLocation;
-
 			// Angle from Forward vector to rotate the spawn direction
 			const float DeltaAngle = DeltaSpread + DeltaSpread * i;
-			const FVector SpawnDirectionRight = CasterForwardVector.RotateAngleAxis(DeltaAngle, FVector::UpVector);
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(),
-			CasterLocation, CasterLocation + SpawnDirectionRight * MaxSpawnDistance, 4.f, FColor::Blue, 3.f);
-			SpawnLocation = UAuraAbilitySystemLibrary::GetRandomLocationInLine(
-			CasterLocation, SpawnDirectionRight, MinSpawnDistance, MaxSpawnDistance);
-			DrawDebugSphere(GetWorld(), SpawnLocation, 15.f, 12, FColor::Cyan, false, 3.f);
-			SpawnLocations.Add(SpawnLocation);
 			
-			const FVector SpawnDirectionLeft = CasterForwardVector.RotateAngleAxis(-DeltaAngle, FVector::UpVector);
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(),
-			CasterLocation, CasterLocation + SpawnDirectionLeft * MaxSpawnDistance, 4.f, FColor::Blue, 3.f);
-			SpawnLocation = UAuraAbilitySystemLibrary::GetRandomLocationInLine(
-			CasterLocation, SpawnDirectionLeft, MinSpawnDistance, MaxSpawnDistance);
-			DrawDebugSphere(GetWorld(), SpawnLocation, 15.f, 12, FColor::Cyan, false, 3.f);
-			SpawnLocations.Add(SpawnLocation);
+			// Spawn in a random location in the Right Direction
+			AddSpawnLocation(CasterForwardVector.RotateAngleAxis(DeltaAngle, FVector::UpVector));
+			
+			// Spawn in a random location in the Left Direction
+			AddSpawnLocation(CasterForwardVector.RotateAngleAxis(-DeltaAngle, FVector::UpVector));
 		}
 	}
 	
 	return SpawnLocations;
+}
+
+void UAuraSummonAbility::SetValidSpawnLocation(FVector& SpawnLocation) const
+{
+	// Do a line trace from sky to below the spawn location
+	FHitResult HitResult;
+	GetWorld()->LineTraceSingleByChannel(HitResult, 
+		SpawnLocation + FVector::UpVector * 400.f, 
+		SpawnLocation - FVector::UpVector * 400.f, 
+		ECC_Visibility);
 	
+	if (HitResult.bBlockingHit)
+	{
+		SpawnLocation = HitResult.ImpactPoint;
+	}
 }
