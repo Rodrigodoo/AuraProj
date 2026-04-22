@@ -18,6 +18,9 @@
 
 AAuraEnemy::AAuraEnemy()
 {
+	// Mark enemies to always be possessed when spawned
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	
 	// Set collision to block visibility
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility,ECR_Block);
 	

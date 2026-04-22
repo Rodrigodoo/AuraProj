@@ -16,8 +16,12 @@ class AURA_API UAuraSummonAbility : public UAuraGameplayAbilityBase
 	
 public:
 	// Get the available spawn location for the minions (centered around the caster's forward vector)
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Summoning")
 	TArray<FVector> GetSpawnLocations();
+	
+	// Retrieves a random Minion Class from the MinionClassesToSpawn array
+	UFUNCTION(BlueprintPure, Category = "Summoning")
+	TSubclassOf<APawn> GetRandomMinionClass();
 	
 	// Number of minions to spawn
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "1", UIMin = "1"), Category = "Summoning")

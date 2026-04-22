@@ -69,6 +69,17 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 	return SpawnLocations;
 }
 
+TSubclassOf<APawn> UAuraSummonAbility::GetRandomMinionClass()
+{
+	if (MinionClassesToSpawn.IsEmpty())
+	{
+		UE_LOG(LogTemp, Error, TEXT("No minion classes found!"));
+		return nullptr;
+	}
+	
+	return MinionClassesToSpawn[FMath::RandRange(0, MinionClassesToSpawn.Num() - 1)];
+}
+
 void UAuraSummonAbility::SetValidSpawnLocation(FVector& SpawnLocation) const
 {
 	// Do a line trace from sky to below the spawn location
