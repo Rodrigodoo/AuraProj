@@ -22,7 +22,6 @@ class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
-	
 	// Get the Overlay Controller
 	// Assumes it's called from an autonomous client
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController")
@@ -74,4 +73,8 @@ public:
 	// Checks if the actors are not friendly towards each-other
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static bool IsNotFriend(AActor* FirstActor, AActor* SecondActor);
+	
+	// Retrieves a random spawn location in the provided line
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static FVector GetRandomLocationInLine(const FVector& Origin, const FVector& Direction, const float MinDistance, float MaxDistance);
 };

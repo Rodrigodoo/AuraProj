@@ -313,3 +313,9 @@ bool UAuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondAc
 	// This encompasses the case where they both do not have tags (they will be considered hostile)
 	return !bFriends;
 }
+
+FVector UAuraAbilitySystemLibrary::GetRandomLocationInLine(const FVector& Origin, const FVector& Direction,
+                                                                const float MinDistance, const float MaxDistance)
+{
+	return Origin + Direction * FMath::RandRange(MinDistance, MaxDistance);
+}
