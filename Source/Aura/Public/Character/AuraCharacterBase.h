@@ -66,6 +66,9 @@ public:
 	
 	// Retrieves the blood effect for this character
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
+	
+	// Get the number of alive minions bound to this character
+	virtual int32 GetMinionCount_Implementation() const override;
 	//~ End - IAuraCombatInterface overrides
 	
 	// To process on all clients and server when character dies
@@ -151,6 +154,12 @@ protected:
 	// Sound to be played when character dies
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USoundBase> DeathSound;
+	
+	//~ Begin - Minions
+	// Number of currently alive minions bound to this character
+	int32 MinionCount = 0;
+	
+	//~ End - Minions
 private:
 	// Finds the socket name first in the Character's mesh, then on the weapon if it exists
 	// If no socket was found returns the Mesh Component Transform (following GetSocketLocation logic)

@@ -134,6 +134,11 @@ UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
 	return BloodEffect;
 }
 
+int32 AAuraCharacterBase::GetMinionCount_Implementation() const
+{
+	return MinionCount;
+}
+
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	// Play death sound

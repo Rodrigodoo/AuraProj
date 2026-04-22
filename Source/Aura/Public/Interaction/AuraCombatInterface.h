@@ -93,4 +93,8 @@ public:
 	// Retrieves the Blood Effect for this actor
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UNiagaraSystem* GetBloodEffect();
+	
+	// Retrieves the number of alive minions bound to this object
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	int32 GetMinionCount() const;
 };
