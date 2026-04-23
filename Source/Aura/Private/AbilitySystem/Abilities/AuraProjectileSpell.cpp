@@ -9,7 +9,8 @@
 #include "Actor/AuraProjectile.h"
 #include "Interaction/AuraCombatInterface.h"
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& MontageTag)
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& MontageTag, 
+	const bool bOverridePitch /*= false*/, const float PitchOverride /*= 0.f*/)
 {
 	// If we are not on the server then move along.
 	if (!GetAvatarActorFromActorInfo()->HasAuthority())
@@ -31,7 +32,12 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	
 	// Get the rotation of the projectile to point at the target location
 	// Vector from socket location to target location
-	const FRotator SpawnRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+	FRotator SpawnRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+	if (bOverridePitch)
+	{
+		// If the pitch override flag is set, then override the pitch
+		SpawnRotation.Pitch = PitchOverride;
+	}
 	
 	// Spawn the projectile actor at the socket location and with the direction of the target
 	FTransform SpawnTransform;
