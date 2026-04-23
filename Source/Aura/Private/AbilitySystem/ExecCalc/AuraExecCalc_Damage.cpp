@@ -152,7 +152,7 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 		
 		// Damage type value
 		// If value not found it returns 0.f.
-		float DamageTypeValue = EffectSpec.GetSetByCallerMagnitude(Pair.Key);
+		float DamageTypeValue = EffectSpec.GetSetByCallerMagnitude(Pair.Key, false);
 		
 		// Damage type resistance definition
 		const FGameplayEffectAttributeCaptureDefinition ResistanceDefinition = DamageStatics().TagsToCaptureDefinitions[Pair.Value];
