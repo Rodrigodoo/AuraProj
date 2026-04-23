@@ -99,6 +99,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// If no hit has been registered, spawn sound and effect at impact point
 	if (!bHit)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName());
 		// Play impact sound and spawn particle system
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
