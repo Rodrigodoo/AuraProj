@@ -139,6 +139,23 @@ int32 AAuraCharacterBase::GetMinionCount_Implementation() const
 	return MinionCount;
 }
 
+void AAuraCharacterBase::SetMinionCount_Implementation(const int32 NewMinionCount)
+{
+	MinionCount = NewMinionCount;
+}
+
+void AAuraCharacterBase::IncrementMinionCount_Implementation(int32 Amount)
+{
+	Amount = FMath::Max(0.f, Amount);
+	MinionCount += Amount;
+}
+
+void AAuraCharacterBase::DecrementMinionCount_Implementation(int32 Amount)
+{
+	Amount = FMath::Max(0.f, Amount);
+	MinionCount -= Amount;
+}
+
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	// Play death sound

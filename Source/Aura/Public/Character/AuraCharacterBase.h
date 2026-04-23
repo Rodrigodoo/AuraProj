@@ -69,6 +69,17 @@ public:
 	
 	// Get the number of alive minions bound to this character
 	virtual int32 GetMinionCount_Implementation() const override;
+	
+	// Set the minion count for the alive minions bound to this character
+	virtual void SetMinionCount_Implementation(int32 NewMinionCount) override;
+	
+	// Increment the minion count by a certain amount for the alive minions bound to this character
+	// Negative numbers will not be considered
+	virtual void IncrementMinionCount_Implementation(int32 Amount = 1) override;
+	
+	// Decrement the minion count by a certain amount for the alive minions bound to this object
+	// Negative numbers will not be considered
+	virtual void DecrementMinionCount_Implementation(int32 Amount = 1) override;
 	//~ End - IAuraCombatInterface overrides
 	
 	// To process on all clients and server when character dies

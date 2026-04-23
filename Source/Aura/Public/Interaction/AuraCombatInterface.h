@@ -97,4 +97,18 @@ public:
 	// Retrieves the number of alive minions bound to this object
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	int32 GetMinionCount() const;
+	
+	// Set the minion count for the alive minions bound to this object
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetMinionCount(const int32 NewMinionCount);
+	
+	// Increment the minion count by a certain amount for the alive minions bound to this object
+	// Negative numbers will not be considered
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, meta = (UIMin = "1"))
+	void IncrementMinionCount(int32 Amount = 1);
+	
+	// Decrement the minion count by a certain amount for the alive minions bound to this object
+	// Negative numbers will not be considered
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, meta = (UIMin = "1"))
+	void DecrementMinionCount(int32 Amount = 1);
 };
