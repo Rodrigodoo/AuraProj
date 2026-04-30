@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/Data/AuraAttributeInfoDataAsset.h"
 
+#include "Aura/AuraLogChannels.h"
+
 FAuraAttributeInfo UAuraAttributeInfoDataAsset::FindAttributeInfoFromTag(const FGameplayTag& AttributeTag, const bool bLogNotFound) const
 {
 	// Find the info by tag
@@ -19,7 +21,7 @@ FAuraAttributeInfo UAuraAttributeInfoDataAsset::FindAttributeInfoFromTag(const F
 	if (bLogNotFound)
 	{
 		// If logging is enabled, display error message
-		UE_LOG(LogTemp, Error, TEXT("Can't find Info for AttributeTag [%s] on AttributeInfo [%s]."), *AttributeTag.ToString(), *GetNameSafe(this));
+		UE_LOG(LogAura, Error, TEXT("Can't find Info for AttributeTag [%s] on AttributeInfo [%s]."), *AttributeTag.ToString(), *GetNameSafe(this));
 		
 	}
 	return FAuraAttributeInfo();

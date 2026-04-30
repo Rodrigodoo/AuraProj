@@ -80,6 +80,9 @@ namespace AuraGameplayTagsManager
 	// Abilities.Summon
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Summon, "Abilities.Summon", 
 		"Summon Ability Tag");
+	// Abilities.Fire.FireBolt
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", 
+		"FireBolt Ability Tag");
 	
 	/*
 	 * Input

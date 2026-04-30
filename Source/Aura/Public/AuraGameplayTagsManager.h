@@ -67,6 +67,8 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Attack);
 	// Abilities.Summon
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Summon);
+	// Abilities.Fire.FireBolt
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Fire_FireBolt);
 	//~ End - Abilities
 	
 	//~ Begin - Inputs

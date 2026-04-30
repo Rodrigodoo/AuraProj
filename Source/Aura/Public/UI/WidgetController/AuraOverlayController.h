@@ -7,6 +7,7 @@
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "AuraOverlayController.generated.h"
 
+class UAuraAbilityInfoDataAsset;
 struct FOnAttributeChangeData;
 
 // Data table row struct design to display messages to screen
@@ -79,14 +80,19 @@ public:
 	//~ End Delegate Variables
 	
 protected:
+	// Data table with display messages
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
+	
+	// Data Asset with Ability Information
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UAuraAbilityInfoDataAsset> AbilityInfo;
 	
 	// Will later be moved to a static function library
 	// Retrieve a data table row by tag
 	// Note: The row name must have the same name as the tag. (This is something easy to break but we are using it for educational purposes)
 	template<typename T>
-	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);	
+	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 };
 
 template <typename T>
