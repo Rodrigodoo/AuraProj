@@ -74,6 +74,9 @@ namespace AuraGameplayTagsManager
 	/*
 	 * Abilities
 	 */
+	// Abilities
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities, "Abilities", 
+		"Ability Tag");
 	// Abilities.Attack
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Attack, "Abilities.Attack", 
 		"Attack Ability Tag");
@@ -87,6 +90,8 @@ namespace AuraGameplayTagsManager
 	/*
 	 * Input
 	 */
+	// InputTag.LMB
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag, "InputTag", "Input Tag");
 	// InputTag.LMB
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_LMB, "InputTag.LMB", "Input Tag for Left Mouse Button");
 	// InputTag.RMB

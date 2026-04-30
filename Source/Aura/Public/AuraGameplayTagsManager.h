@@ -63,6 +63,8 @@ namespace AuraGameplayTagsManager
 	//~ End - Attributes
 	
 	//~ Begin - Abilities
+	// Abilities
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities);
 	// Abilities.Attack
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Attack);
 	// Abilities.Summon
@@ -72,6 +74,8 @@ namespace AuraGameplayTagsManager
 	//~ End - Abilities
 	
 	//~ Begin - Inputs
+	// InputTag
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag);
 	// InputTag.LMB
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_LMB);
 	// InputTag.RMB

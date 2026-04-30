@@ -4,7 +4,9 @@
 #include "UI/WidgetController/AuraOverlayController.h"
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AuraAbilityInfoDataAsset.h"
 
 void UAuraOverlayController::BroadcastInitialValues()
 {
@@ -98,5 +100,24 @@ void UAuraOverlayController::OnInitializedStartupAbilities()
 		return;
 	}
 	
-	//TODO: Get Ability Info for all abilities and broadcast it to the respective widgets
+	// Loop through all activatable Abilities and retrieve their asset tags and input tags
+	// This will be used to find the appropriate Ability Info and set its Input Tag, 
+	// then inform all listening widgets of this Ability's information 
+	FForEachAbility BroadcastDelegate;
+	BroadcastDelegate.BindLambda(
+		[this](const FGameplayAbilitySpec& AbilitySpec)
+		{
+			// Retrieve the Ability Tag from the Spec and search for it in the Ability Info Data Asset
+			FAuraAbilityInfo AbilityInfo = AbilityInfoDataAsset->FindAuraAbilityInfoForTag(
+				UAuraAbilitySystemLibrary::GetAbilityTagFromSpec(AbilitySpec));
+			
+			// Set the Input Tag retrieved from the spec into the data asset entry
+			AbilityInfo.InputTag = UAuraAbilitySystemLibrary::GetInputTagFromSpec(AbilitySpec);
+			
+			// Broadcast to listening widgets the Ability Info 
+			AbilityInfoDelegate.Broadcast(AbilityInfo);
+		});
+	
+	// Call the looping method and provide it with its delegate
+	AuraAbilitySystemComponent->ForEachAbility(BroadcastDelegate);
 }

@@ -5,6 +5,7 @@
 
 #include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/Abilities/AuraGameplayAbilityBase.h"
+#include "Aura/AuraLogChannels.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -96,8 +97,22 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 	}
 }
 
+void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbility& ForEachAbilityDelegate)
+{
+	// Lock all the activatable abilities (so they cannot be deactivated) and loop through all of them
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		// Call the delegate for this ability, and log if not bound
+		if (!ForEachAbilityDelegate.ExecuteIfBound(AbilitySpec))
+		{
+			UE_LOG(LogAura, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__)
+		}
+	}
+}
+
 void UAuraAbilitySystemComponent::EffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent,
-	const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const
+                                                               const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const
 {
 	// Retrieve all the tags associated with this Effect 
 	FGameplayTagContainer TagContainer;

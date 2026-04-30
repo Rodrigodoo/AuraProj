@@ -11,6 +11,8 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/)
 // Delegate to broadcast when all abilities have been given
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven)
+// Delegate to loop over each given ability
+DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&)
 //~ End Delegates
 /**
  * The Aura Ability System Component, in charge of dealing with all Gameplay Ability Systems features for this project
@@ -38,6 +40,9 @@ public:
 	// Called when an Ability Action has been released
 	// InputTag - identifies the input Released
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+	
+	// Loops through all activatable abilities and passes them to the given delegate
+	void ForEachAbility(const FForEachAbility& ForEachAbilityDelegate);
 	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTagsDelegate;

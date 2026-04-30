@@ -7,6 +7,7 @@
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "AuraOverlayController.generated.h"
 
+struct FAuraAbilityInfo;
 class UAuraAbilityInfoDataAsset;
 struct FOnAttributeChangeData;
 
@@ -37,6 +38,7 @@ struct FUIWidgetRow : public FTableRowBase
 // Delegates that can be used in BP and called on multiple widgets
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, AbilityInfo);
 
 /**
  * Overlay Controller responsible for controlling AuraOverlayWidgets
@@ -77,6 +79,10 @@ public:
 	// Message Widget Row Delegate
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
+	
+	// Ability Info Delegate
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Abilities")
+	FAbilityInfoSignature AbilityInfoDelegate;
 	//~ End Delegate Variables
 	
 protected:
@@ -86,7 +92,7 @@ protected:
 	
 	// Data Asset with Ability Information
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
-	TObjectPtr<UAuraAbilityInfoDataAsset> AbilityInfo;
+	TObjectPtr<UAuraAbilityInfoDataAsset> AbilityInfoDataAsset;
 	
 	// Will later be moved to a static function library
 	// Retrieve a data table row by tag

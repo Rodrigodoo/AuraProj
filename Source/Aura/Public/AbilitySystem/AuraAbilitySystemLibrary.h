@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
+struct FGameplayAbilitySpec;
 class UAbilitySystemComponent;
 class UAuraAttributeMenuController;
 class UAuraCharacterClassInfoDataAsset;
@@ -48,6 +50,12 @@ public:
 	// Note: Should be called on Server
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
 	static UAuraCharacterClassInfoDataAsset* GetCharacterClassInfoDataAsset(const UObject* WorldContextObject);
+	
+	// Retrieves the Ability's tag from its Ability Spec
+	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	
+	// Retrieves the Ability's Input tag from its Ability Spec
+	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	
 	// Checks if the Gameplay Effect pertains to a Blocked Hit
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")

@@ -218,6 +218,42 @@ UAuraCharacterClassInfoDataAsset* UAuraAbilitySystemLibrary::GetCharacterClassIn
 	return AuraGameMode->CharacterClassInfoDataAsset;
 }
 
+FGameplayTag UAuraAbilitySystemLibrary::GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	// Early check
+	if (!AbilitySpec.Ability->IsValidLowLevel())
+	{
+		return FGameplayTag();
+	}
+	
+	// Loop through the Ability's tags and check if it has an Ability tag 
+	// i.e: Checking for it in its parents tag. Example: Abilities.Firebolt or Abilities.Summon
+	for (const FGameplayTag& Tag : AbilitySpec.Ability->GetAssetTags())
+	{
+		if (!Tag.MatchesTag(AuraGameplayTagsManager::Abilities))
+		{
+			return Tag;
+		}
+	}
+	
+	return FGameplayTag();
+}
+
+FGameplayTag UAuraAbilitySystemLibrary::GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	// Loop through the Ability's dynamic tags and check if it has an Input tag 
+	// i.e: Checking for it in its parents tag. Example: InputTag.LMB or InputTag.2
+	for (const FGameplayTag& Tag : AbilitySpec.GetDynamicSpecSourceTags())
+	{
+		if (!Tag.MatchesTag(AuraGameplayTagsManager::InputTag))
+		{
+			return Tag;
+		}
+	}
+	
+	return FGameplayTag();
+}
+
 bool UAuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	// Retrieve the Aura Gameplay Effect Context and check if it was a Blocked Hit
