@@ -9,6 +9,8 @@
 
 // Delegate to broadcast Effect Asset tags
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/)
+// Delegate to broadcast when all abilities have been given
+DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven)
 //~ End Delegates
 /**
  * The Aura Ability System Component, in charge of dealing with all Gameplay Ability Systems features for this project
@@ -26,6 +28,9 @@ public:
 	// Add Abilities to the character implementing this component
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
 	
+	// Check if Startup Abilities have been given
+	bool AreStartupAbilitiesGiven() const;
+	
 	// Called when an Ability Action has been Pressed/Held
 	// InputTag - identifies the input Pressed/Held
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
@@ -35,7 +40,10 @@ public:
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
-	FEffectAssetTags EffectAssetTags;
+	FEffectAssetTags EffectAssetTagsDelegate;
+	
+	// Delegate to Broadcast when all abilities have been given
+	FAbilitiesGiven AbilitiesGivenDelegate;
 	
 protected:
 	// Method bound to delegate OnGameplayEffectAppliedDelegateToSelf(FOnGameplayEffectAppliedDelegate)
@@ -44,4 +52,6 @@ protected:
 	UFUNCTION(Client, Reliable)
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const;
 	
+	// Flag to identify when all startup abilities have been given
+    bool bStartupAbilitiesGiven = false;
 };

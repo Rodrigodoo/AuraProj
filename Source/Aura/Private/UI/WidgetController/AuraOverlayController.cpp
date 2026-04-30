@@ -55,7 +55,21 @@ void UAuraOverlayController::BindCallbacksToDependencies()
 	// Bind callbacks in this controller to the Aura ASC
 	if (UAuraAbilitySystemComponent* AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
 	{
-		AuraAbilitySystemComponent->EffectAssetTags.AddLambda(
+		// If the Startup Abilities have been initialized and given
+		if (AuraAbilitySystemComponent->AreStartupAbilitiesGiven())
+		{
+			// Retrieve the Ability Information for display
+			OnInitializedStartupAbilities();
+		}
+		else
+		{
+			// Otherwise, Bind to the AbilitiesGivenDelegate to retrieve the Ability Information when available
+			AuraAbilitySystemComponent->AbilitiesGivenDelegate.AddUObject(this, &UAuraOverlayController::OnInitializedStartupAbilities);
+		}
+
+
+		// Bind to messages
+		AuraAbilitySystemComponent->EffectAssetTagsDelegate.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
 			{
 				// Debug message showing all tags
@@ -74,4 +88,15 @@ void UAuraOverlayController::BindCallbacksToDependencies()
 			}
 		);
 	}
+}
+
+void UAuraOverlayController::OnInitializedStartupAbilities()
+{
+	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)
+	if (!AuraAbilitySystemComponent || !AuraAbilitySystemComponent->AreStartupAbilitiesGiven())
+	{
+		return;
+	}
+	
+	//TODO: Get Ability Info for all abilities and broadcast it to the respective widgets
 }

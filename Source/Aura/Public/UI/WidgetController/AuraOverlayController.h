@@ -93,6 +93,10 @@ protected:
 	// Note: The row name must have the same name as the tag. (This is something easy to break but we are using it for educational purposes)
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+	
+	// Called when all startup abilities have been given
+	// 
+	void OnInitializedStartupAbilities();
 };
 
 template <typename T>

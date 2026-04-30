@@ -33,6 +33,15 @@ void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 			GiveAbility(AbilitySpec);
 		}
 	}
+	
+	// Broadcast that all abilities have been given
+	bStartupAbilitiesGiven = true;
+	AbilitiesGivenDelegate.Broadcast();
+}
+
+bool UAuraAbilitySystemComponent::AreStartupAbilitiesGiven() const
+{
+	return bStartupAbilitiesGiven;
 }
 
 void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
@@ -96,5 +105,5 @@ void UAuraAbilitySystemComponent::EffectApplied_Implementation(UAbilitySystemCom
 	
 	// Broadcast to listeners the Tags associated with this Effect Asset
 	//Note: This could be Widget Controllers, etc...
-	EffectAssetTags.Broadcast(TagContainer);
+	EffectAssetTagsDelegate.Broadcast(TagContainer);
 }
