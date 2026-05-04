@@ -94,7 +94,7 @@ void UAuraOverlayController::BindCallbacksToDependencies()
 
 void UAuraOverlayController::OnInitializedStartupAbilities()
 {
-	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)
+	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	if (!AuraAbilitySystemComponent || !AuraAbilitySystemComponent->AreStartupAbilitiesGiven())
 	{
 		return;

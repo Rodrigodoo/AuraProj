@@ -111,6 +111,20 @@ void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbility& ForEachA
 	}
 }
 
+void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+	
+	// On the client this will be false the first time
+	if (!bStartupAbilitiesGiven)
+	{
+		// The server already has broadcast this delegate, now should be the client
+		// Should only broadcast once
+		bStartupAbilitiesGiven = true;
+		AbilitiesGivenDelegate.Broadcast();
+	}
+}
+
 void UAuraAbilitySystemComponent::EffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent,
                                                                const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const
 {

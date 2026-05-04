@@ -230,7 +230,7 @@ FGameplayTag UAuraAbilitySystemLibrary::GetAbilityTagFromSpec(const FGameplayAbi
 	// i.e: Checking for it in its parents tag. Example: Abilities.Firebolt or Abilities.Summon
 	for (const FGameplayTag& Tag : AbilitySpec.Ability->GetAssetTags())
 	{
-		if (!Tag.MatchesTag(AuraGameplayTagsManager::Abilities))
+		if (Tag.MatchesTag(AuraGameplayTagsManager::Abilities))
 		{
 			return Tag;
 		}
@@ -245,7 +245,7 @@ FGameplayTag UAuraAbilitySystemLibrary::GetInputTagFromSpec(const FGameplayAbili
 	// i.e: Checking for it in its parents tag. Example: InputTag.LMB or InputTag.2
 	for (const FGameplayTag& Tag : AbilitySpec.GetDynamicSpecSourceTags())
 	{
-		if (!Tag.MatchesTag(AuraGameplayTagsManager::InputTag))
+		if (Tag.MatchesTag(AuraGameplayTagsManager::InputTag))
 		{
 			return Tag;
 		}

@@ -57,6 +57,11 @@ protected:
 	UFUNCTION(Client, Reliable)
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const;
 	
+	//~ Begin - UAbilitySystemComponent Overrides
+	// Activatable Abilities replication method
+	virtual void OnRep_ActivateAbilities() override;
+	//~ End - UAbilitySystemComponent Overrides
+	
 	// Flag to identify when all startup abilities have been given
     bool bStartupAbilitiesGiven = false;
 };
