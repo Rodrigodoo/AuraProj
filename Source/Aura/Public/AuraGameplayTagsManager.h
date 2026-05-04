@@ -73,6 +73,13 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Fire_FireBolt);
 	//~ End - Abilities
 	
+	//~ Begin - Cooldowns
+	// Cooldown
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown);
+	// Cooldown.Fire.FireBolt
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Fire_FireBolt);
+	//~ End - Cooldowns
+	
 	//~ Begin - Inputs
 	// InputTag
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag);

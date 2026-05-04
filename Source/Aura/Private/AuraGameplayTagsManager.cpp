@@ -88,6 +88,16 @@ namespace AuraGameplayTagsManager
 		"FireBolt Ability Tag");
 	
 	/*
+	 * Cooldowns
+	 */
+	// Abilities
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown, "Cooldown", 
+		"Cooldown Tag");
+	// Cooldown.Fire.FireBolt
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", 
+		"Firebolt Cooldown Tag");
+	
+	/*
 	 * Input
 	 */
 	// InputTag.LMB
