@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 
 UAuraWaitCooldownChange* UAuraWaitCooldownChange::WaitForCooldownChange(UAbilitySystemComponent* InAbilitySystemComponent,
-                                                                        const FGameplayTag InCooldownTag)
+                                                                        const FGameplayTag& InCooldownTag)
 {
 	// Early exit
 	if (!IsValid(InAbilitySystemComponent) || !InCooldownTag.IsValid())

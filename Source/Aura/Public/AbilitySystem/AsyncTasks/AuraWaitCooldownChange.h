@@ -30,7 +30,7 @@ public:
 	// Factory method to creat a Wait for Cooldown Change Node
 	// Receives and Ability System Component and a cooldown tag to listen to
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UAuraWaitCooldownChange* WaitForCooldownChange(UAbilitySystemComponent* InAbilitySystemComponent, FGameplayTag InCooldownTag);
+	static UAuraWaitCooldownChange* WaitForCooldownChange(UAbilitySystemComponent* InAbilitySystemComponent, const FGameplayTag& InCooldownTag);
 	
 	// Ends tasks and clears any lingering references
 	UFUNCTION(BlueprintCallable)
