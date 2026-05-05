@@ -44,6 +44,10 @@ public:
 	// Loops through all activatable abilities and passes them to the given delegate
 	void ForEachAbility(const FForEachAbility& ForEachAbilityDelegate);
 	
+	// Checks if the ability can be used (cost check passes) from its Ability Tag
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystem")
+	bool CheckAbilityCostFromTag(const FGameplayTag& AbilityTag);
+	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTagsDelegate;
 	
@@ -56,6 +60,9 @@ protected:
 	// This is needed since OnGameplayEffectAppliedDelegateToSelf is only run on the server
 	UFUNCTION(Client, Reliable)
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const;
+	
+	// Finds the ability spec from all activatable abilities using the ability's tag 
+	const FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);
 	
 	//~ Begin - UAbilitySystemComponent Overrides
 	// Activatable Abilities replication method

@@ -111,6 +111,29 @@ void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbility& ForEachA
 	}
 }
 
+bool UAuraAbilitySystemComponent::CheckAbilityCostFromTag(const FGameplayTag& AbilityTag)
+{
+	// Retrieve the Ability Spec from the ability tag and check if it can accept its cost
+	if (const FGameplayAbilitySpec* AbilitySpec = GetAbilitySpecFromTag(AbilityTag))
+	{
+		return AbilitySpec->Ability->CheckCost(AbilitySpec->Handle, AbilityActorInfo.Get());
+	}
+	return false;
+}
+
+const FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)
+{
+	// Loop through the activatable abilities and find which one has this ability tag
+	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (Spec.Ability && Spec.Ability->AbilityTags.HasTag(AbilityTag))
+		{
+			return &Spec;
+		}
+	}
+	return nullptr;
+}
+
 void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
 {
 	Super::OnRep_ActivateAbilities();

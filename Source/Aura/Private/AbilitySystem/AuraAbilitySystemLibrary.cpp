@@ -250,7 +250,7 @@ FGameplayTag UAuraAbilitySystemLibrary::GetInputTagFromSpec(const FGameplayAbili
 			return Tag;
 		}
 	}
-	
+
 	return FGameplayTag();
 }
 
