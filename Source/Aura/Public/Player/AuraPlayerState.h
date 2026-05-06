@@ -11,6 +11,8 @@
 class UAbilitySystemComponent;
 class UAttributeSet;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChangedSignature, int32 /*StatValue*/)
+
 /**
  * Aura's Player state in charge of controlling several of the players information like its AbilitySystemComponent
  */
@@ -31,8 +33,34 @@ public:
 	// Returns the attribute set to use for this actor.
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
 	
+	// Set the player Level
+	void SetPlayerLevel(int32 NewPlayerLevel);
+	
+	// Adds an amount to the player's Level
+	void AddToPlayerLevel(int32 LevelsToAdd);
+	
 	// Returns this player's level
 	FORCEINLINE int32 GetPlayerLevel() const { return PlayerLevel; }
+	
+	// Set the player XP
+	void SetPlayerXP(const int32 NewXP);
+	
+	// Adds an amount to the Player's XP
+	void AddToPlayerXP(const int32 XPToAdd);
+	
+	// Returns the player XP
+	FORCEINLINE int32 GetPlayerXP() const { return PlayerXP; }
+	
+	
+	//~ Begin - Delegates
+	
+	// Delegate to signal whenever the player's XP changed
+	FOnPlayerStatChangedSignature OnPlayerXPChangedDelegate;
+	
+	// Delegate to signal whenever the player's Level changed
+	FOnPlayerStatChangedSignature OnPlayerLevelChangedDelegate;
+	
+	//~ End - Delegates
 	
 protected:
 	// Pointer to the PlayerState's Ability System Component (If there is one)
@@ -42,7 +70,7 @@ protected:
 	// Pointer to the PlayerState's Attribute Set (If there is one)
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
-	
+
 private:
 	// The Player's Level
 	// This value works as a counter of the player's progress
@@ -53,4 +81,13 @@ private:
 	// Replication method for Level
 	UFUNCTION()
 	void OnRep_PlayerLevel(int32 OldPlayerLevel);
+	
+	// Current Experience Points for this player (cumulative)
+	// This tracks the player's progression and can be translated into the Player Level
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_PlayerXP)
+	int32 PlayerXP;
+	
+	// Replication method for the player PlayerXP
+	UFUNCTION()
+	void OnRep_PlayerXP(int32 OldPlayerXP);
 };
