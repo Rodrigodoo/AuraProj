@@ -7,6 +7,7 @@
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "AuraOverlayController.generated.h"
 
+class UAuraLevelUpInfoDataAsset;
 struct FAuraAbilityInfo;
 class UAuraAbilityInfoDataAsset;
 struct FOnAttributeChangeData;
@@ -83,6 +84,10 @@ public:
 	// Ability Info Delegate
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Abilities")
 	FAbilityInfoSignature AbilityInfoDelegate;
+	
+	// XP Percentage changed (return the new percentage for the current level)
+	UPROPERTY(BlueprintAssignable, Category = "GAS|XP")
+	FOnAttributeChangedSignature XPPercentageChangedDelegate;
 	//~ End Delegate Variables
 	
 protected:

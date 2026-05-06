@@ -48,6 +48,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 FindLevelForXP(const int32 XP) const;
 	
+	// Finds the percentage of the current level this XP represents
+	UFUNCTION(BlueprintCallable)
+	float FindCurrentLevelPercent(const int32 XP) const;
+	
 	// All the level up data (needs to be in order!)
 	// Note that the index of each entry is [Index = Level - 1]
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Level Up Data", meta=(TitleProperty = "Level"))

@@ -7,23 +7,30 @@
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AuraAbilityInfoDataAsset.h"
+#include "AbilitySystem/Data/AuraLevelUpInfoDataAsset.h"
+#include "Player/AuraPlayerState.h"
 
 void UAuraOverlayController::BroadcastInitialValues()
 {
-	// Note: Make sure this method is only called after UAuraAttributeSet is valid!
+	// Note: Make sure this method is only called after UAuraAttributeSet and the Player are valid!
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
+	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
 	
 	// Broadcast Initial Values
 	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
 	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
 	OnManaChanged.Broadcast(AuraAttributeSet->GetMana());
 	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
+	
+	// Broadcast initial XP Percentage
+	XPPercentageChangedDelegate.Broadcast(AuraPlayerState->GetCurrentLevelPercent());
 }
 
 void UAuraOverlayController::BindCallbacksToDependencies()
 {
-	// Note: Make sure this method is only called after UAuraAttributeSet is valid!
+	// Note: Make sure this method is only called after UAuraAttributeSet and the Player are valid!
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
+	AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
 	
 	// Bind Health and Max Health changes
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda(
@@ -90,6 +97,15 @@ void UAuraOverlayController::BindCallbacksToDependencies()
 			}
 		);
 	}
+	
+	// Bind to Player State
+	// Get any Level percent changes
+	AuraPlayerState->OnPlayerLevelPercentageChangedDelegate.AddLambda(
+			[&](int32 NewXP)
+			{
+				// Broadcast the new XP level
+				XPPercentageChangedDelegate.Broadcast(AuraPlayerState->GetCurrentLevelPercent());
+			});
 }
 
 void UAuraOverlayController::OnInitializedStartupAbilities()

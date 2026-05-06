@@ -8,6 +8,7 @@
 #include "AuraPlayerState.generated.h"
 
 
+class UAuraLevelUpInfoDataAsset;
 class UAbilitySystemComponent;
 class UAttributeSet;
 
@@ -51,11 +52,20 @@ public:
 	// Returns the player XP
 	FORCEINLINE int32 GetPlayerXP() const { return PlayerXP; }
 	
+	// Finds the percentage of the current level this XP represents
+	FORCEINLINE float GetCurrentLevelPercent() const { return CurrentLevelPercentage; };
+
+	// Data Asset with Level Up Information
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Level Up Data")
+	TObjectPtr<UAuraLevelUpInfoDataAsset> LevelUpInfoDataAsset;
 	
 	//~ Begin - Delegates
 	
 	// Delegate to signal whenever the player's XP changed
 	FOnPlayerStatChangedSignature OnPlayerXPChangedDelegate;
+	
+	// Delegate to signal whenever the player's Level Percentage changed
+	FOnPlayerStatChangedSignature OnPlayerLevelPercentageChangedDelegate;
 	
 	// Delegate to signal whenever the player's Level changed
 	FOnPlayerStatChangedSignature OnPlayerLevelChangedDelegate;
@@ -90,4 +100,11 @@ private:
 	// Replication method for the player PlayerXP
 	UFUNCTION()
 	void OnRep_PlayerXP(int32 OldPlayerXP);
+	
+	// Current level percentage based on the current XP
+	UPROPERTY(VisibleAnywhere)
+	float CurrentLevelPercentage = 0.0f;
+	
+	// Finds the percentage of the current level this XP represents
+	float FindCurrentLevelPercent(const int32 XP) const;
 };
