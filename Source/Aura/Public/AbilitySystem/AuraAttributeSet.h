@@ -335,4 +335,8 @@ private:
 	// Internal method to display damage as a floating text above the Target Character
 	// bBlockedHit and bCriticalHit will change the color of the text
 	void ShowDamageAsFloatingText(const FEffectProperties& EffectProperties, float Damage, bool bBlockedHit, bool bCriticalHit);
+	
+	// Sends an XP Event to attacker (source) after it killed its target
+	// Retrieves the XP reward from the target
+	void SendXPEvent(const FEffectProperties& EffectProperties);
 };

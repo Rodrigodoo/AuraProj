@@ -218,7 +218,7 @@ UAuraCharacterClassInfoDataAsset* UAuraAbilitySystemLibrary::GetCharacterClassIn
 	return AuraGameMode->CharacterClassInfoDataAsset;
 }
 
-int32 UAuraAbilitySystemLibrary::XPRewardForClassAndLevel(const UObject* WorldContextObject, const EAuraCharacterClass CharacterClass,
+int32 UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject, const EAuraCharacterClass CharacterClass,
                                                  const int32 CharacterLevel)
 {
 	// Get Character Class Info Data Asset

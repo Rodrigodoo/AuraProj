@@ -119,9 +119,12 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 			
-			// Damage was fatal
+			// Damage was fatal!
 			if (NewHealth <= 0.f)
 			{
+				// Inform the Attacker (Source Character) of the XP Reward for killing its enemy (Target Character)
+				SendXPEvent(EffectProperties);
+				
 				// If the object dying has a combat interface call its Die method
 				if (IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(EffectProperties.TargetAvatarActor))
 				{
@@ -406,4 +409,29 @@ void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& Effect
 		// Player is receiving the damage
 		AuraPlayerController->ShowDamageNumber(Damage, EffectProperties.TargetCharacter, bBlockedHit, bCriticalHit);
 	}
+}
+
+void UAuraAttributeSet::SendXPEvent(const FEffectProperties& EffectProperties)
+{
+	IAuraCombatInterface* TargetCombatInterface = Cast<IAuraCombatInterface>(EffectProperties.TargetCharacter);
+	if (!TargetCombatInterface)
+	{
+		// If the target does not implement a combat interface this method cannot be implemented
+		return;
+	}
+	
+	// Retrieve the character class and level from the target and use it to retrieve the XP reward for when the target dies
+	const EAuraCharacterClass TargetCharacterClass = IAuraCombatInterface::Execute_GetCharacterClass(EffectProperties.TargetCharacter);
+	const int32 TargetCharacterLevel = TargetCombatInterface->GetCharacterLevel();
+	const int32 XPReward = UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(EffectProperties.TargetCharacter, 
+		TargetCharacterClass, TargetCharacterLevel);
+	
+	// Now inform the attacker (source character) of the XP Reward given by the enemy it just killed (TargetCharacter)
+	FGameplayEventData PayloadData;
+	PayloadData.EventTag = AuraGameplayTagsManager::Attributes_Meta_IncomingXP;
+	PayloadData.EventMagnitude = XPReward;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		EffectProperties.SourceCharacter, 
+		AuraGameplayTagsManager::Attributes_Meta_IncomingXP,
+		PayloadData);
 }
