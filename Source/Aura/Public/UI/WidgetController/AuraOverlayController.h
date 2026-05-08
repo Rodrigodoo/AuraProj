@@ -106,8 +106,10 @@ protected:
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 	
 	// Called when all startup abilities have been given
-	// 
 	void OnInitializedStartupAbilities();
+	
+	// Broadcasts whenever there are changes to the XP and sends the current player level percentage
+	void BroadcastXPPercentageChanges();
 };
 
 template <typename T>

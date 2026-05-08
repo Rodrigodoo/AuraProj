@@ -10,6 +10,7 @@
 #include "Aura/AuraLogChannels.h"
 #include "GameFramework/Character.h"
 #include "Interaction/AuraCombatInterface.h"
+#include "Interaction/AuraPlayerInterface.h"
 #include "Net/UnrealNetwork.h"
 #include "Player/AuraPlayerController.h"
 
@@ -152,8 +153,9 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		// Get the incoming XP and resetting the attribute so it can process new sources of XP
 		const float LocalIncomingXP = GetIncomingXP();
 		SetIncomingXP(0.f);
-		
-		UE_LOG(LogAura, Warning, TEXT("The incoming XP changed to %f"), LocalIncomingXP);
+
+		// Apply the XP change to the actor receiving the XP
+		IAuraPlayerInterface::Execute_AddToPlayerXP(EffectProperties.SourceCharacter, LocalIncomingXP);
 	}
 }
 

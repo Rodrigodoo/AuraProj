@@ -5,7 +5,6 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
-#include "AbilitySystem/Data/AuraLevelUpInfoDataAsset.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -55,27 +54,13 @@ void AAuraPlayerState::AddToPlayerLevel(const int32 LevelsToAdd)
 void AAuraPlayerState::SetPlayerXP(const int32 NewXP)
 {
 	PlayerXP = NewXP;
-	CurrentLevelPercentage = FindCurrentLevelPercent(PlayerXP);
 	OnPlayerXPChangedDelegate.Broadcast(PlayerXP);
-	OnPlayerLevelPercentageChangedDelegate.Broadcast(CurrentLevelPercentage);
 }
 
 void AAuraPlayerState::AddToPlayerXP(const int32 XPToAdd)
 {
 	PlayerXP += XPToAdd;
-	CurrentLevelPercentage = FindCurrentLevelPercent(PlayerXP);
 	OnPlayerXPChangedDelegate.Broadcast(PlayerXP);
-	OnPlayerLevelPercentageChangedDelegate.Broadcast(CurrentLevelPercentage);
-}
-
-float AAuraPlayerState::FindCurrentLevelPercent(const int32 XP) const
-{
-	if (LevelUpInfoDataAsset)
-	{
-		return LevelUpInfoDataAsset->FindCurrentLevelPercent(XP);
-	}
-	
-	return 0.f;
 }
 
 void AAuraPlayerState::OnRep_PlayerLevel(int32 OldPlayerLevel)
@@ -88,6 +73,4 @@ void AAuraPlayerState::OnRep_PlayerXP(int32 OldPlayerXP)
 {
 	// Signal that the player XP changed
 	OnPlayerXPChangedDelegate.Broadcast(PlayerXP);
-	CurrentLevelPercentage = FindCurrentLevelPercent(PlayerXP);
-	OnPlayerLevelPercentageChangedDelegate.Broadcast(CurrentLevelPercentage);
 }

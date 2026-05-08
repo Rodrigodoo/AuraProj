@@ -12,10 +12,9 @@
 
 void UAuraOverlayController::BroadcastInitialValues()
 {
-	// Note: Make sure this method is only called after UAuraAttributeSet and the Player are valid!
+	// Note: Make sure this method is only called after UAuraAttributeSet is valid!
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
-	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
-	
+
 	// Broadcast Initial Values
 	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
 	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
@@ -23,7 +22,7 @@ void UAuraOverlayController::BroadcastInitialValues()
 	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
 	
 	// Broadcast initial XP Percentage
-	XPPercentageChangedDelegate.Broadcast(AuraPlayerState->GetCurrentLevelPercent());
+	BroadcastXPPercentageChanges();
 }
 
 void UAuraOverlayController::BindCallbacksToDependencies()
@@ -99,12 +98,12 @@ void UAuraOverlayController::BindCallbacksToDependencies()
 	}
 	
 	// Bind to Player State
-	// Get any Level percent changes
-	AuraPlayerState->OnPlayerLevelPercentageChangedDelegate.AddLambda(
+	// Get any XP changes
+	AuraPlayerState->OnPlayerXPChangedDelegate.AddLambda(
 			[&](int32 NewXP)
 			{
 				// Broadcast the new XP level
-				XPPercentageChangedDelegate.Broadcast(AuraPlayerState->GetCurrentLevelPercent());
+				BroadcastXPPercentageChanges();
 			});
 }
 
@@ -136,4 +135,22 @@ void UAuraOverlayController::OnInitializedStartupAbilities()
 	
 	// Call the looping method and provide it with its delegate
 	AuraAbilitySystemComponent->ForEachAbility(BroadcastDelegate);
+}
+
+void UAuraOverlayController::BroadcastXPPercentageChanges()
+{
+	// Note: Make sure this method is only called after AuraPlayerState is valid,
+	// And it has valid LevelUpInfoDataAsset !
+	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	if (!AuraPlayerState->LevelUpInfoDataAsset)
+	{
+		return;
+	}
+	
+	// Find the current XP percentage
+	const int32 CurrentXP = AuraPlayerState->GetPlayerXP();
+	const float CurrentLevelPercentage = AuraPlayerState->LevelUpInfoDataAsset->FindCurrentLevelPercent(CurrentXP);
+	
+	// Broadcast it to any listening widget 
+	XPPercentageChangedDelegate.Broadcast(CurrentLevelPercentage);
 }

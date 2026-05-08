@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/PlayerState.h"
+#include "Interaction/AuraPlayerInterface.h"
 #include "AuraPlayerState.generated.h"
 
 
@@ -28,8 +29,12 @@ public:
 	// Replication method override for variable replication
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
+	//~ Begin - IAbilitySystemInterface
+	
 	// Returns the ability system component to use for this actor.
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
+	//~ End - IAbilitySystemInterface
 	
 	// Returns the attribute set to use for this actor.
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
@@ -51,9 +56,6 @@ public:
 	
 	// Returns the player XP
 	FORCEINLINE int32 GetPlayerXP() const { return PlayerXP; }
-	
-	// Finds the percentage of the current level this XP represents
-	FORCEINLINE float GetCurrentLevelPercent() const { return CurrentLevelPercentage; };
 
 	// Data Asset with Level Up Information
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Level Up Data")
@@ -63,9 +65,6 @@ public:
 	
 	// Delegate to signal whenever the player's XP changed
 	FOnPlayerStatChangedSignature OnPlayerXPChangedDelegate;
-	
-	// Delegate to signal whenever the player's Level Percentage changed
-	FOnPlayerStatChangedSignature OnPlayerLevelPercentageChangedDelegate;
 	
 	// Delegate to signal whenever the player's Level changed
 	FOnPlayerStatChangedSignature OnPlayerLevelChangedDelegate;
@@ -100,11 +99,4 @@ private:
 	// Replication method for the player PlayerXP
 	UFUNCTION()
 	void OnRep_PlayerXP(int32 OldPlayerXP);
-	
-	// Current level percentage based on the current XP
-	UPROPERTY(VisibleAnywhere)
-	float CurrentLevelPercentage = 0.0f;
-	
-	// Finds the percentage of the current level this XP represents
-	float FindCurrentLevelPercent(const int32 XP) const;
 };
