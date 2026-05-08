@@ -86,7 +86,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 		// Initialise and cache the Ability Actor Info on the server as it will have all the information needed.
 		InitCharacterAndComponents();
 		
-		// Adds Abilities to the character
+		// Adds Startup Abilities to the character
 		AddCharacterAbilities();
 	}
 }

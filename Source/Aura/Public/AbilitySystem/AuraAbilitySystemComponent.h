@@ -30,6 +30,9 @@ public:
 	// Add Abilities to the character implementing this component
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
 	
+	// Add Passive Abilities to the character implementing this component
+	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& PassiveAbilities);
+	
 	// Check if Startup Abilities have been given
 	bool AreStartupAbilitiesGiven() const;
 	

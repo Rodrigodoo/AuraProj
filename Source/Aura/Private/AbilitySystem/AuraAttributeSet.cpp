@@ -7,6 +7,7 @@
 #include "AuraGameplayTagsManager.h"
 #include "GameplayEffectExtension.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Aura/AuraLogChannels.h"
 #include "GameFramework/Character.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Net/UnrealNetwork.h"
@@ -93,7 +94,6 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
-		UE_LOG(LogTemp, Warning, TEXT("Changed Health on %s: Health -> %f"), *EffectProperties.TargetAvatarActor->GetName(), GetHealth());
 	}
 	
 	// Clamp Mana
@@ -140,6 +140,17 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
 			ShowDamageAsFloatingText(EffectProperties, LocalIncomingDamage, bBlockedHit, bCriticalHit);
 		}
+	}
+	
+	// Process any Incoming XP change
+	// Note: This only gets called on the server
+	if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
+	{
+		// Get the incoming XP and resetting the attribute so it can process new sources of XP
+		const float LocalIncomingXP = GetIncomingXP();
+		SetIncomingXP(0.f);
+		
+		UE_LOG(LogAura, Warning, TEXT("The incoming XP changed to %f"), LocalIncomingXP);
 	}
 }
 

@@ -40,6 +40,19 @@ void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 	AbilitiesGivenDelegate.Broadcast();
 }
 
+void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& PassiveAbilities)
+{
+	// Loop through the passive abilities and grant them to the character
+	for(const TSubclassOf<UGameplayAbility> Ability : PassiveAbilities)
+	{
+		// Create an Ability Spec for this ability
+		FGameplayAbilitySpec AbilitySpec(Ability, 1);
+
+		// Give the ability and activate only once as they will be active throughout the entire game
+		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}
+
 bool UAuraAbilitySystemComponent::AreStartupAbilitiesGiven() const
 {
 	return bStartupAbilitiesGiven;

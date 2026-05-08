@@ -316,6 +316,11 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
 	FGameplayAttributeData IncomingDamage;
 	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, IncomingDamage);
+	
+	//~ Attribute to process all incoming XP (usually from a character death)
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingXP;
+	ATTRIBUTE_ACCESSORS_BASIC(UAuraAttributeSet, IncomingXP);
 	/*
 	 * End - Meta  Attributes
 	 */

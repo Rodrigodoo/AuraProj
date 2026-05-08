@@ -72,6 +72,15 @@ namespace AuraGameplayTagsManager
 		"Resistance to Physical Damage");
 	
 	/*
+	 * Meta Attributes
+	 */
+	// Attributes.Meta
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Meta, "Attributes.Meta", "Meta Attributes");
+	// Attributes.Meta.IncomingXP
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attributes_Meta_IncomingXP, "Attributes.Meta.IncomingXP", 
+		"Incoming XP Meta Attribute");
+	
+	/*
 	 * Abilities
 	 */
 	// Abilities

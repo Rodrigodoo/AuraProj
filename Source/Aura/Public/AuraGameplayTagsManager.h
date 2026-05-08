@@ -60,6 +60,14 @@ namespace AuraGameplayTagsManager
 	// Attributes.Resistance.Physical
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Resistance_Physical);
 	//~ End - Attributes Resistances
+	
+	//~ Begin - Meta Attributes
+	// Attributes.Meta
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Meta);
+	// Attributes.Meta.IncomingXP
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attributes_Meta_IncomingXP);
+	//~ End - Meta Attributes
+	
 	//~ End - Attributes
 	
 	//~ Begin - Abilities

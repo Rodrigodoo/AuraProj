@@ -234,6 +234,7 @@ void AAuraCharacterBase::AddCharacterAbilities()
 	// Add the startup Abilities to the character
 	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	AuraAbilitySystemComponent->AddCharacterAbilities(StartupAbilities);
+	AuraAbilitySystemComponent->AddCharacterPassiveAbilities(StartupPassiveAbilities);
 }
 
 void AAuraCharacterBase::Dissolve()
