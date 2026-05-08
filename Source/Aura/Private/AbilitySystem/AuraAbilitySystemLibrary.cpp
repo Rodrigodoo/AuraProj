@@ -218,6 +218,22 @@ UAuraCharacterClassInfoDataAsset* UAuraAbilitySystemLibrary::GetCharacterClassIn
 	return AuraGameMode->CharacterClassInfoDataAsset;
 }
 
+int32 UAuraAbilitySystemLibrary::XPRewardForClassAndLevel(const UObject* WorldContextObject, const EAuraCharacterClass CharacterClass,
+                                                 const int32 CharacterLevel)
+{
+	// Get Character Class Info Data Asset
+	const UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = GetCharacterClassInfoDataAsset(WorldContextObject);
+	if (!CharacterClassInfoDataAsset)
+	{
+		// If this is called on the client it will fail since GameMode is only available on the server
+		return 0;
+	}
+
+	// Find the appropriate CharacterClassDefaultInfo for this class type and return its XP Reward for the current level
+	const FAuraCharacterClassDefaultInfo CharacterClassDefaultInfo = CharacterClassInfoDataAsset->GetClassDefaultInfo(CharacterClass);
+	return static_cast<int32>(CharacterClassDefaultInfo.XPReward.GetValueAtLevel(CharacterLevel));
+}
+
 FGameplayTag UAuraAbilitySystemLibrary::GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
 	// Early check

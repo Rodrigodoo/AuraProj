@@ -49,6 +49,11 @@ void AAuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
+EAuraCharacterClass AAuraCharacterBase::GetCharacterClass_Implementation() const
+{
+	return CharacterClass;
+}
+
 FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const
 {
 	// Find the correct socket name for the montage being played

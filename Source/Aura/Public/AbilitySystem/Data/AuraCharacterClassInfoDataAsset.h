@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ScalableFloat.h"
 #include "Engine/DataAsset.h"
 #include "AuraCharacterClassInfoDataAsset.generated.h"
 
@@ -35,6 +36,10 @@ struct FAuraCharacterClassDefaultInfo
 	// Abilities used by this RPG Class
 	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
+	// XP to be rewarded when killing a character of this class (varies by character level)
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	FScalableFloat XPReward = FScalableFloat();
 };
 
 /**

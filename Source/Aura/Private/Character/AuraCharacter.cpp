@@ -26,6 +26,9 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+	
+	// Set aura as an Elementalist by default
+	CharacterClass = EAuraCharacterClass::Elementalist;
 }
 
 int32 AAuraCharacter::GetCharacterLevel() const

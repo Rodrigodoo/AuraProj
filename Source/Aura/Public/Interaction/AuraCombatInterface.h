@@ -7,6 +7,8 @@
 #include "UObject/Interface.h"
 #include "AuraCombatInterface.generated.h"
 
+enum class ECharacterClass : uint8;
+
 class UNiagaraSystem;
 // Structure to associate a Montage info to a GameplayTag
 // This will be used to decide what montages are played, which sockets are used, sounds to be played,
@@ -51,6 +53,10 @@ public:
 	// Get the current level of the actor
 	virtual int32 GetCharacterLevel() const;
 	
+	// Retrieves the Character's class.
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	EAuraCharacterClass GetCharacterClass() const;
+	
 	// Retrieves the combat socket location, generally for weapons, but depends on the montage being played
 	// This can be used to spawn effects, actor like projectiles, or apply damage.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -60,11 +66,7 @@ public:
 	// This can be used to set warping motions like translation or rotation
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& TargetLocation);
-	
-	// Retrieve the Hit React Montage for this object
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	UAnimMontage* GetHitReactMontage();
-	
+
 	// Method to be called when object/actor is destroyed/dies
 	virtual void Die() = 0;
 	
@@ -75,6 +77,16 @@ public:
 	// Get a reference to this interface owner
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	AActor* GetAvatar();
+	
+	// Retrieves the Blood Effect for this actor
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UNiagaraSystem* GetBloodEffect();
+	
+	//~ Begin - Montages
+	
+	// Retrieve the Hit React Montage for this object
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UAnimMontage* GetHitReactMontage();
 	
 	// Retrieves all attack montages used by this actor
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -90,9 +102,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool FindTaggedMontageByTag(const FGameplayTag& MontageTag, FTaggedMontage& OutTaggedMontage) const;
 	
-	// Retrieves the Blood Effect for this actor
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	UNiagaraSystem* GetBloodEffect();
+	//~ End - Montages
+	
+	
+	//~ Begin - Minions
 	
 	// Retrieves the number of alive minions bound to this object
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -111,4 +124,6 @@ public:
 	// Negative numbers will not be considered
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, meta = (UIMin = "1"))
 	void DecrementMinionCount(int32 Amount = 1);
+	
+	//~ End - Minions
 };

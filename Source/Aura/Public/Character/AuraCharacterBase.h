@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "GameFramework/Character.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "AuraCharacterBase.generated.h"
@@ -36,6 +37,9 @@ public:
 	virtual void BeginPlay() override;
 	
 	//~ Begin - IAuraCombatInterface overrides
+	
+	// Retrieves the Character's class
+	virtual EAuraCharacterClass GetCharacterClass_Implementation() const override;
 	
 	// Returns the location of the combat socket depending on the montage being played
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const override;
@@ -122,6 +126,10 @@ protected:
 	// - These should be an instant gameplay effects
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+	
+	// This Character's RPG Class
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Character Class Defaults")
+	EAuraCharacterClass CharacterClass = EAuraCharacterClass::Warrior;
 
 	// Initializes all default attributes for this character
 	virtual void InitializeDefaultAttributes() const;

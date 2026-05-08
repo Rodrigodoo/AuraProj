@@ -51,6 +51,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
 	static UAuraCharacterClassInfoDataAsset* GetCharacterClassInfoDataAsset(const UObject* WorldContextObject);
 	
+	// Finds how much XP should be rewarded when killing a character of said class and level
+	static int32 XPRewardForClassAndLevel(const UObject* WorldContextObject, EAuraCharacterClass CharacterClass, const int32 CharacterLevel);
+	
 	// Retrieves the Ability's tag from its Ability Spec
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	

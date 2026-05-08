@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "Character/AuraCharacterBase.h"
 #include "Interaction/AuraEnemyInterface.h"
 #include "UI/WidgetController/AuraOverlayController.h"
@@ -100,10 +99,6 @@ protected:
 	// Note: Note replicated because only the server needs to know this information
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Character Class Defaults")
 	int32  CharacterLevel = 1;
-	
-	// This Character's RPG Class
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Character Class Defaults")
-	EAuraCharacterClass CharacterClass = EAuraCharacterClass::Warrior;
 	
 	// Health Bar widget that hover over the character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Health Bar")
