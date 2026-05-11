@@ -75,7 +75,8 @@ void AAuraPlayerState::AddToPlayerXP(const int32 XPToAdd)
 	
 	// We loop from the next player level, to the player level + number of LevelUps
 	// The methods FindAttributePointRewardForLevel and FindSpellPointRewardForLevel fix the indexes
-	for (int Level = PlayerLevel + 1; Level <=  PlayerLevel + NumLevelUps; ++Level)
+	const int32 OldPlayerLevel = PlayerLevel;
+	for (int Level = OldPlayerLevel + 1; Level <=  OldPlayerLevel + NumLevelUps; ++Level)
 	{
 		// Add the attribute point reward
 		const int32 AttributePointReward = FindAttributePointRewardForLevel(Level);

@@ -105,6 +105,14 @@ void UAuraOverlayController::BindCallbacksToDependencies()
 				// Broadcast the new XP level
 				BroadcastXPPercentageChanges();
 			});
+	
+	// Get any Level changes
+	AuraPlayerState->OnPlayerLevelChangedDelegate.AddLambda(
+			[&](const int32 NewLevel)
+			{
+				// Broadcast the new level
+				OnPlayerLevelChangedDelegate.Broadcast(NewLevel);
+			});
 }
 
 void UAuraOverlayController::OnInitializedStartupAbilities()
