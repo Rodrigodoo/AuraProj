@@ -24,4 +24,8 @@ public:
 	// Adds XP to the Player
 	UFUNCTION(BlueprintNativeEvent)
 	void AddToPlayerXP(const int32 XPToAdd);
+	
+	// Levels up the player
+	UFUNCTION(BlueprintNativeEvent)
+	void LevelUp();
 };

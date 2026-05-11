@@ -44,7 +44,7 @@ public:
 	
 	//~ Begin - IAuraCombatInterface
 	// Get this enemy's level
-	virtual int32 GetCharacterLevel() const override;
+	virtual int32 GetCharacterLevel_Implementation() const override;
 	
 	// Process character's death (Only on server)
 	// Drop Weapon and Ragdoll

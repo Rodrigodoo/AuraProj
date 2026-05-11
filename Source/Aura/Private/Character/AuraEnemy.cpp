@@ -176,7 +176,7 @@ AActor* AAuraEnemy::GetCombatTarget_Implementation()
 	return CombatTarget;
 }
 
-int32 AAuraEnemy::GetCharacterLevel() const
+int32 AAuraEnemy::GetCharacterLevel_Implementation() const
 {
 	return CharacterLevel;
 }

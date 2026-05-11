@@ -415,8 +415,7 @@ void UAuraAttributeSet::ShowDamageAsFloatingText(const FEffectProperties& Effect
 
 void UAuraAttributeSet::SendXPEvent(const FEffectProperties& EffectProperties)
 {
-	IAuraCombatInterface* TargetCombatInterface = Cast<IAuraCombatInterface>(EffectProperties.TargetCharacter);
-	if (!TargetCombatInterface)
+	if (!EffectProperties.TargetCharacter->Implements<UAuraCombatInterface>())
 	{
 		// If the target does not implement a combat interface this method cannot be implemented
 		return;
@@ -424,7 +423,7 @@ void UAuraAttributeSet::SendXPEvent(const FEffectProperties& EffectProperties)
 	
 	// Retrieve the character class and level from the target and use it to retrieve the XP reward for when the target dies
 	const EAuraCharacterClass TargetCharacterClass = IAuraCombatInterface::Execute_GetCharacterClass(EffectProperties.TargetCharacter);
-	const int32 TargetCharacterLevel = TargetCombatInterface->GetCharacterLevel();
+	const int32 TargetCharacterLevel =  IAuraCombatInterface::Execute_GetCharacterLevel(EffectProperties.TargetCharacter);
 	const int32 XPReward = UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(EffectProperties.TargetCharacter, 
 		TargetCharacterClass, TargetCharacterLevel);
 	

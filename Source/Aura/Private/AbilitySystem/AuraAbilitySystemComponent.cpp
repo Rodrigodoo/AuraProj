@@ -139,7 +139,7 @@ const FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(c
 	// Loop through the activatable abilities and find which one has this ability tag
 	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{
-		if (Spec.Ability && Spec.Ability->AbilityTags.HasTag(AbilityTag))
+		if (Spec.Ability && Spec.Ability->GetAssetTags().HasTag(AbilityTag))
 		{
 			return &Spec;
 		}

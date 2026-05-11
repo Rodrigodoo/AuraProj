@@ -37,10 +37,10 @@ float UAuraMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGameplayEff
 	Intelligence = FMath::Max<float>(Intelligence, 0.f);
 	
 	// Get the character's level
-	float CharacterLevel = 1.f;
-	if (IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(Spec.GetContext().GetSourceObject()))
+	int32 CharacterLevel = 1;
+	if (Spec.GetContext().GetSourceObject()->Implements<UAuraCombatInterface>())
 	{
-		CharacterLevel = CombatInterface->GetCharacterLevel();
+		CharacterLevel = IAuraCombatInterface::Execute_GetCharacterLevel(Spec.GetContext().GetSourceObject());
 	}
 	
 	// Do the modifier calculation

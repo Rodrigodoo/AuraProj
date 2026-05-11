@@ -51,7 +51,8 @@ class AURA_API IAuraCombatInterface
 
 public:
 	// Get the current level of the actor
-	virtual int32 GetCharacterLevel() const;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	int32 GetCharacterLevel() const;
 	
 	// Retrieves the Character's class.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

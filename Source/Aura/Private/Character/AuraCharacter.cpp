@@ -31,7 +31,7 @@ AAuraCharacter::AAuraCharacter()
 	CharacterClass = EAuraCharacterClass::Elementalist;
 }
 
-int32 AAuraCharacter::GetCharacterLevel() const
+int32 AAuraCharacter::GetCharacterLevel_Implementation() const
 {
 	// Retrieve the Player state
 	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
@@ -49,6 +49,10 @@ void AAuraCharacter::AddToPlayerXP_Implementation(const int32 XPToAdd)
 	check(AuraPlayerState);
 	
 	AuraPlayerState->AddToPlayerXP(XPToAdd);
+}
+
+void AAuraCharacter::LevelUp_Implementation()
+{
 }
 
 void AAuraCharacter::InitCharacterAndComponents()

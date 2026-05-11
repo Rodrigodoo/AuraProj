@@ -176,9 +176,9 @@ void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
 	
 	// Get the character level to initialize the Abilities at the right level
 	int32 CharacterLevel = 1;
-	if (IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(AbilitySystemComponent->GetAvatarActor()))
+	if (AbilitySystemComponent->GetAvatarActor()->Implements<UAuraCombatInterface>())
 	{
-		CharacterLevel = CombatInterface->GetCharacterLevel();
+		CharacterLevel = IAuraCombatInterface::Execute_GetCharacterLevel(AbilitySystemComponent->GetAvatarActor());
 	}
 	
 	// Loop  through the common abilities and apply them to the Ability System Component's owner

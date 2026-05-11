@@ -88,8 +88,6 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	
 	const AActor* SourceAvatar = SourceAbilitySystemComponent ? SourceAbilitySystemComponent->GetAvatarActor() : nullptr;
 	const AActor* TargetAvatar = TargetAbilitySystemComponent ? TargetAbilitySystemComponent->GetAvatarActor() : nullptr;
-	const IAuraCombatInterface* SourceCombatInterface = Cast<IAuraCombatInterface>(SourceAvatar);
-	const IAuraCombatInterface* TargetCombatInterface = Cast<IAuraCombatInterface>(TargetAvatar);
 
 	//~  Begin - Early checks
 	//
@@ -99,8 +97,10 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	// - Source or Target Avatar Actors are not using a Combat Interface
 	// - Called from Client
 	// - No Character Class Info DataAsset -> No Damage Calculation Coefficients Curve Table -> No Curves set
-	check(SourceCombatInterface);
-	check(TargetCombatInterface);
+	check(SourceAvatar)
+	check(TargetAvatar)
+	check(SourceAvatar->Implements<UAuraCombatInterface>());
+	check(TargetAvatar->Implements<UAuraCombatInterface>());
 	UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = 
 		UAuraAbilitySystemLibrary::GetCharacterClassInfoDataAsset(SourceAvatar);
 	if (!CharacterClassInfoDataAsset)
@@ -197,14 +197,16 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	SourceArmorPenetrationMagnitude = FMath::Max(SourceArmorPenetrationMagnitude, 0.f);
 	
 	// Capture Armor Penetration coefficient
-	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetCharacterLevel());
+	const int32 SourceCharacterLevel = IAuraCombatInterface::Execute_GetCharacterLevel(SourceAvatar);
+	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCharacterLevel);
 	
 	// Effective Armor calculation - (Armor * (1 - (Armor Penetration * Coefficient)))
 	const float EffectiveArmor = TargetArmorMagnitude * 
 		(100.f - SourceArmorPenetrationMagnitude * ArmorPenetrationCoefficient) / 100.f;
 	
 	// Capture Effective Armor coefficient
-	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetCharacterLevel());
+	const int32 TargetCharacterLevel = IAuraCombatInterface::Execute_GetCharacterLevel(TargetAvatar);
+	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCharacterLevel);
 	
 	// Apply Armor to Damage - (Damage * (1 - (Effective Armor * Coefficient)))
 	Damage *= (100.f - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
@@ -222,7 +224,7 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	TargetCriticalHitResistanceMagnitude = FMath::Clamp(TargetCriticalHitResistanceMagnitude, 0.f, 100.f);
 	
 	// Capture Critical Hit Resistance coefficient
-	const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetCharacterLevel());
+	const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCharacterLevel);
 	
 	// Capture Critical Hit Damage on Source
 	float SourceCriticalHitDamageMagnitude = 0.f; // Damage Value

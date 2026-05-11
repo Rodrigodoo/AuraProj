@@ -23,7 +23,7 @@ public:
 	//~ Begin - IAuraCombatInterface
 	
 	// Get the player's level (the player level will be this character's level)
-	virtual int32 GetCharacterLevel() const override;
+	virtual int32 GetCharacterLevel_Implementation() const override;
 	
 	//~ End - IAuraCombatInterface
 	
@@ -31,6 +31,9 @@ public:
 	
 	// Adds an amount to the Player's XP
 	virtual void AddToPlayerXP_Implementation(const int32 XPToAdd) override;
+	
+	// levels up the character
+	virtual void LevelUp_Implementation() override;
 	
 	//~ End - IAuraPlayerInterface
 	
