@@ -96,6 +96,9 @@ public:
 	// Called after a Gameplay Effect is executed
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
+	// Maximizes the Vital Attributes' values (Health & Mana)
+	void MaximizeVitalAttributes();
+	
 	// Map between Gameplay Tags and accessor methods to Gameplay Attributes
 	TMap<FGameplayTag, TStaticFunctionPointer<FGameplayAttribute()>> TagToAttributes;
 	

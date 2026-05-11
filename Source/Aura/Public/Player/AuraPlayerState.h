@@ -54,9 +54,36 @@ public:
 	// Adds an amount to the Player's XP
 	void AddToPlayerXP(const int32 XPToAdd);
 	
+	// Finds the player's level for the provided XP
+	int32 FindLevelForXP(const int32 XP) const;
+	
 	// Returns the player XP
 	FORCEINLINE int32 GetPlayerXP() const { return PlayerXP; }
+	
+	// Returns the currently unused attribute points
+	FORCEINLINE int32 GetAttributePoints() const { return AttributePoints; }
 
+	// Sets the currently unused attribute points
+	void SetAttributePoints(const int32 NewAttributePoints);
+	
+	// Adds points to the currently unused attribute points
+	void AddToAttributePoints(const int32 AttributePointsToAdd);
+
+	// Returns the currently unused spell points
+	FORCEINLINE int32 GetSpellPoints() const { return SpellPoints; }
+
+	// Sets the currently unused spell points
+	void SetSpellPoints(const int32 NewSpellPoints);
+	
+	// Adds points to the currently unused spell points
+	void AddToSpellPoints(const int32 SpellPointsToAdd);
+
+	// Finds the Attribute points reward for said level
+	int32 FindAttributePointRewardForLevel(const int32 Level) const;
+	
+	// Finds the Spell points reward for said level
+	int32 FindSpellPointRewardForLevel(const int32 Level) const;
+	
 	// Data Asset with Level Up Information
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Level Up Data")
 	TObjectPtr<UAuraLevelUpInfoDataAsset> LevelUpInfoDataAsset;
@@ -99,4 +126,14 @@ private:
 	// Replication method for the player PlayerXP
 	UFUNCTION()
 	void OnRep_PlayerXP(int32 OldPlayerXP);
+	
+	// Currently unused attribute points
+	int32 AttributePoints = 0;
+
+public:
+	
+
+private:
+	// Currently unused spell point
+	int32 SpellPoints = 0;
 };

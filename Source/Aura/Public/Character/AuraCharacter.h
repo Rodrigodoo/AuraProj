@@ -29,6 +29,18 @@ public:
 	
 	//~ Begin - IAuraPlayerInterface
 	
+	// Retrieves the Attribute points reward for said Level
+	virtual int32 GetAttributePointsReward_Implementation(const int32 Level) const override;
+	
+	// Retrieves the Spell points reward for said Level
+	virtual int32 GetSpellPointsReward_Implementation(const int32 Level) const override;
+	
+	// Retrieves the player level for the provided XP 
+	virtual int32 FindLevelForXP_Implementation(const int32 XP) const override;
+	
+	// Retrieves the player's current XP
+	virtual int32 GetPlayerXP_Implementation() const override;
+	
 	// Adds an amount to the Player's XP
 	virtual void AddToPlayerXP_Implementation(const int32 XPToAdd) override;
 	

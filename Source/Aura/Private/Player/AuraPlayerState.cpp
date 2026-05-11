@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AuraLevelUpInfoDataAsset.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -61,6 +62,79 @@ void AAuraPlayerState::AddToPlayerXP(const int32 XPToAdd)
 {
 	PlayerXP += XPToAdd;
 	OnPlayerXPChangedDelegate.Broadcast(PlayerXP);
+
+	// Check if a level up is required
+	// Possible new player level
+	const int32 NewPlayerLevel = FindLevelForXP(PlayerXP);
+	const int32 NumLevelUps = NewPlayerLevel - PlayerLevel;
+	if (NumLevelUps <= 0)
+	{
+		// There is no need for a level up
+		return;
+	}
+	
+	// We loop from the next player level, to the player level + number of LevelUps
+	// The methods FindAttributePointRewardForLevel and FindSpellPointRewardForLevel fix the indexes
+	for (int Level = PlayerLevel + 1; Level <=  PlayerLevel + NumLevelUps; ++Level)
+	{
+		// Add the attribute point reward
+		const int32 AttributePointReward = FindAttributePointRewardForLevel(Level);
+		AddToAttributePoints(AttributePointReward);
+		// Add the spell point reward
+		const int32 SpellPointReward = FindSpellPointRewardForLevel(Level);
+		AddToSpellPoints(SpellPointReward);
+
+		// Add a player level
+		AddToPlayerLevel(1);
+	}
+	
+	// If a level up occured maximize Health and Mana (only needs to happen once!)
+	if (UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(GetAttributeSet()))
+	{
+		AuraAttributeSet->MaximizeVitalAttributes();
+	}
+}
+
+int32 AAuraPlayerState::FindLevelForXP(const int32 XP) const
+{
+	check(LevelUpInfoDataAsset)
+	return LevelUpInfoDataAsset->FindLevelForXP(XP);
+}
+
+void AAuraPlayerState::SetAttributePoints(const int32 NewAttributePoints)
+{
+	AttributePoints = NewAttributePoints;
+}
+
+void AAuraPlayerState::AddToAttributePoints(const int32 AttributePointsToAdd)
+{
+	AttributePoints += AttributePointsToAdd;
+}
+
+void AAuraPlayerState::AddToSpellPoints(const int32 SpellPointsToAdd)
+{
+	SpellPoints += SpellPointsToAdd;
+}
+
+int32 AAuraPlayerState::FindAttributePointRewardForLevel(const int32 Level) const
+{
+	// Since LevelUpInfoData is 0 index based, then we need to remove 1 to the Level get the right position
+	check(LevelUpInfoDataAsset)
+	check(LevelUpInfoDataAsset->LevelUpInfoData.IsValidIndex(Level - 1))
+	return LevelUpInfoDataAsset->LevelUpInfoData[Level - 1].AttributePointReward;
+}
+
+int32 AAuraPlayerState::FindSpellPointRewardForLevel(const int32 Level) const
+{
+	// Since LevelUpInfoData is 0 index based, then we need to remove 1 to the Level get the right position
+	check(LevelUpInfoDataAsset)
+	check(LevelUpInfoDataAsset->LevelUpInfoData.IsValidIndex(Level - 1))
+	return LevelUpInfoDataAsset->LevelUpInfoData[Level - 1].SpellPointReward;
+}
+
+void AAuraPlayerState::SetSpellPoints(const int32 NewSpellPoints)
+{
+	SpellPoints = NewSpellPoints;
 }
 
 void AAuraPlayerState::OnRep_PlayerLevel(int32 OldPlayerLevel)

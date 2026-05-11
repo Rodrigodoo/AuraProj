@@ -154,9 +154,15 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		const float LocalIncomingXP = GetIncomingXP();
 		SetIncomingXP(0.f);
 
-		// Apply the XP change to the actor receiving the XP
+		// Apply the XP change to the actor receiving the XP (it is an apply to self effect so we can use source)
 		IAuraPlayerInterface::Execute_AddToPlayerXP(EffectProperties.SourceCharacter, LocalIncomingXP);
 	}
+}
+
+void UAuraAttributeSet::MaximizeVitalAttributes()
+{
+	SetHealth(GetMaxHealth());
+	SetMana(GetMaxMana());
 }
 
 void UAuraAttributeSet::OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const
