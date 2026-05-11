@@ -88,7 +88,7 @@ void AAuraPlayerState::AddToPlayerXP(const int32 XPToAdd)
 		// Add a player level
 		AddToPlayerLevel(1);
 	}
-	
+
 	// If a level up occured maximize Health and Mana (only needs to happen once!)
 	if (UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(GetAttributeSet()))
 	{

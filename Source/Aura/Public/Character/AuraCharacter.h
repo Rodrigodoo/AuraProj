@@ -7,6 +7,9 @@
 #include "Interaction/AuraPlayerInterface.h"
 #include "AuraCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+class UNiagaraComponent;
 class AAuraPlayerState;
 
 /**
@@ -71,8 +74,24 @@ public:
 	virtual void OnRep_PlayerState() override;
 	
 	//~ End - APawn Overrides
+	
+	// Component to display level effects
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
 protected:
 
+	// Top down Camera used by this character
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UCameraComponent> TopDownCameraComponent;
+	
+	// Spring Arm used by the camera
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USpringArmComponent> CameraBoom;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Rotation")
 	float YawRotationRate = 400.0f;
+	
+	// Multicast method to spawn level up effects
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastLevelUpParticles() const;
 };

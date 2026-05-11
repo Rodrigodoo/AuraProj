@@ -4,8 +4,11 @@
 #include "Character/AuraCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "NiagaraComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/HUD/AuraHUD.h"
@@ -13,6 +16,22 @@
 AAuraCharacter::AAuraCharacter()
 {
 	// Top down type character setup
+	
+	// Setup Camera & Spring Arm
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>("CameraBoom");
+	CameraBoom->SetupAttachment(GetRootComponent());
+	CameraBoom->SetUsingAbsoluteRotation(true);
+	CameraBoom->bDoCollisionTest = false;
+	CameraBoom->bEnableCameraLag = true;
+	
+	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>("TopDownCameraComponent");
+	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	TopDownCameraComponent->bUsePawnControlRotation = false;
+	
+	// Level up Niagara component setup
+	LevelUpNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("LevelUpNiagaraComponent");
+	LevelUpNiagaraComponent->SetupAttachment(GetRootComponent());
+	LevelUpNiagaraComponent->bAutoActivate = false;
 	
 	// Setup Character orientation
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -89,6 +108,7 @@ void AAuraCharacter::AddToPlayerXP_Implementation(const int32 XPToAdd)
 
 void AAuraCharacter::LevelUp_Implementation()
 {
+	MulticastLevelUpParticles_Implementation();
 }
 
 void AAuraCharacter::InitCharacterAndComponents()
@@ -124,6 +144,16 @@ void AAuraCharacter::InitCharacterAndComponents()
 			HUD->InitOverlay(AuraPlayerController, AuraPlayerState,AbilitySystemComponent,AttributeSet);
 		}
 	}
+	
+	// Bindings to Player State
+	
+	// Level up bindings
+	AuraPlayerState->OnPlayerLevelChangedDelegate.AddLambda(
+		[&](int32 NewPlayerLevel)
+		{
+			MulticastLevelUpParticles_Implementation();
+		});
+	
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
@@ -147,4 +177,20 @@ void AAuraCharacter::OnRep_PlayerState()
 	
 	// Initialise and cache the Ability Actor Info on the client as it will have all the information needed.
 	InitCharacterAndComponents();
+}
+
+void AAuraCharacter::MulticastLevelUpParticles_Implementation() const
+{
+	// Activate the particle effect
+	if (IsValid(LevelUpNiagaraComponent))
+	{
+		// Rotate the effects towards the camera 
+		const FVector CameraLocation = TopDownCameraComponent->GetComponentLocation();
+		const FVector NiagaraSystemLocation = LevelUpNiagaraComponent->GetComponentLocation();
+		const FRotator ToCameraRotation = (CameraLocation - NiagaraSystemLocation).Rotation();
+		LevelUpNiagaraComponent->SetWorldRotation(ToCameraRotation);
+		
+		// Spawn the effect
+		LevelUpNiagaraComponent->Activate(true);
+	}
 }
