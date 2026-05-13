@@ -10,6 +10,9 @@
 class UAbilitySystemComponent;
 class UAttributeSet;
 
+// Delegates that can be used in BP and called on multiple widgets
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStatChangedSignature, int32, NewValue);
+
 /**
  * Struct in charge or recording the model classes to retrieve data from
  */

@@ -34,9 +34,13 @@ public:
 	virtual void BindCallbacksToDependencies() override;
 	//~ End - UAuraWidgetController Overrides
 	
+	// Delegate to broadcast Attribute value changes
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FAttributeInfoSignature AttributeInfoDelegate;
 	
+	// Delegate to broadcast when Attribute Points changes
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FOnStatChangedSignature AttributePointsDelegate;
 protected:
 
 	// Reference to the Attribute Info data asset storing the attribute information

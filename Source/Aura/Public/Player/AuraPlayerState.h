@@ -96,6 +96,12 @@ public:
 	// Delegate to signal whenever the player's Level changed
 	FOnPlayerStatChangedSignature OnPlayerLevelChangedDelegate;
 	
+	// Delegate to signal whenever the player's Attribute Points changed
+	FOnPlayerStatChangedSignature OnPlayerAttributePointsChangedDelegate;
+	
+	// Delegate to signal whenever the player's Spell Points changed
+	FOnPlayerStatChangedSignature OnPlayerSpellPointsChangedDelegate;
+	
 	//~ End - Delegates
 	
 protected:
@@ -128,12 +134,20 @@ private:
 	void OnRep_PlayerXP(int32 OldPlayerXP);
 	
 	// Currently unused attribute points
+	// These are used to increase attribute values
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_AttributePoints)
 	int32 AttributePoints = 0;
-
-public:
 	
-
-private:
+	// Replication method for AttributePoints
+	UFUNCTION()
+	void OnRep_AttributePoints(int32 OldAttributePoints);
+	
 	// Currently unused spell point
-	int32 SpellPoints = 0;
+	// Used to purchase new spells and increase spell levels
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SpellPoints)
+	int32 SpellPoints = 1;
+	
+	// Replication method for Spell Points
+	UFUNCTION()
+	void OnRep_SpellPoints(int32 OldSpellPoints);
 };

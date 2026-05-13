@@ -33,6 +33,8 @@ void AAuraPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
 	// Registers the variables to be replicated
 	DOREPLIFETIME(AAuraPlayerState, PlayerLevel);
 	DOREPLIFETIME(AAuraPlayerState, PlayerXP);
+	DOREPLIFETIME(AAuraPlayerState, AttributePoints);
+	DOREPLIFETIME(AAuraPlayerState, SpellPoints);
 }
 
 UAbilitySystemComponent* AAuraPlayerState::GetAbilitySystemComponent() const
@@ -105,16 +107,25 @@ int32 AAuraPlayerState::FindLevelForXP(const int32 XP) const
 void AAuraPlayerState::SetAttributePoints(const int32 NewAttributePoints)
 {
 	AttributePoints = NewAttributePoints;
+	OnPlayerAttributePointsChangedDelegate.Broadcast(AttributePoints);
 }
 
 void AAuraPlayerState::AddToAttributePoints(const int32 AttributePointsToAdd)
 {
 	AttributePoints += AttributePointsToAdd;
+	OnPlayerAttributePointsChangedDelegate.Broadcast(AttributePoints);
 }
 
 void AAuraPlayerState::AddToSpellPoints(const int32 SpellPointsToAdd)
 {
 	SpellPoints += SpellPointsToAdd;
+	OnPlayerSpellPointsChangedDelegate.Broadcast(SpellPoints);
+}
+
+void AAuraPlayerState::SetSpellPoints(const int32 NewSpellPoints)
+{
+	SpellPoints = NewSpellPoints;
+	OnPlayerSpellPointsChangedDelegate.Broadcast(SpellPoints);
 }
 
 int32 AAuraPlayerState::FindAttributePointRewardForLevel(const int32 Level) const
@@ -133,11 +144,6 @@ int32 AAuraPlayerState::FindSpellPointRewardForLevel(const int32 Level) const
 	return LevelUpInfoDataAsset->LevelUpInfoData[Level - 1].SpellPointReward;
 }
 
-void AAuraPlayerState::SetSpellPoints(const int32 NewSpellPoints)
-{
-	SpellPoints = NewSpellPoints;
-}
-
 void AAuraPlayerState::OnRep_PlayerLevel(int32 OldPlayerLevel)
 {
 	// Signal that the player Level changed
@@ -148,4 +154,16 @@ void AAuraPlayerState::OnRep_PlayerXP(int32 OldPlayerXP)
 {
 	// Signal that the player XP changed
 	OnPlayerXPChangedDelegate.Broadcast(PlayerXP);
+}
+
+void AAuraPlayerState::OnRep_AttributePoints(int32 OldAttributePoints)
+{
+	// Signal that the player Attribute Points changed
+	OnPlayerAttributePointsChangedDelegate.Broadcast(AttributePoints);
+}
+
+void AAuraPlayerState::OnRep_SpellPoints(int32 OldSpellPoints)
+{
+	// Signal that the player Spell Points changed
+	OnPlayerSpellPointsChangedDelegate.Broadcast(SpellPoints);
 }
