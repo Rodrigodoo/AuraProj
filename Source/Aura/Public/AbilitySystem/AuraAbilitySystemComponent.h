@@ -52,11 +52,14 @@ public:
 	bool CheckAbilityCostFromTag(const FGameplayTag& AbilityTag);
 	
 	// Upgrades the attribute related to the tag
-	void UpgradeAttributes(const FGameplayTag& AttributeTag); 
+	void UpgradeAttributes(const FGameplayTag& AttributeTag);
+	
+	// Reverts the attribute point related to the tag
+	void RevertAttributes(const FGameplayTag& AttributeTag); 
 	
 	// Server RPC to upgrade the attribute related to the tag
 	UFUNCTION(Server, Reliable)
-	void ServerUpgradeAttributes(const FGameplayTag& AttributeTag);
+	void ServerUpgradeAttributes(const FGameplayTag& AttributeTag, int32 AttributeValue);
 	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTagsDelegate;

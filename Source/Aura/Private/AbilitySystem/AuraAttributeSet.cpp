@@ -7,8 +7,6 @@
 #include "AuraGameplayTagsManager.h"
 #include "GameplayEffectExtension.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
-#include "Aura/AuraLogChannels.h"
-#include "Chaos/Character/CharacterGroundConstraintContainer.h"
 #include "GameFramework/Character.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Interaction/AuraPlayerInterface.h"
@@ -170,7 +168,7 @@ void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute,
 		SetHealth(GetMaxHealth());
 		bTopOffHealth = false;
 	}
-	if (bTopOffMana && Attribute == GetManaAttribute())
+	if (bTopOffMana && Attribute == GetMaxManaAttribute())
 	{
 		SetMana(GetMaxMana());
 		bTopOffMana = false;

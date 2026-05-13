@@ -13,6 +13,7 @@ void UAuraAttributeMenuController::BroadcastInitialValues()
 	// Early checks
 	check(AuraAttributeInfoDataAsset)
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
+	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
 	
 	// Read the attributes' value from the Attribute Set and apply it to the Attribute Info struct to be broadcast
 	// Pair: Key - FGameplayTag | Value - Function pointer (FGameplayAttribute(*)())
@@ -22,6 +23,9 @@ void UAuraAttributeMenuController::BroadcastInitialValues()
 		// Broadcasts this Attribute Info using the provided TagToAttribute pair
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
 	}
+	
+	// Broadcast the initial attribute points
+	AttributePointsDelegate.Broadcast(AuraPlayerState->GetAttributePoints());
 }
 
 void UAuraAttributeMenuController::BindCallbacksToDependencies()
@@ -57,6 +61,12 @@ void UAuraAttributeMenuController::UpgradeAttributes(const FGameplayTag& Attribu
 {
 	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	AuraAbilitySystemComponent->UpgradeAttributes(AttributeTag);
+}
+
+void UAuraAttributeMenuController::RevertAttributes(const FGameplayTag& AttributeTag) const
+{
+	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	AuraAbilitySystemComponent->RevertAttributes(AttributeTag);
 }
 
 void UAuraAttributeMenuController::BroadcastAttributeInfo(

@@ -149,20 +149,32 @@ void UAuraAbilitySystemComponent::UpgradeAttributes(const FGameplayTag& Attribut
 	}
 	
 	// Call the upgrade on the server
-	ServerUpgradeAttributes_Implementation(AttributeTag);
+	ServerUpgradeAttributes_Implementation(AttributeTag, 1);
 }
 
-void UAuraAbilitySystemComponent::ServerUpgradeAttributes_Implementation(const FGameplayTag& AttributeTag)
+void UAuraAbilitySystemComponent::RevertAttributes(const FGameplayTag& AttributeTag)
+{
+	// Early checks
+	if (!GetAvatarActor()->Implements<UAuraPlayerInterface>())
+	{
+		return;
+	}
+	
+	// Revert the upgrade on the server
+	ServerUpgradeAttributes_Implementation(AttributeTag, -1);
+}
+
+void UAuraAbilitySystemComponent::ServerUpgradeAttributes_Implementation(const FGameplayTag& AttributeTag, const int32 AttributeValue)
 {
 	// Create an event and send it to the Avatar Actor
 	// The actor should have a passive ability that waits for events and then applies a change
 	FGameplayEventData Payload;
 	Payload.EventTag = AttributeTag;
-	Payload.EventMagnitude = 1.f;
+	Payload.EventMagnitude = AttributeValue;
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetAvatarActor(), AttributeTag, Payload);
 	
 	// Decrease the Available Attribute Points by one
-	IAuraPlayerInterface::Execute_AddToPlayerAttributePoints(GetAvatarActor(), -1);
+	IAuraPlayerInterface::Execute_AddToPlayerAttributePoints(GetAvatarActor(), -AttributeValue);
 }
 
 const FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)

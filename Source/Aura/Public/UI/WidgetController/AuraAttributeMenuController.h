@@ -37,6 +37,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpgradeAttributes(const FGameplayTag& AttributeTag) const;
 	
+	// Revert the attribute point related to the tag
+	UFUNCTION(BlueprintCallable)
+	void RevertAttributes(const FGameplayTag& AttributeTag) const;
+	
 	// Delegate to broadcast Attribute value changes
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FAttributeInfoSignature AttributeInfoDelegate;
