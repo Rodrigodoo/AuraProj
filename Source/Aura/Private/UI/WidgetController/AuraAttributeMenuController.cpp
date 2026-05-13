@@ -55,6 +55,9 @@ void UAuraAttributeMenuController::BindCallbacksToDependencies()
 void UAuraAttributeMenuController::BroadcastAttributeInfo(
 	const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const
 {
+	// Get player state
+	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	
 	// Get the Attribute Info from the Attribute Info Data Asset
 	FAuraAttributeInfo Info = AuraAttributeInfoDataAsset->FindAttributeInfoFromTag(AttributeTag);
 				
@@ -64,4 +67,8 @@ void UAuraAttributeMenuController::BroadcastAttributeInfo(
 				
 	// Broadcast Attribute Info to listeners
 	AttributeInfoDelegate.Broadcast(Info);
+	
+	// Broadcast initial attribute points
+	AttributePointsDelegate.Broadcast(AuraPlayerState->GetAttributePoints());
+	
 }
