@@ -25,7 +25,6 @@ class AURA_API UAuraAttributeMenuController : public UAuraWidgetController
 	GENERATED_BODY()
 	
 public:
-	
 	//~ Begin - UAuraWidgetController Overrides
 	// Call delegates to broadcast initial values
 	virtual void BroadcastInitialValues() override;
@@ -33,6 +32,10 @@ public:
 	// Binds callbacks to dependencies of this controller
 	virtual void BindCallbacksToDependencies() override;
 	//~ End - UAuraWidgetController Overrides
+	
+	// Upgrades the attribute related to the tag
+	UFUNCTION(BlueprintCallable)
+	void UpgradeAttributes(const FGameplayTag& AttributeTag) const;
 	
 	// Delegate to broadcast Attribute value changes
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")

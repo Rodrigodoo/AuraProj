@@ -47,6 +47,12 @@ public:
 	// Adds an amount to the Player's XP
 	virtual void AddToPlayerXP_Implementation(const int32 XPToAdd) override;
 	
+	// Gets the player's currently available attribute points
+	virtual int32 GetPlayerAttributePoints_Implementation() const override;
+	
+	// Adds points the player's currently available attribute points
+	virtual void AddToPlayerAttributePoints_Implementation(const int32 PointsToAdd) const override;
+	
 	// levels up the character
 	virtual void LevelUp_Implementation() override;
 	

@@ -106,6 +106,24 @@ void AAuraCharacter::AddToPlayerXP_Implementation(const int32 XPToAdd)
 	AuraPlayerState->AddToPlayerXP(XPToAdd);
 }
 
+int32 AAuraCharacter::GetPlayerAttributePoints_Implementation() const
+{
+	// Retrieve the Player state
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	
+	return AuraPlayerState->GetAttributePoints();
+}
+
+void AAuraCharacter::AddToPlayerAttributePoints_Implementation(const int32 PointsToAdd) const
+{
+	// Retrieve the Player state
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	
+	return AuraPlayerState->AddToAttributePoints(PointsToAdd);
+}
+
 void AAuraCharacter::LevelUp_Implementation()
 {
 	MulticastLevelUpParticles_Implementation();

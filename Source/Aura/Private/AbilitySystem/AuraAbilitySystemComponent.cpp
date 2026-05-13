@@ -3,9 +3,11 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/Abilities/AuraGameplayAbilityBase.h"
 #include "Aura/AuraLogChannels.h"
+#include "Interaction/AuraPlayerInterface.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -132,6 +134,35 @@ bool UAuraAbilitySystemComponent::CheckAbilityCostFromTag(const FGameplayTag& Ab
 		return AbilitySpec->Ability->CheckCost(AbilitySpec->Handle, AbilityActorInfo.Get());
 	}
 	return false;
+}
+
+void UAuraAbilitySystemComponent::UpgradeAttributes(const FGameplayTag& AttributeTag)
+{
+	// Early checks
+	if (!GetAvatarActor()->Implements<UAuraPlayerInterface>())
+	{
+		return;
+	}
+	if (IAuraPlayerInterface::Execute_GetPlayerAttributePoints(GetAvatarActor()) < 1)
+	{
+		return;
+	}
+	
+	// Call the upgrade on the server
+	ServerUpgradeAttributes_Implementation(AttributeTag);
+}
+
+void UAuraAbilitySystemComponent::ServerUpgradeAttributes_Implementation(const FGameplayTag& AttributeTag)
+{
+	// Create an event and send it to the Avatar Actor
+	// The actor should have a passive ability that waits for events and then applies a change
+	FGameplayEventData Payload;
+	Payload.EventTag = AttributeTag;
+	Payload.EventMagnitude = 1.f;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetAvatarActor(), AttributeTag, Payload);
+	
+	// Decrease the Available Attribute Points by one
+	IAuraPlayerInterface::Execute_AddToPlayerAttributePoints(GetAvatarActor(), -1);
 }
 
 const FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)

@@ -51,6 +51,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystem")
 	bool CheckAbilityCostFromTag(const FGameplayTag& AbilityTag);
 	
+	// Upgrades the attribute related to the tag
+	void UpgradeAttributes(const FGameplayTag& AttributeTag); 
+	
+	// Server RPC to upgrade the attribute related to the tag
+	UFUNCTION(Server, Reliable)
+	void ServerUpgradeAttributes(const FGameplayTag& AttributeTag);
+	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTagsDelegate;
 	

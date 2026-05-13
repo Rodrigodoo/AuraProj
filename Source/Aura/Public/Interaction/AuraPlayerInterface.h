@@ -41,6 +41,14 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void AddToPlayerXP(const int32 XPToAdd);
 	
+	// Gets the player's currently available attribute points
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetPlayerAttributePoints() const;
+	
+	// Adds points the player's currently available attribute points
+	UFUNCTION(BlueprintNativeEvent)
+	void AddToPlayerAttributePoints(const int32 PointsToAdd) const;
+	
 	// Levels up the player
 	UFUNCTION(BlueprintNativeEvent)
 	void LevelUp();
