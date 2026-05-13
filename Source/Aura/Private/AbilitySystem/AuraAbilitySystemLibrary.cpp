@@ -270,6 +270,53 @@ FGameplayTag UAuraAbilitySystemLibrary::GetInputTagFromSpec(const FGameplayAbili
 	return FGameplayTag();
 }
 
+void UAuraAbilitySystemLibrary::AssignAndApplyToSelfSetByCallerEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpecHandle& EffectSpecHandle, const FGameplayTag& DataTag, const float Magnitude, const bool
+                                                                SupressWarnings)
+{
+	// Early check
+	if (!AbilitySystemComponent || !EffectSpecHandle.IsValid())
+	{
+		return;
+	}
+	
+	// Assign the set by SetByCallerMagnitude for the provided Tag
+	EffectSpecHandle.Data->SetSetByCallerMagnitude(DataTag, Magnitude);
+	
+	// Fill out the Effect Spec with all other set by caller tags, so there are no warnings
+	if (SupressWarnings)
+	{
+		// Early check
+		const UGameplayEffect* GameplayEffect = EffectSpecHandle.Data->Def;
+		if (!GameplayEffect)
+		{
+			return;
+		}
+		
+		// Go through the modifiers to find the set by caller ones
+		for (const FGameplayModifierInfo& ModifierInfo : GameplayEffect->Modifiers)
+		{
+			// Early check
+			if (ModifierInfo.ModifierMagnitude.GetMagnitudeCalculationType() != EGameplayEffectMagnitudeCalculation::SetByCaller)
+			{
+				continue;
+			}
+			
+			// If found, then pass the set by caller tag into the Effect Spec with a magnitude of 0.f
+			// Note: Except for the one already applied
+			const FGameplayTag SetByCallerTag = ModifierInfo.ModifierMagnitude.GetSetByCallerFloat().DataTag;
+			if (SetByCallerTag.MatchesTagExact(DataTag))
+			{
+				continue;
+			}
+			
+			EffectSpecHandle.Data->SetSetByCallerMagnitude(SetByCallerTag, 0.f);
+		}
+	}
+	
+	// Now apply the Effect Spec to Self
+	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+}
+
 bool UAuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	// Retrieve the Aura Gameplay Effect Context and check if it was a Blocked Hit

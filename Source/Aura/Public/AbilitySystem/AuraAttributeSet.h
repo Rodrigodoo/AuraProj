@@ -88,6 +88,8 @@ public:
 	// Replication method override for variable replication
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
+	//~ Begin - UAttributeSet Overrides
+	
 	// Called before an attribute change
 	// should only be used for clamping
 	// Later modifications might affect this value even after clamping it
@@ -95,6 +97,11 @@ public:
 	
 	// Called after a Gameplay Effect is executed
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	
+	// Called just after any modification happens to an attribute
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+	
+	//~ End - UAttributeSet Overrides
 	
 	// Maximizes the Vital Attributes' values (Health & Mana)
 	void MaximizeVitalAttributes();
@@ -342,4 +349,11 @@ private:
 	// Sends an XP Event to attacker (source) after it killed its target
 	// Retrieves the XP reward from the target
 	void SendXPEvent(const FEffectProperties& EffectProperties);
+	
+	// Flags
+	
+	// Flagg to signal that Health should be topped off
+	bool bTopOffHealth = false;
+	// Flagg to signal that Health should be topped off
+	bool bTopOffMana = false;
 };

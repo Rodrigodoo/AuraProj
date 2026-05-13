@@ -8,6 +8,7 @@
 #include "GameplayEffectExtension.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Aura/AuraLogChannels.h"
+#include "Chaos/Character/CharacterGroundConstraintContainer.h"
 #include "GameFramework/Character.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Interaction/AuraPlayerInterface.h"
@@ -159,10 +160,28 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	}
 }
 
+void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+	
+	// If the vital attributes were signalled to be maxed out, increase them and reset flags
+	if (bTopOffHealth && Attribute == GetMaxHealthAttribute())
+	{
+		SetHealth(GetMaxHealth());
+		bTopOffHealth = false;
+	}
+	if (bTopOffMana && Attribute == GetManaAttribute())
+	{
+		SetMana(GetMaxMana());
+		bTopOffMana = false;
+	}
+}
+
 void UAuraAttributeSet::MaximizeVitalAttributes()
 {
-	SetHealth(GetMaxHealth());
-	SetMana(GetMaxMana());
+	// Signals the Attribute Set that the vital attributes should be maxed out
+	bTopOffHealth = true;
+	bTopOffMana = true;
 }
 
 void UAuraAttributeSet::OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const

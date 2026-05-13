@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AuraAbilitySystemLibrary.generated.h"
@@ -59,6 +60,15 @@ public:
 	
 	// Retrieves the Ability's Input tag from its Ability Spec
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	
+	// Assign a Tag set by caller magnitude and apply it to self
+	// Note: If SupressWarnings = true, then a set by caller magnitude will be created for all other modifiers 
+	// that use set by caller with a magnitude of 0.f. This will guarantee that no warning will occur.
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|Effects")
+	static void AssignAndApplyToSelfSetByCallerEffect(UAbilitySystemComponent* AbilitySystemComponent,
+	                                            const FGameplayEffectSpecHandle& EffectSpecHandle,
+	                                            const FGameplayTag& DataTag, float Magnitude,
+	                                            bool SupressWarnings = true);
 	
 	// Checks if the Gameplay Effect pertains to a Blocked Hit
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
