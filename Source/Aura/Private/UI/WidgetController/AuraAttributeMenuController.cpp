@@ -87,5 +87,4 @@ void UAuraAttributeMenuController::BroadcastAttributeInfo(
 	
 	// Broadcast initial attribute points
 	AttributePointsDelegate.Broadcast(AuraPlayerState->GetAttributePoints());
-	
 }
