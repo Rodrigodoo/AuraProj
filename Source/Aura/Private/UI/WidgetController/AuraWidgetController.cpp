@@ -10,6 +10,11 @@
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
 
+bool FWidgetControllerParams::IsValid() const
+{
+	return PlayerController && PlayerState && AbilitySystemComponent && AttributeSet;
+}
+
 void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
 {
 	PlayerController = WCParams.PlayerController;

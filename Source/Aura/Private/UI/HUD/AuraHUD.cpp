@@ -4,41 +4,31 @@
 #include "UI/HUD/AuraHUD.h"
 
 #include "Blueprint/UserWidget.h"
-#include "Player/AuraPlayerState.h"
 #include "UI/Widget/AuraUserWidget.h"
 #include "UI/WidgetController/AuraAttributeMenuController.h"
 #include "UI/WidgetController/AuraOverlayController.h"
+#include "UI/WidgetController/AuraSpellMenuController.h"
 
 UAuraOverlayController* AAuraHUD::GetAuraOverlayController(const FWidgetControllerParams& WCParams)
 {
-	// If none exists create a new one
-	if (!OverlayController)
-	{
-		// Creates the Overlay Controller and initialises its params
-		OverlayController = NewObject<UAuraOverlayController>(this, OverlayControllerClass);
-		OverlayController->SetWidgetControllerParams(WCParams);
-		OverlayController->BindCallbacksToDependencies();
-	}
-
-	return OverlayController;
+	return CreateOrGetWidgetController<UAuraOverlayController>(
+		OverlayController, OverlayControllerClass, WCParams);
 }
 
 UAuraAttributeMenuController* AAuraHUD::GetAuraAttributeMenuController(const FWidgetControllerParams& WCParams)
 {
-	// If none exists create a new one
-	if (!AttributeMenuController)
-	{
-		// Creates the Attribute Menu Controller and initialises its params
-		AttributeMenuController = NewObject<UAuraAttributeMenuController>(this, AttributeMenuControllerClass);
-		AttributeMenuController->SetWidgetControllerParams(WCParams);
-		AttributeMenuController->BindCallbacksToDependencies();
-	}
+	return CreateOrGetWidgetController<UAuraAttributeMenuController>(
+		AttributeMenuController, AttributeMenuControllerClass, WCParams);
+}
 
-	return AttributeMenuController;
+UAuraSpellMenuController* AAuraHUD::GetAuraSpellMenuController(const FWidgetControllerParams& WCParams)
+{
+	return CreateOrGetWidgetController<UAuraSpellMenuController>(
+		SpellMenuController, SpellMenuControllerClass, WCParams);
 }
 
 void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC,
-	UAttributeSet* AS)
+                           UAttributeSet* AS)
 {
 	// Early checks
 	checkf(OverlayWidgetClass, TEXT("Overlay Widget Class uninitialised, please define in BP_AuraHUD"));

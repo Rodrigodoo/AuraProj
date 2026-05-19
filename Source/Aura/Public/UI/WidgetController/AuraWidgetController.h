@@ -46,6 +46,9 @@ struct FWidgetControllerParams
 	// Attribute Set
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget Controller")
 	TObjectPtr<UAttributeSet> AttributeSet = nullptr;
+	
+	// Helper function to check parameter validity.
+	bool IsValid() const;
 };
 
 /**

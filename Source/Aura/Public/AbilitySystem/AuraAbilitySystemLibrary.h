@@ -6,8 +6,10 @@
 #include "GameplayEffectTypes.h"
 #include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "UI/WidgetController/AuraSpellMenuController.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
+class AAuraHUD;
 struct FGameplayAbilitySpec;
 class UAbilitySystemComponent;
 class UAuraAttributeMenuController;
@@ -27,29 +29,34 @@ class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary
 public:
 	// Get the Overlay Controller
 	// Assumes it's called from an autonomous client
-	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController")
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController", meta=(DefaultToSelf = "WorldContextObject"))
 	static UAuraOverlayController* GetOverlayController(const UObject* WorldContextObject);
 	
-	// Get the Overlay Controller
+	// Get the Attribute Menu Controller
 	// Assumes it's called from an autonomous client
-	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController")
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController", meta=(DefaultToSelf = "WorldContextObject"))
 	static UAuraAttributeMenuController* GetAttributeMenuController(const UObject* WorldContextObject);
+	
+	// Get the Spell Controller
+	// Assumes it's called from an autonomous client
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController", meta=(DefaultToSelf = "WorldContextObject"))
+	static UAuraSpellMenuController* GetSpellMenuController(const UObject* WorldContextObject);
 	
 	// Initializes the Default Attributes relating to this RPG Class
 	// It reads this information from the UAuraCharacterClassInfoDataAsset stored in the AuraGameMode 
-	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults", meta=(DefaultToSelf = "WorldContextObject"))
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, EAuraCharacterClass CharacterClass, 
 		float Level, UAbilitySystemComponent*AbilitySystemComponent);
 	
 	// Give to the ability system component's owner its startup abilities 
 	// Note: Should be called on Server
-	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults", meta=(DefaultToSelf = "WorldContextObject"))
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* AbilitySystemComponent, 
 		EAuraCharacterClass CharacterClass);
 	
 	// Retrieves the Character Class Info Data Asset
 	// Note: Should be called on Server
-	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults", meta=(DefaultToSelf = "WorldContextObject"))
 	static UAuraCharacterClassInfoDataAsset* GetCharacterClassInfoDataAsset(const UObject* WorldContextObject);
 	
 	// Finds how much XP should be rewarded when killing a character of said class and level
@@ -87,7 +94,7 @@ public:
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
 	
 	// Searches for live players within a certain radius from an origin point
-	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics", meta=(DefaultToSelf = "WorldContextObject"))
 	static void GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, 
 		const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& OriginPoint, bool DebugSphere = false);
 	
@@ -98,4 +105,14 @@ public:
 	// Retrieves a random spawn location in the provided line
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static FVector GetRandomLocationInLine(const FVector& Origin, const FVector& Direction, const float MinDistance, float MaxDistance);
+	
+	// Check if Child is actually a child of Parent.
+	static void CheckIsClassChildOf(const UClass* Parent, const UClass* Child);
+	
+private:
+	// Creates Controller Parameters to be used in creating Widget Controllers
+	// Also returns a reference to the HUD, retrieved from the player controller
+	// Note: private method
+	static FWidgetControllerParams MakeWidgetControllerParams(const UObject* WorldContextObject, AAuraHUD*& AuraHUD);
+	
 };

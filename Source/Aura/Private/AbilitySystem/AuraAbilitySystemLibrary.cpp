@@ -17,50 +17,14 @@
 
 UAuraOverlayController* UAuraAbilitySystemLibrary::GetOverlayController(const UObject* WorldContextObject)
 {
-	
-	// Assumes this method is called from an autonomous client (Player), 
-	// and fetches the first available player controller
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(WorldContextObject, 0);
-	if (!PlayerController)
-	{
-		// No valid Player Controller 
-		return	nullptr;
-	}
-
-	// Get the HUD to find the overlay controller
-	AAuraHUD* AuraHUD = Cast<AAuraHUD>(PlayerController->GetHUD());
-	if (!AuraHUD)
-	{
-		// No valid HUD was found
-		return	nullptr;
-	}
-	
-	// Get required data to initialize an Overlay Controller
-	// Need to construct a FWidgetControllerParams (requirements):
-	// - Player Controller
-	// - Player State
-	// - Ability System Component
-	// - Attribute Set
-
-	// Get Player State
-	AAuraPlayerState* AuraPlayerState = PlayerController->GetPlayerState<AAuraPlayerState>();
-	if (!AuraPlayerState)
-	{
-		// No player state was defined
-		return	nullptr;
-	}
-	
-	// Get Ability System Component and Attribute Set
-	UAbilitySystemComponent* AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
-	UAttributeSet* AttributeSet = AuraPlayerState->GetAttributeSet();
-	if (!AbilitySystemComponent || !AttributeSet)
-	{
-		// Either the ASC or the AS are not valid 
-		return	nullptr;
-	}
-	
 	// Make the Widget Controller params
-	const FWidgetControllerParams ControllerParams(PlayerController, AuraPlayerState,AbilitySystemComponent, AttributeSet);
+	AAuraHUD* AuraHUD = nullptr;
+	const FWidgetControllerParams ControllerParams = MakeWidgetControllerParams(WorldContextObject, AuraHUD);
+	if (!ControllerParams.IsValid() || !AuraHUD)
+	{
+		// Early Exit
+		return	nullptr;
+	}
 	
 	// Retrieve the Overlay Controller (If one does not exist it will create one)
 	return AuraHUD->GetAuraOverlayController(ControllerParams);
@@ -69,51 +33,30 @@ UAuraOverlayController* UAuraAbilitySystemLibrary::GetOverlayController(const UO
 
 UAuraAttributeMenuController* UAuraAbilitySystemLibrary::GetAttributeMenuController(const UObject* WorldContextObject)
 {
-	// Assumes this method is called from an autonomous client (Player), 
-	// and fetches the first available player controller
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(WorldContextObject, 0);
-	if (!PlayerController)
-	{
-		// No valid Player Controller 
-		return	nullptr;
-	}
-
-	// Get the HUD to find the overlay controller
-	AAuraHUD* AuraHUD = Cast<AAuraHUD>(PlayerController->GetHUD());
-	if (!AuraHUD)
-	{
-		// No valid HUD was found
-		return	nullptr;
-	}
-	
-	// Get required data to initialize an Overlay Controller
-	// Need to construct a FWidgetControllerParams (requirements):
-	// - Player Controller
-	// - Player State
-	// - Ability System Component
-	// - Attribute Set
-
-	// Get Player State
-	AAuraPlayerState* AuraPlayerState = PlayerController->GetPlayerState<AAuraPlayerState>();
-	if (!AuraPlayerState)
-	{
-		// No player state was defined
-		return	nullptr;
-	}
-	
-	// Get Ability System Component and Attribute Set
-	UAbilitySystemComponent* AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
-	UAttributeSet* AttributeSet = AuraPlayerState->GetAttributeSet();
-	if (!AbilitySystemComponent || !AttributeSet)
-	{
-		// Either the ASC or the AS are not valid 
-		return	nullptr;
-	}
-	
 	// Make the Widget Controller params
-	const FWidgetControllerParams ControllerParams(PlayerController, AuraPlayerState,AbilitySystemComponent, AttributeSet);
+	AAuraHUD* AuraHUD = nullptr;
+	const FWidgetControllerParams ControllerParams = MakeWidgetControllerParams(WorldContextObject, AuraHUD);
+	if (!ControllerParams.IsValid() || !AuraHUD)
+	{
+		// Early Exit
+		return	nullptr;
+	}
 	
 	return AuraHUD->GetAuraAttributeMenuController(ControllerParams);
+}
+
+UAuraSpellMenuController* UAuraAbilitySystemLibrary::GetSpellMenuController(const UObject* WorldContextObject)
+{
+	// Make the Widget Controller params
+	AAuraHUD* AuraHUD = nullptr;
+	const FWidgetControllerParams ControllerParams = MakeWidgetControllerParams(WorldContextObject, AuraHUD);
+	if (!ControllerParams.IsValid() || !AuraHUD)
+	{
+		// Early Exit
+		return	nullptr;
+	}
+
+	return AuraHUD->GetAuraSpellMenuController(ControllerParams);
 }
 
 void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, const EAuraCharacterClass CharacterClass, float Level, UAbilitySystemComponent*
@@ -417,4 +360,58 @@ FVector UAuraAbilitySystemLibrary::GetRandomLocationInLine(const FVector& Origin
                                                                 const float MinDistance, const float MaxDistance)
 {
 	return Origin + Direction * FMath::RandRange(MinDistance, MaxDistance);
+}
+
+void UAuraAbilitySystemLibrary::CheckIsClassChildOf(const UClass* Parent, const UClass* Child)
+{
+	checkf(Parent, TEXT("CheckIsClassChildOf() called with a nullptr Parent class object."));
+	checkf(Child, TEXT("CheckIsClassChildOf() called with a nullptr Child class object."));
+	checkf(Child->IsChildOf(Parent), TEXT("CheckIsClassChildOf() called with invalid Child class, %s must be a child of %s."), *Child->GetName(), *Parent->GetName());
+}
+
+FWidgetControllerParams UAuraAbilitySystemLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject, AAuraHUD*& AuraHUD)
+{
+	// Assumes this method is called from an autonomous client (Player), 
+	// and fetches the first available player controller
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(WorldContextObject, 0);
+	if (!PlayerController)
+	{
+		// No valid Player Controller 
+		return	FWidgetControllerParams();
+	}
+	
+	// Get the HUD to find the overlay controller
+	AuraHUD = Cast<AAuraHUD>(PlayerController->GetHUD());
+	if (!AuraHUD)
+	{
+		// No valid HUD was found
+		return	FWidgetControllerParams();
+	}
+
+	// Get required data to initialize an Overlay Controller
+	// Need to construct a FWidgetControllerParams (requirements):
+	// - Player Controller
+	// - Player State
+	// - Ability System Component
+	// - Attribute Set
+
+	// Get Player State
+	AAuraPlayerState* AuraPlayerState = PlayerController->GetPlayerState<AAuraPlayerState>();
+	if (!AuraPlayerState)
+	{
+		// No player state was defined
+		return	FWidgetControllerParams();
+	}
+	
+	// Get Ability System Component and Attribute Set
+	UAbilitySystemComponent* AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	UAttributeSet* AttributeSet = AuraPlayerState->GetAttributeSet();
+	if (!AbilitySystemComponent || !AttributeSet)
+	{
+		// Either the ASC or the AS are not valid 
+		return	FWidgetControllerParams();
+	}
+	
+	// Make the Widget Controller params
+	return FWidgetControllerParams(PlayerController, AuraPlayerState,AbilitySystemComponent, AttributeSet);
 }
