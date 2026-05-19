@@ -35,11 +35,11 @@ public:
 	
 	// Upgrades the attribute related to the tag
 	UFUNCTION(BlueprintCallable)
-	void UpgradeAttributes(const FGameplayTag& AttributeTag) const;
+	void UpgradeAttributes(const FGameplayTag& AttributeTag);
 	
 	// Revert the attribute point related to the tag
 	UFUNCTION(BlueprintCallable)
-	void RevertAttributes(const FGameplayTag& AttributeTag) const;
+	void RevertAttributes(const FGameplayTag& AttributeTag);
 	
 	// Delegate to broadcast Attribute value changes
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
@@ -58,5 +58,5 @@ private:
 	// Internal method to broadcast an Attribute Info
 	// Needs a GameplayTag and a GameplayAttribute
 	// the caller should make sure these are logically bound (the right tag for the right attribute)
-	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const;
+	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute);
 };

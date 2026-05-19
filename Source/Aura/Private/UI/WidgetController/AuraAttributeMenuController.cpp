@@ -10,35 +10,31 @@
 
 void UAuraAttributeMenuController::BroadcastInitialValues()
 {
-	// Early checks
+	// Early check
 	check(AuraAttributeInfoDataAsset)
-	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
-	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
 	
 	// Read the attributes' value from the Attribute Set and apply it to the Attribute Info struct to be broadcast
 	// Pair: Key - FGameplayTag | Value - Function pointer (FGameplayAttribute(*)())
 	// Note: to get the gameplay attribute from the Value you need to execute the method it's bound to
-	for (const auto& Pair : AuraAttributeSet->TagToAttributes)
+	for (const auto& Pair : GetAuraAttributeSet()->TagToAttributes)
 	{
 		// Broadcasts this Attribute Info using the provided TagToAttribute pair
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
 	}
 	
 	// Broadcast the initial attribute points
-	AttributePointsDelegate.Broadcast(AuraPlayerState->GetAttributePoints());
+	AttributePointsDelegate.Broadcast(GetAuraPlayerState()->GetAttributePoints());
 }
 
 void UAuraAttributeMenuController::BindCallbacksToDependencies()
 {
-	// Early checks
+	// Early check
 	check(AuraAttributeInfoDataAsset)
-	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
-	AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
 	
 	// Get the Attribute Set and bind callbacks to all attributes
 	// Pair: Key - FGameplayTag | Value - Function pointer (FGameplayAttribute(*)())
 	// Note: to get the gameplay attribute from the Value you need to execute the method it's bound to
-	for (const auto& Pair : AuraAttributeSet->TagToAttributes)
+	for (const auto& Pair : GetAuraAttributeSet()->TagToAttributes)
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
 			[this, Pair](const FOnAttributeChangeData& Data)
@@ -50,31 +46,26 @@ void UAuraAttributeMenuController::BindCallbacksToDependencies()
 	}
 	
 	// Bind to changes in the PlayerState's Attribute Points
-	AuraPlayerState->OnPlayerAttributePointsChangedDelegate.AddLambda(
+	GetAuraPlayerState()->OnPlayerAttributePointsChangedDelegate.AddLambda(
 		[this](const int32 AttributePoints)
 		{
 			AttributePointsDelegate.Broadcast(AttributePoints);
 		});
 }
 
-void UAuraAttributeMenuController::UpgradeAttributes(const FGameplayTag& AttributeTag) const
+void UAuraAttributeMenuController::UpgradeAttributes(const FGameplayTag& AttributeTag)
 {
-	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
-	AuraAbilitySystemComponent->UpgradeAttributes(AttributeTag);
+	GetAuraAbilitySystemComponent()->UpgradeAttributes(AttributeTag);
 }
 
-void UAuraAttributeMenuController::RevertAttributes(const FGameplayTag& AttributeTag) const
+void UAuraAttributeMenuController::RevertAttributes(const FGameplayTag& AttributeTag)
 {
-	UAuraAbilitySystemComponent* AuraAbilitySystemComponent = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
-	AuraAbilitySystemComponent->RevertAttributes(AttributeTag);
+	GetAuraAbilitySystemComponent()->RevertAttributes(AttributeTag);
 }
 
 void UAuraAttributeMenuController::BroadcastAttributeInfo(
-	const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const
+	const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute)
 {
-	// Get player state
-	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
-	
 	// Get the Attribute Info from the Attribute Info Data Asset
 	FAuraAttributeInfo Info = AuraAttributeInfoDataAsset->FindAttributeInfoFromTag(AttributeTag);
 				
@@ -86,5 +77,5 @@ void UAuraAttributeMenuController::BroadcastAttributeInfo(
 	AttributeInfoDelegate.Broadcast(Info);
 	
 	// Broadcast initial attribute points
-	AttributePointsDelegate.Broadcast(AuraPlayerState->GetAttributePoints());
+	AttributePointsDelegate.Broadcast(GetAuraPlayerState()->GetAttributePoints());
 }

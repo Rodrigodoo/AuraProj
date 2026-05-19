@@ -8,8 +8,6 @@
 #include "AuraOverlayController.generated.h"
 
 class UAuraLevelUpInfoDataAsset;
-struct FAuraAbilityInfo;
-class UAuraAbilityInfoDataAsset;
 struct FOnAttributeChangeData;
 
 // Data table row struct design to display messages to screen
@@ -39,7 +37,6 @@ struct FUIWidgetRow : public FTableRowBase
 // Delegates that can be used in BP and called on multiple widgets
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, AbilityInfo);
 
 /**
  * Overlay Controller responsible for controlling AuraOverlayWidgets
@@ -81,10 +78,6 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 	
-	// Ability Info Delegate
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Abilities")
-	FAbilityInfoSignature AbilityInfoDelegate;
-	
 	// XP Percentage changed (return the new percentage for the current level)
 	UPROPERTY(BlueprintAssignable, Category = "GAS|XP")
 	FOnAttributeChangedSignature XPPercentageChangedDelegate;
@@ -99,18 +92,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 	
-	// Data Asset with Ability Information
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
-	TObjectPtr<UAuraAbilityInfoDataAsset> AbilityInfoDataAsset;
-	
 	// Will later be moved to a static function library
 	// Retrieve a data table row by tag
 	// Note: The row name must have the same name as the tag. (This is something easy to break but we are using it for educational purposes)
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
-	
-	// Called when all startup abilities have been given
-	void OnInitializedStartupAbilities();
 	
 	// Broadcasts whenever there are changes to the XP and sends the current player level percentage
 	void BroadcastXPPercentageChanges();
