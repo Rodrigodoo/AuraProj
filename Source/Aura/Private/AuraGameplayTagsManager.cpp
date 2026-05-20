@@ -123,6 +123,10 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_3, "InputTag.3", "Input Tag for 3 key");
 	// InputTag.4
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_4, "InputTag.4", "Input Tag for 4 key");
+	// InputTag.Passive.1
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Passive1, "InputTag.Passive.1", "Input Tag for Passive 1 key");
+	// InputTag.Passive.2
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Passive2, "InputTag.Passive.2", "Input Tag for Passive 2 key");
 	
 	/*
 	 * Effects

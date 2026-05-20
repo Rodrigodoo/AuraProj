@@ -103,6 +103,10 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_3);
 	// InputTag.4
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_4);
+	// InputTag.Passive.1
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Passive_1);
+	// InputTag.Passive.2
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Passive_2);
 	//~ End - Inputs
 	
 	//~ Begin - Effects
