@@ -213,8 +213,38 @@ FGameplayTag UAuraAbilitySystemLibrary::GetInputTagFromSpec(const FGameplayAbili
 	return FGameplayTag();
 }
 
+FGameplayTag UAuraAbilitySystemLibrary::GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	// Loop through the Ability's dynamic tags and check if it has a Status tag 
+	// i.e: Checking for it in its parents tag. Example: Abilities.Status.Locked or Abilities.Status.Equipped
+	for (const FGameplayTag& Tag : AbilitySpec.GetDynamicSpecSourceTags())
+	{
+		if (Tag.MatchesTag(AuraGameplayTagsManager::Abilities_Status))
+		{
+			return Tag;
+		}
+	}
+
+	return FGameplayTag();
+}
+
+FGameplayTag UAuraAbilitySystemLibrary::GetTypeFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	// Loop through the Ability's dynamic tags and check if it has a Type tag 
+	// i.e: Checking for it in its parents tag. Example: Abilities.Type.Offensive or Abilities.Type.None
+	for (const FGameplayTag& Tag : AbilitySpec.GetDynamicSpecSourceTags())
+	{
+		if (Tag.MatchesTag(AuraGameplayTagsManager::Abilities_Type))
+		{
+			return Tag;
+		}
+	}
+
+	return FGameplayTag();
+}
+
 void UAuraAbilitySystemLibrary::AssignAndApplyToSelfSetByCallerEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpecHandle& EffectSpecHandle, const FGameplayTag& DataTag, const float Magnitude, const bool
-                                                                SupressWarnings)
+                                                                      SupressWarnings)
 {
 	// Early check
 	if (!AbilitySystemComponent || !EffectSpecHandle.IsValid())

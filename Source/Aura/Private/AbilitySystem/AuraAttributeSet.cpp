@@ -134,7 +134,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			else // No fatal damage
 			{
 				// Activate any Ability that has the Hit React Tag
-				const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Effects_HitReact);
+				const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Abilities_HitReact);
 				EffectProperties.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
 			}
 

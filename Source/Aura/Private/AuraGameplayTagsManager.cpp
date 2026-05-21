@@ -95,6 +95,44 @@ namespace AuraGameplayTagsManager
 	// Abilities.Fire.FireBolt
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", 
 		"FireBolt Ability Tag");
+	// Abilities.HitReact
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_HitReact, "Abilities.HitReact", 
+		"Hit React Ability Tag");
+	
+	/*
+	 * Abilities Status
+	 */
+	// Abilities.Status
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Status, "Abilities.Status", 
+		"Ability Status Tag");
+	// Abilities.Status.Locked
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Status_Locked, "Abilities.Status.Locked", 
+		"Ability Status Locked Tag");
+	// Abilities.Status.Eligible
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Status_Eligible, "Abilities.Status.Eligible", 
+		"Ability Status Eligible Tag");
+	// Abilities.Status.Unlocked
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Status_Unlocked, "Abilities.Status.Unlocked", 
+		"Ability Status Unlocked Tag");
+	// Abilities.Status.Equipped
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Status_Equipped, "Abilities.Status.Equipped", 
+		"Ability Status Equipped Tag");
+	
+	/*
+	 * Abilities Type
+	 */
+	// Abilities.Type
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Type, "Abilities.Type", 
+		"Ability Type Tag");
+	// Abilities.Type.Offensive
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Type_Offensive, "Abilities.Type.Offensive", 
+		"Ability Type Offensive Tag");
+	// Abilities.Type.Passive
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Type_Passive, "Abilities.Type.Passive", 
+		"Ability Type Passive Tag");
+	// Abilities.Type.None
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Type_None, "Abilities.Type.None", 
+		"Ability Type None Tag");
 	
 	/*
 	 * Cooldowns

@@ -79,6 +79,33 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Summon);
 	// Abilities.Fire.FireBolt
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Fire_FireBolt);
+	// Abilities.HitReact
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_HitReact);
+	
+	//~ Begin - Abilities Status
+	// Abilities.Status
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Status);
+	// Abilities.Status.Locked
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Status_Locked);
+	// Abilities.Status.Eligible
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Status_Eligible);
+	// Abilities.Status.Unlocked
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Status_Unlocked);
+	// Abilities.Status.Equipped
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Status_Equipped);
+	//~ End - Abilities Status
+	
+	//~ Begin - Abilities Type
+	// Abilities.Type
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Type);
+	// Abilities.Type.Offensive
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Type_Offensive);
+	// Abilities.Type.Passive
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Type_Passive);
+	// Abilities.Type.None
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Type_None);
+	//~ End - Abilities Type
+	
 	//~ End - Abilities
 	
 	//~ Begin - Cooldowns

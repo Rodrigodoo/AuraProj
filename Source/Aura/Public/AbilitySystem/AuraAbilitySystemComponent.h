@@ -50,7 +50,7 @@ public:
 	// Checks if the ability can be used (cost check passes) from its Ability Tag
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystem")
 	bool CheckAbilityCostFromTag(const FGameplayTag& AbilityTag);
-	
+
 	// Upgrades the attribute related to the tag
 	void UpgradeAttributes(const FGameplayTag& AttributeTag);
 	

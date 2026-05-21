@@ -68,6 +68,12 @@ public:
 	// Retrieves the Ability's Input tag from its Ability Spec
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	
+	// Retrieves the Ability's Status from to its Ability Spec
+	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	
+	// Retrieves the Ability's Type from to its Ability Spec
+	static FGameplayTag GetTypeFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	
 	// Assign a Tag set by caller magnitude and apply it to self
 	// Note: If SupressWarnings = true, then a set by caller magnitude will be created for all other modifiers 
 	// that use set by caller with a magnitude of 0.f. This will guarantee that no warning will occur.

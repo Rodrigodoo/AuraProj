@@ -29,8 +29,11 @@ void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 		// If the Ability is of Aura Ability type we can add Startup Input tags to this spec
 		if (const UAuraGameplayAbilityBase* AuraAbility = Cast<UAuraGameplayAbilityBase>(AbilitySpec.Ability))
 		{
-			// Add the Startup Input Tag to the dynamic source tags of the Spec we are about to grant
+			// Add Dynamic Tags to the Spec we are about to grant
+			// Startup Input Tags
 			AbilitySpec.GetDynamicSpecSourceTags().AddTag(AuraAbility->StartupInputTag);
+			// Set Ability as Equipped
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(AuraGameplayTagsManager::Abilities_Status_Equipped);
 			
 			// Grant the ability
 			GiveAbility(AbilitySpec);
