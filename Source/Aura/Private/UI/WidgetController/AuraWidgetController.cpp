@@ -58,8 +58,9 @@ void UAuraWidgetController::BroadcastAbilityInfo()
 			// Use the Ability tag to search for the Ability Info in the Ability Info Data Asset
 			FAuraAbilityInfo AbilityInfo = AbilityInfoDataAsset->FindAuraAbilityInfoForTag(AbilityTag);
 
-			// Set the Input Tag retrieved from the spec into the data asset entry
+			// Set the Input tag and the Status tag, retrieved from the spec into the data asset entry
 			AbilityInfo.InputTag = UAuraAbilitySystemLibrary::GetInputTagFromSpec(AbilitySpec);
+			AbilityInfo.StatusTag = UAuraAbilitySystemLibrary::GetStatusTagFromSpec(AbilitySpec);
 			
 			// Broadcast to listening widgets the Ability Info 
 			AbilityInfoDelegate.Broadcast(AbilityInfo);

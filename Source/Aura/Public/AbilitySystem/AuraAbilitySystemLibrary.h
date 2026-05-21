@@ -69,7 +69,7 @@ public:
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	
 	// Retrieves the Ability's Status from to its Ability Spec
-	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	static FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	
 	// Retrieves the Ability's Type from to its Ability Spec
 	static FGameplayTag GetTypeFromSpec(const FGameplayAbilitySpec& AbilitySpec);

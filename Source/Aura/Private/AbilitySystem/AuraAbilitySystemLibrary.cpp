@@ -213,7 +213,7 @@ FGameplayTag UAuraAbilitySystemLibrary::GetInputTagFromSpec(const FGameplayAbili
 	return FGameplayTag();
 }
 
-FGameplayTag UAuraAbilitySystemLibrary::GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+FGameplayTag UAuraAbilitySystemLibrary::GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
 	// Loop through the Ability's dynamic tags and check if it has a Status tag 
 	// i.e: Checking for it in its parents tag. Example: Abilities.Status.Locked or Abilities.Status.Equipped

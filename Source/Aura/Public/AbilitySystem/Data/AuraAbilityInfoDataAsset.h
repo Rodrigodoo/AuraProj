@@ -14,16 +14,20 @@ struct FAuraAbilityInfo
 	GENERATED_BODY()
 	
 	// This Ability's tag
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "Abilities"))
 	FGameplayTag AbilityTag = FGameplayTag();
 	
 	// This Ability's input tag to identify which input triggers this ability
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, meta = (Categories = "InputTag"))
 	FGameplayTag InputTag = FGameplayTag();
 	
 	// Cooldown tag for this ability
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "Cooldown"))
 	FGameplayTag CooldownTag = FGameplayTag();
+	
+	// Status tag for this ability
+	UPROPERTY(BlueprintReadOnly, meta = (Categories = "Abilities.Status"))
+	FGameplayTag StatusTag = FGameplayTag();
 	
 	// This Ability's icon to use in the UI
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
