@@ -5,7 +5,9 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTagsManager.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/Abilities/AuraGameplayAbilityBase.h"
+#include "AbilitySystem/Data/AuraAbilityInfoDataAsset.h"
 #include "Aura/AuraLogChannels.h"
 #include "Interaction/AuraPlayerInterface.h"
 
@@ -165,6 +167,55 @@ void UAuraAbilitySystemComponent::RevertAttributes(const FGameplayTag& Attribute
 	
 	// Revert the upgrade on the server
 	ServerUpgradeAttributes_Implementation(AttributeTag, -1);
+}
+
+FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFromAbilityTag(const FGameplayTag& AbilityTag)
+{
+	// Lock all activatable abilities while looping through them
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		// Check if any of the activatable abilities has the provided ability tag
+		if (AbilitySpec.Ability->IsValidLowLevel() && AbilitySpec.Ability->GetAssetTags().HasTagExact(AbilityTag))
+		{
+			// If it does, then return it
+			return &AbilitySpec;
+		}
+	}
+	// None was found
+	return nullptr;
+}
+
+void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
+{
+	UAuraAbilityInfoDataAsset* AbilityInfoDataAsset = UAuraAbilitySystemLibrary::GetAbilityInfoDataAsset(GetAvatarActor());
+	if (!AbilityInfoDataAsset)
+	{
+		// Early check
+		return;
+	}
+
+	// loop through all abilities and change their status according to the provided level
+	for (const FAuraAbilityInfo& AbilityInfo : AbilityInfoDataAsset->AbilityInformation)
+	{
+		// If the level has not yet reached the level requirement, 
+		// Or the Ability Tag is not valid, then continue
+		if (Level < AbilityInfo.LevelRequirement || !AbilityInfo.AbilityTag.IsValid())
+		{
+			continue;
+		}
+		
+		// Only update the status for abilities that have NOT yet been activated
+		// Non activated abilities will return as nullptr to GetSpecFromAbilityTag
+		if (!GetSpecFromAbilityTag(AbilityInfo.AbilityTag))
+		{
+			// Make an ability spec, mark it as eligible and give the ability
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityInfo.AbilityClass , 1);
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(AuraGameplayTagsManager::Abilities_Status_Eligible);
+			GiveAbility(AbilitySpec);
+			MarkAbilitySpecDirty(AbilitySpec); // Make the ability spec replicate immediately
+		}
+	}
 }
 
 void UAuraAbilitySystemComponent::ServerUpgradeAttributes_Implementation(const FGameplayTag& AttributeTag, const int32 AttributeValue)

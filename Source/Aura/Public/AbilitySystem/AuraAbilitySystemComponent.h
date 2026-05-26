@@ -61,6 +61,13 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerUpgradeAttributes(const FGameplayTag& AttributeTag, int32 AttributeValue);
 	
+	// Retrieve a pointer to a gameplay ability spec, with the given ability tag
+	// If no such ability is yet activated, then it return null
+	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
+	
+	// Updates by checking them against the level provided
+	void UpdateAbilityStatuses(int32 Level);
+	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTagsDelegate;
 	
