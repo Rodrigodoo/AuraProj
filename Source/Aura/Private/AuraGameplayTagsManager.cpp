@@ -92,9 +92,16 @@ namespace AuraGameplayTagsManager
 	// Abilities.Summon
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Summon, "Abilities.Summon", 
 		"Summon Ability Tag");
+	// Abilities.Fire
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Fire, "Abilities.Fire", "Fire Ability type Tag");
 	// Abilities.Fire.FireBolt
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", 
 		"FireBolt Ability Tag");
+	// Abilities.Lightning
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Lightning, "Abilities.Lightning", "Lightning Ability type Tag");
+	// Abilities.Lightning.Electrocute
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Lightning_Electrocute, "Abilities.Lightning.Electrocute",
+		"Electrocute Ability Tag");
 	// Abilities.HitReact
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_HitReact, "Abilities.HitReact", 
 		"Hit React Ability Tag");

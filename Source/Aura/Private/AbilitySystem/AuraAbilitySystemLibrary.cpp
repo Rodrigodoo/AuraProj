@@ -161,8 +161,22 @@ UAuraCharacterClassInfoDataAsset* UAuraAbilitySystemLibrary::GetCharacterClassIn
 	return AuraGameMode->CharacterClassInfoDataAsset;
 }
 
+UAuraAbilityInfoDataAsset* UAuraAbilitySystemLibrary::GetAbilityInfoDataAsset(const UObject* WorldContextObject)
+{
+	// Get the game mode and the Character Class Info Data Asset
+	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (!AuraGameMode)
+	{
+		// If this is called on the client it will fail since GameMode is only available on the server
+		return nullptr;
+	}
+	
+	check(AuraGameMode->AbilityInfoDataAsset);
+	return AuraGameMode->AbilityInfoDataAsset;
+}
+
 int32 UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject, const EAuraCharacterClass CharacterClass,
-                                                 const int32 CharacterLevel)
+                                                             const int32 CharacterLevel)
 {
 	// Get Character Class Info Data Asset
 	const UAuraCharacterClassInfoDataAsset* CharacterClassInfoDataAsset = GetCharacterClassInfoDataAsset(WorldContextObject);

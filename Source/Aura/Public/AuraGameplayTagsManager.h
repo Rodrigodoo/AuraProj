@@ -77,8 +77,14 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Attack);
 	// Abilities.Summon
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Summon);
+	// Abilities.Fire
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Fire);
 	// Abilities.Fire.FireBolt
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Fire_FireBolt);
+	// Abilities.Lightning
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Lightning);
+	// Abilities.Lightning.Electrocute
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Lightning_Electrocute);
 	// Abilities.HitReact
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_HitReact);
 	

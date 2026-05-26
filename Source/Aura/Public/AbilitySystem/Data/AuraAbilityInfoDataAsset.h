@@ -7,6 +7,8 @@
 #include "Engine/DataAsset.h"
 #include "AuraAbilityInfoDataAsset.generated.h"
 
+class UGameplayAbility;
+
 // Structure to store the Ability's information
 USTRUCT(BlueprintType)
 struct FAuraAbilityInfo
@@ -36,6 +38,15 @@ struct FAuraAbilityInfo
 	// This Ability's Background material to be displayed underneath the icon in the UI
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const UMaterialInterface> BackgroundMaterial = nullptr;
+	
+	// The character level required to unlock this ability
+	// Even tough the ability is unlocked the player must still "purchase" the ability to use it
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 LevelRequirement = 1;
+	
+	// This Ability's class
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayAbility> AbilityClass;
 };
 
 
