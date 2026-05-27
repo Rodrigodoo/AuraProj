@@ -37,3 +37,8 @@ void UAuraSpellMenuController::BindCallbacksToDependencies()
 			SpellPointsDelegate.Broadcast(SpellPoints);
 		});
 }
+
+void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton)
+{
+	AbilitySelectedDelegate.Broadcast(AbilityButton);
+}
