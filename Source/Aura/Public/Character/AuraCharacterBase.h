@@ -31,7 +31,7 @@ public:
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
 	
 	// Initializes the character and other components
-	// Init the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
+	// Init the AuraAbilitySystemComponent and stores internal references to AuraAbilitySystemComponent and AttributeSet
 	virtual void InitCharacterAndComponents();
 	
 	virtual void BeginPlay() override;

@@ -145,7 +145,7 @@ void AAuraCharacter::InitCharacterAndComponents()
 		AuraAbilitySystemComponent->AbilityActorInfoSet();
 	}
 	
-	// Pass references this character of the PlayerState's AbilitySystemComponent and AttributeSet
+	// Pass references this character of the PlayerState's AuraAbilitySystemComponent and AttributeSet
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	

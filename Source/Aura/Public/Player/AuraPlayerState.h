@@ -9,6 +9,7 @@
 #include "AuraPlayerState.generated.h"
 
 
+class UAuraAbilitySystemComponent;
 class UAuraLevelUpInfoDataAsset;
 class UAbilitySystemComponent;
 class UAttributeSet;
@@ -16,7 +17,7 @@ class UAttributeSet;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChangedSignature, int32 /*StatValue*/)
 
 /**
- * Aura's Player state in charge of controlling several of the players information like its AbilitySystemComponent
+ * Aura's Player state in charge of controlling several of the players information like its AuraAbilitySystemComponent
  */
 UCLASS()
 class AURA_API AAuraPlayerState : public APlayerState, public IAbilitySystemInterface
@@ -35,6 +36,9 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	//~ End - IAbilitySystemInterface
+	
+	// Returns the aura ability system component to use for this actor.
+	UAbilitySystemComponent* GetAuraAbilitySystemComponent() const;
 	
 	// Returns the attribute set to use for this actor.
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
@@ -107,7 +111,7 @@ public:
 protected:
 	// Pointer to the PlayerState's Ability System Component (If there is one)
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
 	
 	// Pointer to the PlayerState's Attribute Set (If there is one)
 	UPROPERTY()

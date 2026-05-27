@@ -13,6 +13,8 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContaine
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven)
 // Delegate to loop over each given ability
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&)
+// Delegate to call whenever an Ability Status changed
+DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChanged, const FGameplayTag& /*Ability Tag*/, const FGameplayTag&/*Status Tag*/)
 //~ End Delegates
 /**
  * The Aura Ability System Component, in charge of dealing with all Gameplay Ability Systems features for this project
@@ -66,13 +68,17 @@ public:
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 	
 	// Updates by checking them against the level provided
+	// Note: should only run on server
 	void UpdateAbilityStatuses(int32 Level);
 	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTagsDelegate;
 	
-	// Delegate to Broadcast when all abilities have been given
+	// Delegate to broadcast when all abilities have been given
 	FAbilitiesGiven AbilitiesGivenDelegate;
+	
+	// Delegate to broadcast whenever and ability status has changed
+	FAbilityStatusChanged AbilityStatusChangedDelegate;
 	
 protected:
 	// Method bound to delegate OnGameplayEffectAppliedDelegateToSelf(FOnGameplayEffectAppliedDelegate)
@@ -80,6 +86,11 @@ protected:
 	// This is needed since OnGameplayEffectAppliedDelegateToSelf is only run on the server
 	UFUNCTION(Client, Reliable)
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle) const;
+	
+	// This is a Client RPC that informs the owning client that an ability status has changed (Reliable to make sure it runs on client)
+	// This is needed since UpdateAbilityStatuses is only run on the server
+	UFUNCTION(Client, Reliable)
+	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
 	
 	// Finds the ability spec from all activatable abilities using the ability's tag 
 	const FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);

@@ -53,7 +53,8 @@ public:
 	// Adds points the player's currently available attribute points
 	virtual void AddToPlayerAttributePoints_Implementation(const int32 PointsToAdd) const override;
 	
-	// levels up the character
+	// Levels up the character
+	// Only for cosmetics (Player State deals with other level up systems)
 	virtual void LevelUp_Implementation() override;
 	
 	//~ End - IAuraPlayerInterface
@@ -61,7 +62,7 @@ public:
 	//~ Begin - AAuraCharacterBase Overrides
 	
 	// Initializes the character and other components
-	// Init the AbilitySystemComponent and stores internal references to AbilitySystemComponent and AttributeSet
+	// Init the AuraAbilitySystemComponent and stores internal references to AuraAbilitySystemComponent and AttributeSet
 	// initializes the HUD and its Overlay
 	virtual void InitCharacterAndComponents() override;
 	

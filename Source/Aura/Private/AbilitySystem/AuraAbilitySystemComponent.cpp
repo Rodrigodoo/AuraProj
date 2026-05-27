@@ -186,8 +186,9 @@ FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFromAbilityTag(const F
 	return nullptr;
 }
 
-void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
+void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)
 {
+	// Running on server
 	UAuraAbilityInfoDataAsset* AbilityInfoDataAsset = UAuraAbilitySystemLibrary::GetAbilityInfoDataAsset(GetAvatarActor());
 	if (!AbilityInfoDataAsset)
 	{
@@ -214,6 +215,9 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
 			AbilitySpec.GetDynamicSpecSourceTags().AddTag(AuraGameplayTagsManager::Abilities_Status_Eligible);
 			GiveAbility(AbilitySpec);
 			MarkAbilitySpecDirty(AbilitySpec); // Make the ability spec replicate immediately
+			
+			// Inform the client
+			ClientUpdateAbilityStatus_Implementation(AbilityInfo.AbilityTag,AuraGameplayTagsManager::Abilities_Status_Eligible);
 		}
 	}
 }
@@ -229,6 +233,13 @@ void UAuraAbilitySystemComponent::ServerUpgradeAttributes_Implementation(const F
 	
 	// Decrease the Available Attribute Points by one
 	IAuraPlayerInterface::Execute_AddToPlayerAttributePoints(GetAvatarActor(), -AttributeValue);
+}
+
+void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
+	const FGameplayTag& StatusTag)
+{
+	// Broadcast that this ability changed status
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
 }
 
 const FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)

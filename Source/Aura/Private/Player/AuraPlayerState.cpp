@@ -12,10 +12,10 @@
 AAuraPlayerState::AAuraPlayerState()
 {
 	// Construct and setup the Ability System Component
-	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
-	AbilitySystemComponent->SetIsReplicated(true);
+	AuraAbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AuraAbilitySystemComponent");
+	AuraAbilitySystemComponent->SetIsReplicated(true);
 	// Set Replication mode to Mixed so that Gameplay Effects are replicated to Owning Clients
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+	AuraAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
 	// Construct the Attribute Set
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
@@ -39,19 +39,30 @@ void AAuraPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
 
 UAbilitySystemComponent* AAuraPlayerState::GetAbilitySystemComponent() const
 {
-	return AbilitySystemComponent;
+	return AuraAbilitySystemComponent;
+}
+
+UAbilitySystemComponent* AAuraPlayerState::GetAuraAbilitySystemComponent() const
+{
+	return AuraAbilitySystemComponent;
 }
 
 void AAuraPlayerState::SetPlayerLevel(const int32 NewPlayerLevel)
 {
 	PlayerLevel = NewPlayerLevel;
 	OnPlayerLevelChangedDelegate.Broadcast(PlayerLevel);
+	
+	// Update Abilities according to the new level
+	AuraAbilitySystemComponent->UpdateAbilityStatuses(PlayerLevel);
 }
 
 void AAuraPlayerState::AddToPlayerLevel(const int32 LevelsToAdd)
 {
 	PlayerLevel += LevelsToAdd;
 	OnPlayerLevelChangedDelegate.Broadcast(PlayerLevel);
+
+	// Update Abilities according to the new level
+	AuraAbilitySystemComponent->UpdateAbilityStatuses(PlayerLevel);
 }
 
 void AAuraPlayerState::SetPlayerXP(const int32 NewXP)
