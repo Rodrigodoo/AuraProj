@@ -24,4 +24,9 @@ public:
 	// Binds callbacks to dependencies of this controller
 	virtual void BindCallbacksToDependencies() override;
 	//~ End - UAuraWidgetController Overrides
+	
+protected:
+	// Delegate to broadcast when Spell Points changes
+	UPROPERTY(BlueprintAssignable, Category="GAS|SpellPoints")
+	FOnStatChangedSignature SpellPointsDelegate;
 };

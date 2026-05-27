@@ -46,7 +46,7 @@ public:
 	FAttributeInfoSignature AttributeInfoDelegate;
 	
 	// Delegate to broadcast when Attribute Points changes
-	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	UPROPERTY(BlueprintAssignable, Category="GAS|AttributePoints")
 	FOnStatChangedSignature AttributePointsDelegate;
 protected:
 
