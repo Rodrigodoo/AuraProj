@@ -149,7 +149,7 @@ private:
 	// Currently unused spell point
 	// Used to purchase new spells and increase spell levels
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SpellPoints)
-	int32 SpellPoints = 1;
+	int32 SpellPoints = 0;
 	
 	// Replication method for Spell Points
 	UFUNCTION()

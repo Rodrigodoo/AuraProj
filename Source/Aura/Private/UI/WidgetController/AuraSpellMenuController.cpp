@@ -39,13 +39,20 @@ void UAuraSpellMenuController::BindCallbacksToDependencies()
 		});
 }
 
-void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton, const FGameplayTag& StatusTag)
+void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton)
+{
+	// Broadcast to all listening widgets whenever this ability has been selected
+	AbilitySelectedDelegate.Broadcast(AbilityButton);
+}
+
+void UAuraSpellMenuController::ShouldEnableSpendPointAndEquipButtons(const FGameplayTag& StatusTag,
+	bool& bSpendPointEnabled, bool& bEquipEnabled)
 {
 	// If the status of the ability is Unlocked or Equipped then the buttons to spend points or to equip should be enabled
 	// If the Ability is Eligible then only the spend points button should be enabled
 	// in all other cases both buttons should be disabled
-	bool bSpendPointEnabled = false;
-	bool bEquipEnabled = false;
+	bSpendPointEnabled = false;
+	bEquipEnabled = false;
 	if (StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Equipped) || 
 		StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Unlocked))
 	{
@@ -56,7 +63,4 @@ void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton, con
 	{
 		bSpendPointEnabled = true;
 	}
-	
-	// Broadcast to all listening widgets whenever this ability has been selected
-	AbilitySelectedDelegate.Broadcast(AbilityButton, bSpendPointEnabled, bEquipEnabled);
 }

@@ -10,8 +10,7 @@
 class UAuraUserWidget;
 // Delegates
 // Delegate for when an ability is selected
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAbilitySelectedSignature, 
-	UAuraUserWidget*, AbilityButton, bool, bSpendPointEnabled, bool, bEquipEnabled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilitySelectedSignature, UAuraUserWidget*, AbilityButton);
 
 /**
  * Spell Menu Controller responsible for controlling the Aura Spell Menu Widget
@@ -39,10 +38,14 @@ public:
 	
 	// Method to broadcast the selection of an Ability
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
-	void SelectAbility(UAuraUserWidget* AbilityButton, const FGameplayTag& StatusTag);
+	void SelectAbility(UAuraUserWidget* AbilityButton);
 	
 protected:
 	// Delegate to broadcast when Spell Points changes
 	UPROPERTY(BlueprintAssignable, Category="GAS|SpellPoints")
 	FOnStatChangedSignature SpellPointsDelegate;
+	
+	// Auxiliary method to know if Spend Point Button and Equip Button should be enabled
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
+	static void ShouldEnableSpendPointAndEquipButtons(const FGameplayTag& StatusTag, bool& bSpendPointEnabled, bool& bEquipEnabled);
 };

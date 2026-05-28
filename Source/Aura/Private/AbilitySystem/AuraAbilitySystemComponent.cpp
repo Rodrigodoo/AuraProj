@@ -217,7 +217,7 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)
 			MarkAbilitySpecDirty(AbilitySpec); // Make the ability spec replicate immediately
 			
 			// Inform the client
-			ClientUpdateAbilityStatus_Implementation(AbilityInfo.AbilityTag,AuraGameplayTagsManager::Abilities_Status_Eligible);
+			ClientUpdateAbilityStatus(AbilityInfo.AbilityTag,AuraGameplayTagsManager::Abilities_Status_Eligible);
 		}
 	}
 }
