@@ -3,12 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "AuraSpellMenuController.generated.h"
 
 class UAuraUserWidget;
 // Delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilitySelectedSignature, UAuraUserWidget*, AbilityButton);
+// Delegate for when an ability is selected
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAbilitySelectedSignature, 
+	UAuraUserWidget*, AbilityButton, bool, bSpendPointEnabled, bool, bEquipEnabled);
 
 /**
  * Spell Menu Controller responsible for controlling the Aura Spell Menu Widget
@@ -36,7 +39,7 @@ public:
 	
 	// Method to broadcast the selection of an Ability
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
-	void SelectAbility(UAuraUserWidget* AbilityButton);
+	void SelectAbility(UAuraUserWidget* AbilityButton, const FGameplayTag& StatusTag);
 	
 protected:
 	// Delegate to broadcast when Spell Points changes

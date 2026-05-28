@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/AuraSpellMenuController.h"
 
+#include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/AuraAbilityInfoDataAsset.h"
 #include "Player/AuraPlayerState.h"
@@ -38,7 +39,24 @@ void UAuraSpellMenuController::BindCallbacksToDependencies()
 		});
 }
 
-void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton)
+void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton, const FGameplayTag& StatusTag)
 {
-	AbilitySelectedDelegate.Broadcast(AbilityButton);
+	// If the status of the ability is Unlocked or Equipped then the buttons to spend points or to equip should be enabled
+	// If the Ability is Eligible then only the spend points button should be enabled
+	// in all other cases both buttons should be disabled
+	bool bSpendPointEnabled = false;
+	bool bEquipEnabled = false;
+	if (StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Equipped) || 
+		StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Unlocked))
+	{
+		bSpendPointEnabled = true;
+		bEquipEnabled = true;
+	}
+	else if (StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Eligible))
+	{
+		bSpendPointEnabled = true;
+	}
+	
+	// Broadcast to all listening widgets whenever this ability has been selected
+	AbilitySelectedDelegate.Broadcast(AbilityButton, bSpendPointEnabled, bEquipEnabled);
 }
