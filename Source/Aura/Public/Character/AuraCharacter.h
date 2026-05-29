@@ -53,6 +53,12 @@ public:
 	// Adds points the player's currently available attribute points
 	virtual void AddToPlayerAttributePoints_Implementation(const int32 PointsToAdd) const override;
 	
+	// Gets the player's currently available spell points
+	virtual int32 GetPlayerSpellPoints_Implementation() const override;
+	
+	// Adds points the player's currently available spell points
+	virtual void AddToPlayerSpellPoints_Implementation(const int32 PointsToAdd) const override;
+	
 	// Levels up the character
 	// Only for cosmetics (Player State deals with other level up systems)
 	virtual void LevelUp_Implementation() override;

@@ -14,7 +14,8 @@ DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven)
 // Delegate to loop over each given ability
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&)
 // Delegate to call whenever an Ability Status changed
-DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChanged, const FGameplayTag& /*Ability Tag*/, const FGameplayTag&/*Status Tag*/)
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChanged, 
+	const FGameplayTag& /*Ability Tag*/, const FGameplayTag&/*Status Tag*/, int32 /*Ability Level*/)
 //~ End Delegates
 /**
  * The Aura Ability System Component, in charge of dealing with all Gameplay Ability Systems features for this project
@@ -71,6 +72,10 @@ public:
 	// Note: should only run on server
 	void UpdateAbilityStatuses(int32 Level);
 	
+	// Server method to tell the Ability System component that a spell point was spent on a specific ability
+	UFUNCTION(Server, Reliable)
+	void ServerSpendSpellPoint(const FGameplayTag& AbilityTag);
+	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTagsDelegate;
 	
@@ -90,7 +95,7 @@ protected:
 	// This is a Client RPC that informs the owning client that an ability status has changed (Reliable to make sure it runs on client)
 	// This is needed since UpdateAbilityStatuses is only run on the server
 	UFUNCTION(Client, Reliable)
-	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
+	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
 	
 	// Finds the ability spec from all activatable abilities using the ability's tag 
 	const FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);

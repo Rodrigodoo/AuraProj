@@ -124,6 +124,24 @@ void AAuraCharacter::AddToPlayerAttributePoints_Implementation(const int32 Point
 	return AuraPlayerState->AddToAttributePoints(PointsToAdd);
 }
 
+int32 AAuraCharacter::GetPlayerSpellPoints_Implementation() const
+{
+	// Retrieve the Player state
+	const AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	
+	return AuraPlayerState->GetSpellPoints();
+}
+
+void AAuraCharacter::AddToPlayerSpellPoints_Implementation(const int32 PointsToAdd) const
+{
+	// Retrieve the Player state
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+
+	return AuraPlayerState->AddToSpellPoints(PointsToAdd);
+}
+
 void AAuraCharacter::LevelUp_Implementation()
 {
 	MulticastLevelUpParticles_Implementation();

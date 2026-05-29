@@ -40,6 +40,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
 	void SelectAbility(UAuraUserWidget* AbilityButton);
 	
+	// Method to be called whenever a spell point should be spent
+	// It will inform the ability system component (server) to update the ability and spend a spell point 
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
+	void SpendSpellPoint(const FGameplayTag& AbilityTag);
+
 protected:
 	// Delegate to broadcast when Spell Points changes
 	UPROPERTY(BlueprintAssignable, Category="GAS|SpellPoints")

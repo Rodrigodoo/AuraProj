@@ -217,9 +217,60 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)
 			MarkAbilitySpecDirty(AbilitySpec); // Make the ability spec replicate immediately
 			
 			// Inform the client
-			ClientUpdateAbilityStatus(AbilityInfo.AbilityTag,AuraGameplayTagsManager::Abilities_Status_Eligible);
+			ClientUpdateAbilityStatus(AbilityInfo.AbilityTag,
+				AuraGameplayTagsManager::Abilities_Status_Eligible, 
+				AbilitySpec.Level);
 		}
 	}
+}
+
+void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGameplayTag& AbilityTag)
+{
+	// Get the Ability Spec to find its status
+	FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag);
+	if (!AbilitySpec)
+	{
+		// Early exit
+		return;
+	}
+	
+	// Get the status of the currently provided ability
+	// Since it passed the GetSpecFromAbilityTag it means that it is an activatable Ability
+	// That means it will be either: Unlocked, Eligible or Equipped.
+	FGameplayTag StatusTag = UAuraAbilitySystemLibrary::GetStatusTagFromSpec(*AbilitySpec);
+	if (StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Locked))
+	{
+		// Something went wrong as the status tag should never reach here as Abilities_Status_Locked
+		UE_LOG(LogAura, Error, TEXT("The [%s] Ability has a [%s] status tag. "
+							  "This should not happen for an activatable Ability]"), 
+							  *AbilityTag.ToString(), *StatusTag.ToString());
+		return;
+	}
+	
+	// If the status is eligible, purchase the ability
+	// Note: Make sure you only have one status tag at the time. The system depends on that guarantee
+	if (StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Eligible))
+	{
+		// Remove the old status tag and add the new (Old: Eligible / New: Unlocked)
+		AbilitySpec->GetDynamicSpecSourceTags().RemoveTag(StatusTag);
+		AbilitySpec->GetDynamicSpecSourceTags().AddTag(AuraGameplayTagsManager::Abilities_Status_Unlocked);
+		StatusTag = AuraGameplayTagsManager::Abilities_Status_Unlocked;
+	} 
+	// If the status is either equipped or unlocked, upgrade the ability
+	else if (StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Equipped) || 
+		StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Unlocked))
+	{
+		// No need to change the status tag
+		// Just level up the ability
+		AbilitySpec->Level += 1;
+	}
+	
+	// Spend a spell point
+	IAuraPlayerInterface::Execute_AddToPlayerSpellPoints(GetAvatarActor(), -1);
+	
+	// Inform the client UI that the Ability status has changed
+	ClientUpdateAbilityStatus(AbilityTag, StatusTag, AbilitySpec->Level);
+	MarkAbilitySpecDirty(*AbilitySpec);
 }
 
 void UAuraAbilitySystemComponent::ServerUpgradeAttributes_Implementation(const FGameplayTag& AttributeTag, const int32 AttributeValue)
@@ -236,10 +287,10 @@ void UAuraAbilitySystemComponent::ServerUpgradeAttributes_Implementation(const F
 }
 
 void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
-	const FGameplayTag& StatusTag)
+                                                                           const FGameplayTag& StatusTag, int32 AbilityLevel)
 {
 	// Broadcast that this ability changed status
-	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }
 
 const FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)

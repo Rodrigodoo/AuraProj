@@ -5,7 +5,9 @@
 
 #include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/Data/AuraAbilityInfoDataAsset.h"
+#include "Aura/AuraLogChannels.h"
 #include "Player/AuraPlayerState.h"
 
 void UAuraSpellMenuController::BroadcastInitialValues()
@@ -20,7 +22,7 @@ void UAuraSpellMenuController::BroadcastInitialValues()
 void UAuraSpellMenuController::BindCallbacksToDependencies()
 {
 	GetAuraAbilitySystemComponent()->AbilityStatusChangedDelegate.AddLambda(
-		[&](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
+		[&](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel)
 		{
 			if (AbilityInfoDataAsset)
 			{
@@ -45,8 +47,13 @@ void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton)
 	AbilitySelectedDelegate.Broadcast(AbilityButton);
 }
 
+void UAuraSpellMenuController::SpendSpellPoint(const FGameplayTag& AbilityTag)
+{
+	GetAuraAbilitySystemComponent()->ServerSpendSpellPoint(AbilityTag);
+}
+
 void UAuraSpellMenuController::ShouldEnableSpendPointAndEquipButtons(const FGameplayTag& StatusTag,
-	bool& bSpendPointEnabled, bool& bEquipEnabled)
+                                                                     bool& bSpendPointEnabled, bool& bEquipEnabled)
 {
 	// If the status of the ability is Unlocked or Equipped then the buttons to spend points or to equip should be enabled
 	// If the Ability is Eligible then only the spend points button should be enabled

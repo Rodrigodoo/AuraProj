@@ -49,6 +49,14 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void AddToPlayerAttributePoints(const int32 PointsToAdd) const;
 	
+	// Gets the player's currently available spell points
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetPlayerSpellPoints() const;
+	
+	// Adds points the player's currently available spell points
+	UFUNCTION(BlueprintNativeEvent)
+	void AddToPlayerSpellPoints(const int32 PointsToAdd) const;
+	
 	// Levels up the player
 	UFUNCTION(BlueprintNativeEvent)
 	void LevelUp();
