@@ -68,6 +68,9 @@ public:
 	// If no such ability is yet activated, then it return null
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 	
+	// Retrieves the descriptions available for this Ability
+	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription);
+	
 	// Updates by checking them against the level provided
 	// Note: should only run on server
 	void UpdateAbilityStatuses(int32 Level);
@@ -103,8 +106,16 @@ protected:
 	//~ Begin - UAbilitySystemComponent Overrides
 	// Activatable Abilities replication method
 	virtual void OnRep_ActivateAbilities() override;
+	
+	// Will be called from GiveAbility or from OnRep. Initializes events (triggers and inputs) with the given ability
+	virtual void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;
+
 	//~ End - UAbilitySystemComponent Overrides
 	
 	// Flag to identify when all startup abilities have been given
     bool bStartupAbilitiesGiven = false;
+	
+private:
+	// Internal Method to Broadcast and Ability Status Update
+	void BroadCastAbilityStatusUpdate(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
 };

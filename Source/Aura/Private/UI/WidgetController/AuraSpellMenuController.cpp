@@ -41,7 +41,7 @@ void UAuraSpellMenuController::BindCallbacksToDependencies()
 		});
 }
 
-void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton)
+void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton) const
 {
 	// Broadcast to all listening widgets whenever this ability has been selected
 	AbilitySelectedDelegate.Broadcast(AbilityButton);
@@ -50,6 +50,12 @@ void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton)
 void UAuraSpellMenuController::SpendSpellPoint(const FGameplayTag& AbilityTag)
 {
 	GetAuraAbilitySystemComponent()->ServerSpendSpellPoint(AbilityTag);
+}
+
+void UAuraSpellMenuController::GetDescriptionsForAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription,
+	FString& OutNextLevelDescription)
+{
+	GetAuraAbilitySystemComponent()->GetDescriptionsByAbilityTag(AbilityTag, OutDescription, OutNextLevelDescription);
 }
 
 void UAuraSpellMenuController::ShouldEnableSpendPointAndEquipButtons(const FGameplayTag& StatusTag,

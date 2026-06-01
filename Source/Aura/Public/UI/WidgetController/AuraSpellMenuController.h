@@ -38,12 +38,16 @@ public:
 	
 	// Method to broadcast the selection of an Ability
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
-	void SelectAbility(UAuraUserWidget* AbilityButton);
+	void SelectAbility(UAuraUserWidget* AbilityButton) const;
 	
 	// Method to be called whenever a spell point should be spent
 	// It will inform the ability system component (server) to update the ability and spend a spell point 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
 	void SpendSpellPoint(const FGameplayTag& AbilityTag);
+	
+	// Retrieves the descriptions for the Ability tag provided
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
+	void GetDescriptionsForAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription);
 
 protected:
 	// Delegate to broadcast when Spell Points changes

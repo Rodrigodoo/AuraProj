@@ -186,6 +186,37 @@ FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFromAbilityTag(const F
 	return nullptr;
 }
 
+bool UAuraAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription,
+	FString& OutNextLevelDescription)
+{
+	// Early checks
+	if (!AbilityTag.IsValid())
+	{
+		OutDescription = "Error - No Ability Tag Set!";
+		OutNextLevelDescription = "";
+		return false;
+	}
+	
+	// Check if ability is unlocked
+	if (const FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
+	{
+		// If it is and there is a valid Ability get the description and the next level description from it
+		if (const UAuraGameplayAbilityBase* GameplayAbility = Cast<UAuraGameplayAbilityBase>(AbilitySpec->Ability))
+		{
+			OutDescription = GameplayAbility->GetDescription(AbilitySpec->Level);
+			OutNextLevelDescription = GameplayAbility->GetNextLevelDescription(AbilitySpec->Level +1);
+			return true;
+		}
+	}
+	
+	// Since the ability is locked (or no valid ability was found), get the locked description out via the Out Description
+	const UAuraAbilityInfoDataAsset* AbilityInfoDataAsset = UAuraAbilitySystemLibrary::GetAbilityInfoDataAsset(GetAvatarActor());
+	const FAuraAbilityInfo AbilityInfo = AbilityInfoDataAsset->FindAuraAbilityInfoForTag(AbilityTag);
+	OutDescription = UAuraGameplayAbilityBase::GetLockedDescription(AbilityInfo.LevelRequirement);
+	OutNextLevelDescription = "";
+	return false;
+}
+
 void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)
 {
 	// Running on server
@@ -215,11 +246,6 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)
 			AbilitySpec.GetDynamicSpecSourceTags().AddTag(AuraGameplayTagsManager::Abilities_Status_Eligible);
 			GiveAbility(AbilitySpec);
 			MarkAbilitySpecDirty(AbilitySpec); // Make the ability spec replicate immediately
-			
-			// Inform the client
-			ClientUpdateAbilityStatus(AbilityInfo.AbilityTag,
-				AuraGameplayTagsManager::Abilities_Status_Eligible, 
-				AbilitySpec.Level);
 		}
 	}
 }
@@ -287,10 +313,10 @@ void UAuraAbilitySystemComponent::ServerUpgradeAttributes_Implementation(const F
 }
 
 void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
-                                                                           const FGameplayTag& StatusTag, int32 AbilityLevel)
+                                                                           const FGameplayTag& StatusTag, const int32 AbilityLevel)
 {
 	// Broadcast that this ability changed status
-	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
+	BroadCastAbilityStatusUpdate(AbilityTag, StatusTag, AbilityLevel);
 }
 
 const FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)
@@ -318,6 +344,36 @@ void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
 		bStartupAbilitiesGiven = true;
 		AbilitiesGivenDelegate.Broadcast();
 	}
+}
+
+void UAuraAbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec& AbilitySpec)
+{
+	// Call super before doing our logic
+	Super::OnGiveAbility(AbilitySpec);
+	
+	// Note: Only go forward if we are dealing with locally controlled actors, as we use it to update UI elements
+	if (!AbilityActorInfo->IsLocallyControlled())
+	{
+		return;
+	}
+	
+	// If an Ability just became Eligible (i.e. like due to a level up)
+	// Broadcast the change of the Ability Status
+	const FGameplayTag StatusTag = UAuraAbilitySystemLibrary::GetStatusTagFromSpec(AbilitySpec);
+	if (StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Eligible))
+	{
+		// Broadcast that this ability changed status
+		BroadCastAbilityStatusUpdate(
+			UAuraAbilitySystemLibrary::GetAbilityTagFromSpec(AbilitySpec), StatusTag, AbilitySpec.Level);
+	}
+	
+}
+
+void UAuraAbilitySystemComponent::BroadCastAbilityStatusUpdate(const FGameplayTag& AbilityTag,
+	const FGameplayTag& StatusTag, const int32 AbilityLevel)
+{
+	// Broadcast that this ability changed status
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }
 
 void UAuraAbilitySystemComponent::EffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent,

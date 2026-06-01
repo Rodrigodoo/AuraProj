@@ -8,7 +8,7 @@
 #include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "Engine/OverlapResult.h"
-#include "Game/AuraGameModeBase.h"
+#include "Game/AuraGameInstance.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
@@ -150,29 +150,29 @@ void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
 UAuraCharacterClassInfoDataAsset* UAuraAbilitySystemLibrary::GetCharacterClassInfoDataAsset(const UObject* WorldContextObject)
 {
 	// Get the game mode and the Character Class Info Data Asset
-	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (!AuraGameMode)
+	const UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(UGameplayStatics::GetGameInstance(WorldContextObject));
+	if (!AuraGameInstance)
 	{
-		// If this is called on the client it will fail since GameMode is only available on the server
+		// Something failed and the game instance is not available
 		return nullptr;
 	}
 	
-	check(AuraGameMode->CharacterClassInfoDataAsset);
-	return AuraGameMode->CharacterClassInfoDataAsset;
+	check(AuraGameInstance->CharacterClassInfoDataAsset);
+	return AuraGameInstance->CharacterClassInfoDataAsset;
 }
 
 UAuraAbilityInfoDataAsset* UAuraAbilitySystemLibrary::GetAbilityInfoDataAsset(const UObject* WorldContextObject)
 {
 	// Get the game mode and the Character Class Info Data Asset
-	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (!AuraGameMode)
+	const UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(UGameplayStatics::GetGameInstance(WorldContextObject));
+	if (!AuraGameInstance)
 	{
-		// If this is called on the client it will fail since GameMode is only available on the server
+		// Something failed and the game instance is not available
 		return nullptr;
 	}
 	
-	check(AuraGameMode->AbilityInfoDataAsset);
-	return AuraGameMode->AbilityInfoDataAsset;
+	check(AuraGameInstance->AbilityInfoDataAsset);
+	return AuraGameInstance->AbilityInfoDataAsset;
 }
 
 int32 UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject, const EAuraCharacterClass CharacterClass,
