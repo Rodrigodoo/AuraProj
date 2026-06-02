@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraAbilityTypes.h"
 #include "AuraGameplayTagsManager.h"
+#include "AbilitySystem/Data/AuraAbilityInfoDataAsset.h"
 #include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "Engine/OverlapResult.h"
 #include "Game/AuraGameInstance.h"
@@ -173,6 +174,46 @@ UAuraAbilityInfoDataAsset* UAuraAbilitySystemLibrary::GetAbilityInfoDataAsset(co
 	
 	check(AuraGameInstance->AbilityInfoDataAsset);
 	return AuraGameInstance->AbilityInfoDataAsset;
+}
+
+FAuraAbilityInfo UAuraAbilitySystemLibrary::FindAbilityInfoFromTag(const UObject* WorldContextObject,
+	const FGameplayTag& AbilityTag)
+{
+	// Get the Ability info data asset and search for the ability
+	const UAuraAbilityInfoDataAsset* AbilityInfoDataAsset = GetAbilityInfoDataAsset(WorldContextObject);
+	if (!AbilityInfoDataAsset)
+	{
+		return FAuraAbilityInfo();
+	}
+	
+	return AbilityInfoDataAsset->FindAuraAbilityInfoForTag(AbilityTag);
+}
+
+bool UAuraAbilitySystemLibrary::GetAbilityDescriptions(const UObject* WorldContextObject,
+                                                       const FGameplayTag& AbilityTag, FString& OutDescription,
+                                                       FString& OutNextLevelDescription, const int32 Level,
+                                                       const bool bUseLockedDescription)
+{
+	// Early checks
+	if (!AbilityTag.IsValid())
+	{
+		OutDescription = "Error - No Ability Tag Set!";
+		OutNextLevelDescription = "";
+		return false;
+	}
+	const FAuraAbilityInfo AbilityInfo = FindAbilityInfoFromTag(WorldContextObject, AbilityTag);
+	if (bUseLockedDescription)
+	{
+		// If using the locked description pass it out via the description and leave the next level blank
+		OutDescription = AbilityInfo.GetLockedDescription();
+		OutNextLevelDescription = "";
+		return false;
+	}
+
+	// Retrieve the description and the next level description
+	OutDescription = AbilityInfo.GetDescription(Level);
+	OutNextLevelDescription = AbilityInfo.GetNextLevelDescription(Level);
+	return true;
 }
 
 int32 UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject, const EAuraCharacterClass CharacterClass,

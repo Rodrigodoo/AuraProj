@@ -31,6 +31,14 @@ struct FAuraAbilityInfo
 	UPROPERTY(BlueprintReadOnly, meta = (Categories = "Abilities.Status"))
 	FGameplayTag StatusTag = FGameplayTag();
 	
+	// This Ability's description (To be used as Rich Text)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (MultiLine="true"))
+	FString Description = FString();
+	
+	// This Ability's next level description (To be used as Rich Text)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,  meta = (MultiLine="true"))
+	FString NextLevelDescription = FString();
+	
 	// This Ability's icon to use in the UI
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const UTexture2D> Icon = nullptr;
@@ -47,6 +55,17 @@ struct FAuraAbilityInfo
 	// This Ability's class
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayAbility> AbilityClass;
+	
+	// Retrieves the description with all the data filled in
+	FString GetDescription(int32 Level) const;
+	// Retrieves the next level description with all the data filled in
+	FString GetNextLevelDescription(int32 Level) const;
+	// Retrieves the locked description with all the data filled in
+	FString GetLockedDescription() const;
+	
+private:
+	// Retrieves the data to implement on the texts
+	void FormatTextValues(FString& OutText, const int32 Level, bool bNextLevel = false) const;
 };
 
 

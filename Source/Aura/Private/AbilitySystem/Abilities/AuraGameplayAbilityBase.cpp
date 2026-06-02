@@ -3,18 +3,54 @@
 
 #include "AbilitySystem/Abilities/AuraGameplayAbilityBase.h"
 
-FString UAuraGameplayAbilityBase::GetDescription(const int32 Level) const
+#include "AbilitySystem/AuraAttributeSet.h"
+
+float UAuraGameplayAbilityBase::GetManaCost(const int32 Level) const
 {
-	return FString::Printf(TEXT("%s, Level:<Level>%d</>"), L"Default Ability Name - LoremIpsum", Level);
+	// Get the cost gameplay effect and go through its modifiers to check the cost of this ability
+	float CostValue = 0.f;
+	UGameplayEffect* CostGE = GetCostGameplayEffect();
+	if (!CostGE)
+	{
+		return CostValue;
+	}
+	
+	// Iterate through the modifiers to find the cost
+	for (const FGameplayModifierInfo& ModInfo : CostGE->Modifiers)
+	{
+		// Only count costs to Mana
+        if (ModInfo.Attribute != UAuraAttributeSet::GetManaAttribute())
+        {
+	        continue;
+        }
+
+		// If it has mana modifier then retrieve its magnitude value (Needs to be a scalable float)
+		ModInfo.ModifierMagnitude.GetStaticMagnitudeIfPossible(Level, CostValue);
+		break;
+	}
+	
+	// Return the cost
+	return FMath::Abs(CostValue);
 }
 
-FString UAuraGameplayAbilityBase::GetNextLevelDescription(const int32 NextLevel) const
+float UAuraGameplayAbilityBase::GetCooldown(const int32 Level) const
 {
-	return FString::Printf(TEXT("Next Level:<Level>%d</> \nCauses much more damage"), NextLevel);
-}
+	// Get the cooldown gameplay effect check its duration if it has one
+	float CooldownValue = 0.f;
+	const UGameplayEffect* CooldownGE = GetCooldownGameplayEffect();
+	if (!CooldownGE)
+	{
+		return CooldownValue;
+	}
 
-FString UAuraGameplayAbilityBase::GetLockedDescription(const int32 Level)
-{
-	return FString::Printf(TEXT("Spell Locked until level:<Level>%d</>"), Level);
-
+	// If the cooldown has no duration then return early
+	if (CooldownGE->DurationPolicy != EGameplayEffectDurationType::HasDuration)
+	{
+		return CooldownValue;
+	}
+	
+	// If it has duration then return its value (Needs to be a scalable float)
+	CooldownGE->DurationMagnitude.GetStaticMagnitudeIfPossible(Level, CooldownValue);
+	
+	return CooldownValue;
 }

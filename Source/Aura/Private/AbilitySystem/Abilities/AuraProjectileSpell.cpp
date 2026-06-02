@@ -5,7 +5,6 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "AuraGameplayTagsManager.h"
 #include "Actor/AuraProjectile.h"
 #include "Interaction/AuraCombatInterface.h"
 
@@ -44,45 +43,53 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	SpawnTransform.SetLocation(SocketLocation);
 	SpawnTransform.SetRotation(SpawnRotation.Quaternion());
 	
-	// Begin Spawning
-	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+	// Begin Spawning the current amount of projectiles
+	for (int Index = 0; Index < ProjectileCount.GetValueAtLevel(GetAbilityLevel()); Index++)
+	{
+		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 		ProjectileClass,
 		SpawnTransform,
 		GetOwningActorFromActorInfo(), 
 		Cast<APawn>(GetAvatarActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
-	// Setup Projectile
-	if (const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo()))
-	{
-		// Create Custom Effect Context Handle
-		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
-		EffectContextHandle.SetAbility(this);
-		EffectContextHandle.AddSourceObject(Projectile);
-		TArray<TWeakObjectPtr<AActor>> Actors;
-		Actors.Add(Projectile);
-		EffectContextHandle.AddActors(Actors);
-		FHitResult HitResult;
-		HitResult.Location = ProjectileTargetLocation;
-		EffectContextHandle.AddHitResult(HitResult);
-		
-		// Create a Spec Handle to pass it to the Projectile
-		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
-
-		// Go through the damage types and set them by caller using their tags
-		// Key: FGameplayTag | Value: FScalableFloat 
-		for (auto& Pair : DamageTypes)
+		// Setup Projectile
+		if (const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo()))
 		{
-			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
-			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
-		}
+			// Create Custom Effect Context Handle
+			FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
+			EffectContextHandle.SetAbility(this);
+			EffectContextHandle.AddSourceObject(Projectile);
+			TArray<TWeakObjectPtr<AActor>> Actors;
+			Actors.Add(Projectile);
+			EffectContextHandle.AddActors(Actors);
+			FHitResult HitResult;
+			HitResult.Location = ProjectileTargetLocation;
+			EffectContextHandle.AddHitResult(HitResult);
 		
-		// Pass the Spec Handle down to the Projectile
-		Projectile->DamageEffectSpecHandle = SpecHandle;
-	}
+			// Create a Spec Handle to pass it to the Projectile
+			const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
 
-	// Finish spawning
-	Projectile->FinishSpawning(SpawnTransform);
+			// Go through the damage types and set them by caller using their tags
+			// Key: FGameplayTag | Value: FScalableFloat 
+			for (auto& Pair : DamageTypes)
+			{
+				const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+				UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
+			}
+		
+			// Pass the Spec Handle down to the Projectile
+			Projectile->DamageEffectSpecHandle = SpecHandle;
+		}
+
+		// Finish spawning
+		Projectile->FinishSpawning(SpawnTransform);
+	}
+}
+
+int32 UAuraProjectileSpell::GetProjectileCount(const int32 Level) const
+{
+	return ProjectileCount.GetValueAtLevel(Level);
 }
 
 void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

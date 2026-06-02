@@ -19,14 +19,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input", meta = (Categories = "InputTag"))
 	FGameplayTag StartupInputTag;
 	
-	//~ Begin - Ability Description Getters
+	//~ Begin - Ability Getters
+	// Retrieves the cost to activate this ability
+	virtual float GetManaCost(int32 Level) const;
 	
-	// Getter for the description of this ability for the supplied level
-	virtual FString GetDescription(const int32 Level) const;
-	// Getter for the description of this ability at the next supplied level
-	virtual FString GetNextLevelDescription(const int32 NextLevel) const;
-	// Getter for the description of this ability at the next supplied level
-	static FString GetLockedDescription(const int32 Level);
-	
-	//~ End - Ability Description Getters
+	// Retrieves the cooldown to activate this ability
+	virtual float GetCooldown(int32 Level) const;
+	//~ End - Ability Getters
 };

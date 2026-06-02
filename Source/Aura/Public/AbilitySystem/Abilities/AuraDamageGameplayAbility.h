@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* TargetActor);
 	
+	// Get the damage value for said type and level
+	float GetDamageAtLevel(const FGameplayTag& DamageType, const float Level) const;
+	
 protected:
 	// Damage Effect class to add to the projectile
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

@@ -55,14 +55,22 @@ public:
 		EAuraCharacterClass CharacterClass);
 	
 	// Retrieves the Character Class Info Data Asset
-	// Note: Should be called on Server
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults", meta=(DefaultToSelf = "WorldContextObject"))
 	static UAuraCharacterClassInfoDataAsset* GetCharacterClassInfoDataAsset(const UObject* WorldContextObject);
 	
-	// Retrieves the Ability Info Info Data Asset
-	// Note: Should be called on Server
+	// Retrieves the Ability Info Data Asset
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults", meta=(DefaultToSelf = "WorldContextObject"))
 	static UAuraAbilityInfoDataAsset* GetAbilityInfoDataAsset(const UObject* WorldContextObject);
+	
+	// Retrieves the Ability Info from the Ability Info Data Asset
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults", meta=(DefaultToSelf = "WorldContextObject"))
+	static FAuraAbilityInfo FindAbilityInfoFromTag(const UObject* WorldContextObject, const FGameplayTag& AbilityTag);
+	
+	// Retrieves the Ability Description and Next Level Description
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults", meta=(DefaultToSelf = "WorldContextObject"))
+	static bool GetAbilityDescriptions(const UObject* WorldContextObject, const FGameplayTag& AbilityTag, FString& OutDescription,
+	                                   FString& OutNextLevelDescription, const int32 Level = 1,
+	                                   bool bUseLockedDescription = false);
 	
 	// Finds how much XP should be rewarded when killing a character of said class and level
 	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, EAuraCharacterClass CharacterClass, const int32 CharacterLevel);

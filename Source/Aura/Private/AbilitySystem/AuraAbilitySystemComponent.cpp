@@ -200,21 +200,17 @@ bool UAuraAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag
 	// Check if ability is unlocked
 	if (const FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
 	{
-		// If it is and there is a valid Ability get the description and the next level description from it
-		if (const UAuraGameplayAbilityBase* GameplayAbility = Cast<UAuraGameplayAbilityBase>(AbilitySpec->Ability))
-		{
-			OutDescription = GameplayAbility->GetDescription(AbilitySpec->Level);
-			OutNextLevelDescription = GameplayAbility->GetNextLevelDescription(AbilitySpec->Level +1);
-			return true;
-		}
+		// Get the descriptions from the Ability Info Data Asset
+		// Note: using the Ability Spec Level as the Ability might not yet been updated
+		return UAuraAbilitySystemLibrary::GetAbilityDescriptions(
+			GetAvatarActor(), AbilityTag, OutDescription, OutNextLevelDescription, AbilitySpec->Level);
 	}
 	
 	// Since the ability is locked (or no valid ability was found), get the locked description out via the Out Description
-	const UAuraAbilityInfoDataAsset* AbilityInfoDataAsset = UAuraAbilitySystemLibrary::GetAbilityInfoDataAsset(GetAvatarActor());
-	const FAuraAbilityInfo AbilityInfo = AbilityInfoDataAsset->FindAuraAbilityInfoForTag(AbilityTag);
-	OutDescription = UAuraGameplayAbilityBase::GetLockedDescription(AbilityInfo.LevelRequirement);
-	OutNextLevelDescription = "";
-	return false;
+	// Note: the level here makes no difference
+	return UAuraAbilitySystemLibrary::GetAbilityDescriptions(
+			GetAvatarActor(), AbilityTag, OutDescription, OutNextLevelDescription, 
+			1, true);
 }
 
 void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)

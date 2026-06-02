@@ -23,3 +23,14 @@ void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 		UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
 	;
 }
+
+float UAuraDamageGameplayAbility::GetDamageAtLevel(const FGameplayTag& DamageType, const float Level) const
+{
+	const FScalableFloat* Damage = DamageTypes.Find(DamageType);
+	if (!Damage)
+	{
+		return 0.0f;
+	}
+	
+	return Damage->GetValueAtLevel(Level);
+}

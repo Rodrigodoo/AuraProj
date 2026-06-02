@@ -15,6 +15,9 @@ class AURA_API UAuraProjectileSpell : public UAuraDamageGameplayAbility
 {
 	GENERATED_BODY()
 
+public:
+	// Retrieves the projectile count that can be spawned at once
+	int32 GetProjectileCount(int32 Level) const;
 protected:
 	//~ Begin - UGameplayAbility overrides
 	
@@ -32,4 +35,8 @@ protected:
 	// Projectile class to spawn when ability is activated
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
+	
+	// Amount of projectiles that are being spawned at once
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FScalableFloat ProjectileCount = 1;
 };
