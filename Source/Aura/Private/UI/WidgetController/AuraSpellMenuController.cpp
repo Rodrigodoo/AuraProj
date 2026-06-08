@@ -28,6 +28,9 @@ void UAuraSpellMenuController::BindCallbacksToDependencies()
 			{
 				// Grab the ability info, update its status tag and broadcast it
 				FAuraAbilityInfo AbilityInfo = AbilityInfoDataAsset->FindAuraAbilityInfoForTag(AbilityTag);
+				
+				// Set the Input tag retrieved from the spec into the data asset entry
+				AbilityInfo.InputTag = GetAuraAbilitySystemComponent()->GetInputTagFromAbilityTag(AbilityTag);
 				AbilityInfo.StatusTag = StatusTag;
 				AbilityInfoDelegate.Broadcast(AbilityInfo);
 			}
@@ -45,6 +48,18 @@ void UAuraSpellMenuController::SelectAbility(UAuraUserWidget* AbilityButton) con
 {
 	// Broadcast to all listening widgets whenever this ability has been selected
 	AbilitySelectedDelegate.Broadcast(AbilityButton);
+}
+
+void UAuraSpellMenuController::SelectEquipSlot(UAuraUserWidget* EquipSlotButton) const
+{
+	// Broadcast to all listening widgets whenever this equip slot has been selected
+	EquipSlotSelectedDelegate.Broadcast(EquipSlotButton);
+}
+
+void UAuraSpellMenuController::EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag)
+{
+	// Tells the server to equip this ability to the specified input tag
+	GetAuraAbilitySystemComponent()->ServerEquipAbility(AbilityTag, InputTag);
 }
 
 void UAuraSpellMenuController::SpendSpellPoint(const FGameplayTag& AbilityTag)

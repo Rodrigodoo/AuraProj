@@ -298,6 +298,21 @@ FGameplayTag UAuraAbilitySystemLibrary::GetTypeFromSpec(const FGameplayAbilitySp
 	return FGameplayTag();
 }
 
+bool UAuraAbilitySystemLibrary::ClearInputTagFromSpec(FGameplayAbilitySpec& AbilitySpec)
+{
+	// Get the Input Tag
+	const FGameplayTag& InputTag = GetInputTagFromSpec(AbilitySpec);
+	return AbilitySpec.GetDynamicSpecSourceTags().RemoveTag(InputTag);
+}
+
+bool UAuraAbilitySystemLibrary::AbilityHasInputTag(const FGameplayAbilitySpec& AbilitySpec,
+                                                   const FGameplayTag& InputTagToCheck)
+{
+	// Get the Input Tag
+	const FGameplayTag& InputTag = GetInputTagFromSpec(AbilitySpec);
+	return InputTag.MatchesTagExact(InputTagToCheck);
+}
+
 void UAuraAbilitySystemLibrary::AssignAndApplyToSelfSetByCallerEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpecHandle& EffectSpecHandle, const FGameplayTag& DataTag, const float Magnitude, const bool
                                                                       SupressWarnings)
 {

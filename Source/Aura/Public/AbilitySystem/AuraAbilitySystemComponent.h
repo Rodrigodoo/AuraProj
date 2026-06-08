@@ -71,6 +71,9 @@ public:
 	// Retrieves the descriptions available for this Ability
 	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription);
 	
+	// Clear all this specific Input Tag from all abilities
+	void ClearInputTagFromAbilities(const FGameplayTag& InputTag);
+	
 	// Updates by checking them against the level provided
 	// Note: should only run on server
 	void UpdateAbilityStatuses(int32 Level);
@@ -78,6 +81,13 @@ public:
 	// Server method to tell the Ability System component that a spell point was spent on a specific ability
 	UFUNCTION(Server, Reliable)
 	void ServerSpendSpellPoint(const FGameplayTag& AbilityTag);
+	
+	// Server method to tell the Ability System component that an ability has been equip and to which input slot
+	UFUNCTION(Server, Reliable)
+	void ServerEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag);
+	
+	// Retrieve the Input Tag from this Ability Tag
+	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag);
 	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTagsDelegate;
@@ -99,7 +109,7 @@ protected:
 	// This is needed since UpdateAbilityStatuses is only run on the server
 	UFUNCTION(Client, Reliable)
 	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
-	
+
 	// Finds the ability spec from all activatable abilities using the ability's tag 
 	const FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);
 	

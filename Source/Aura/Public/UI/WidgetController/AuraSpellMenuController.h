@@ -10,7 +10,7 @@
 class UAuraUserWidget;
 // Delegates
 // Delegate for when an ability is selected
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilitySelectedSignature, UAuraUserWidget*, AbilityButton);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FButtonSelectedSignature, UAuraUserWidget*, Button);
 
 /**
  * Spell Menu Controller responsible for controlling the Aura Spell Menu Widget
@@ -32,13 +32,26 @@ public:
 	//~ End - UAuraWidgetController Overrides
 	
 	//~ Begin - Delegates
+	// Ability Selection Delegate
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Spells Menu")
-	FAbilitySelectedSignature AbilitySelectedDelegate;
+	FButtonSelectedSignature AbilitySelectedDelegate;
+	
+	// Equip Slot Selection Delegate
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Spells Menu")
+	FButtonSelectedSignature EquipSlotSelectedDelegate;
 	//~ End - Delegates
 	
 	// Method to broadcast the selection of an Ability
 	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
 	void SelectAbility(UAuraUserWidget* AbilityButton) const;
+	
+	// Method to broadcast the selection of an Equip Slot
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
+	void SelectEquipSlot(UAuraUserWidget* EquipSlotButton) const;
+	
+	// Equips the ability for a specific input tag
+	UFUNCTION(BlueprintCallable, Category = "GAS|Spells Menu")
+	void EquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag);
 	
 	// Method to be called whenever a spell point should be spent
 	// It will inform the ability system component (server) to update the ability and spend a spell point 

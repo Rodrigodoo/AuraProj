@@ -213,6 +213,21 @@ bool UAuraAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag
 			1, true);
 }
 
+void UAuraAbilitySystemComponent::ClearInputTagFromAbilities(const FGameplayTag& InputTag)
+{
+	// Lock all activatable abilities while looping through them
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		// If the Ability uses this input tag, then clear it.
+		if (UAuraAbilitySystemLibrary::AbilityHasInputTag(AbilitySpec, InputTag))
+		{
+			UAuraAbilitySystemLibrary::ClearInputTagFromSpec(AbilitySpec);
+			MarkAbilitySpecDirty(AbilitySpec);
+		}
+	}
+}
+
 void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)
 {
 	// Running on server
@@ -246,9 +261,65 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)
 	}
 }
 
+FGameplayTag UAuraAbilitySystemComponent::GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag)
+{
+	const FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag);
+	if (!AbilitySpec)
+	{
+		return FGameplayTag();
+	}
+	return UAuraAbilitySystemLibrary::GetInputTagFromSpec(*AbilitySpec);
+}
+
+void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGameplayTag& AbilityTag,
+                                                                    const FGameplayTag& InputTag)
+{
+	// Get the Ability Spec to find its status. If it is locked (not activatable) then return
+	FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag);
+	if (!AbilitySpec)
+	{
+		return;
+	}
+	
+	// Retrieve the old InputTag and the status
+	const FGameplayTag& PreviousInputTag = UAuraAbilitySystemLibrary::GetInputTagFromSpec(*AbilitySpec);
+	const FGameplayTag& Status = UAuraAbilitySystemLibrary::GetStatusTagFromSpec(*AbilitySpec);
+	
+	// If the ability is Locked (should not happen here) or Eligible (No yet purchased)
+	// Then return as it should not be able to be equipped
+	if (Status.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Locked) || 
+		Status.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Eligible))
+	{
+		return;
+	}
+	
+	// Clear this Input Tag from all abilities (only one should have it but this is a fail safe)
+	ClearInputTagFromAbilities(InputTag);
+	
+	// Clear this ability's Input Tag in case it's not the same
+	UAuraAbilitySystemLibrary::ClearInputTagFromSpec(*AbilitySpec);
+	
+	// Now assign the new Input Tag to this Ability
+	AbilitySpec->GetDynamicSpecSourceTags().AddTag(InputTag);
+
+	// If the Ability was unlocked, convert its status to Equipped
+	if (Status.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Unlocked))
+	{
+		AbilitySpec->GetDynamicSpecSourceTags().RemoveTag(Status);
+		AbilitySpec->GetDynamicSpecSourceTags().AddTag(AuraGameplayTagsManager::Abilities_Status_Equipped);
+	}
+	
+	// Mark Spec as dirty to immediately replicate changes
+	MarkAbilitySpecDirty(*AbilitySpec);
+	
+	// Now Broadcast the change in status
+	// This should update the UI
+	ClientUpdateAbilityStatus(AbilityTag, AuraGameplayTagsManager::Abilities_Status_Equipped, AbilitySpec->Level);
+}
+
 void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGameplayTag& AbilityTag)
 {
-	// Get the Ability Spec to find its status
+	// Get the Ability Spec to find its status. If it is locked (not activatable) then return
 	FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag);
 	if (!AbilitySpec)
 	{

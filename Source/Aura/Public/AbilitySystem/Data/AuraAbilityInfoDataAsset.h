@@ -19,10 +19,6 @@ struct FAuraAbilityInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "Abilities"))
 	FGameplayTag AbilityTag = FGameplayTag();
 	
-	// This Ability's input tag to identify which input triggers this ability
-	UPROPERTY(BlueprintReadOnly, meta = (Categories = "InputTag"))
-	FGameplayTag InputTag = FGameplayTag();
-	
 	// Cooldown tag for this ability
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "Cooldown"))
 	FGameplayTag CooldownTag = FGameplayTag();
@@ -30,10 +26,6 @@ struct FAuraAbilityInfo
 	// Type tag for this ability
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "Abilities.Type"))
 	FGameplayTag TypeTag = FGameplayTag();
-	
-	// Status tag for this ability
-	UPROPERTY(BlueprintReadOnly, meta = (Categories = "Abilities.Status"))
-	FGameplayTag StatusTag = FGameplayTag();
 	
 	// This Ability's description (To be used as Rich Text)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (MultiLine="true"))
@@ -59,6 +51,15 @@ struct FAuraAbilityInfo
 	// This Ability's class
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayAbility> AbilityClass;
+	
+	// Read-Only Properties
+	// This Ability's input tag to identify which input triggers this ability
+	UPROPERTY(BlueprintReadOnly, meta = (Categories = "InputTag"))
+	FGameplayTag InputTag = FGameplayTag();
+	
+	// Status tag for this ability
+	UPROPERTY(BlueprintReadOnly, meta = (Categories = "Abilities.Status"))
+	FGameplayTag StatusTag = FGameplayTag();
 	
 	// Retrieves the description with all the data filled in
 	FString GetDescription(int32 Level) const;

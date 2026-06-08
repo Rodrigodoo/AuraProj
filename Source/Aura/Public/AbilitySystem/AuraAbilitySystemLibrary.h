@@ -87,6 +87,12 @@ public:
 	// Retrieves the Ability's Type from to its Ability Spec
 	static FGameplayTag GetTypeFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	
+	// Clear the Input Tag from this Ability Spec if it exists
+	static bool ClearInputTagFromSpec(FGameplayAbilitySpec& AbilitySpec);
+	
+	// checks if this Ability has a specific Input Tag
+	static bool AbilityHasInputTag(const FGameplayAbilitySpec& AbilitySpec, const FGameplayTag& InputTagToCheck);
+	
 	// Assign a Tag set by caller magnitude and apply it to self
 	// Note: If SupressWarnings = true, then a set by caller magnitude will be created for all other modifiers 
 	// that use set by caller with a magnitude of 0.f. This will guarantee that no warning will occur.
