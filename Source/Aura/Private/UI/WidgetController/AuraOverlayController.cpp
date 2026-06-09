@@ -6,6 +6,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AuraAbilityInfoDataAsset.h"
 #include "AbilitySystem/Data/AuraLevelUpInfoDataAsset.h"
 #include "Player/AuraPlayerState.h"
 
@@ -85,6 +86,22 @@ void UAuraOverlayController::BindCallbacksToDependencies()
 			}
 		}
 	);
+	
+	// Tell listeners that an Ability has changed status (this might mean a new input tag or status tag)
+	GetAuraAbilitySystemComponent()->AbilityStatusChangedDelegate.AddLambda(
+		[&](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel)
+		{
+			if (AbilityInfoDataAsset)
+			{
+				// Grab the ability info, update its status tag and broadcast it
+				FAuraAbilityInfo AbilityInfo = AbilityInfoDataAsset->FindAuraAbilityInfoForTag(AbilityTag);
+				
+				// Set the Input tag retrieved from the spec into the data asset entry
+				AbilityInfo.InputTag = GetAuraAbilitySystemComponent()->GetInputTagFromAbilityTag(AbilityTag);
+				AbilityInfo.StatusTag = StatusTag;
+				AbilityInfoDelegate.Broadcast(AbilityInfo);
+			}
+		});
 	
 	// Bind to Player State
 	// Get any XP changes
