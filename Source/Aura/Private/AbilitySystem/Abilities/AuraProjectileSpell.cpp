@@ -54,33 +54,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
 		// Setup Projectile
-		if (const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo()))
-		{
-			// Create Custom Effect Context Handle
-			FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
-			EffectContextHandle.SetAbility(this);
-			EffectContextHandle.AddSourceObject(Projectile);
-			TArray<TWeakObjectPtr<AActor>> Actors;
-			Actors.Add(Projectile);
-			EffectContextHandle.AddActors(Actors);
-			FHitResult HitResult;
-			HitResult.Location = ProjectileTargetLocation;
-			EffectContextHandle.AddHitResult(HitResult);
-		
-			// Create a Spec Handle to pass it to the Projectile
-			const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
-
-			// Go through the damage types and set them by caller using their tags
-			// Key: FGameplayTag | Value: FScalableFloat 
-			for (auto& Pair : DamageTypes)
-			{
-				const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
-				UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
-			}
-		
-			// Pass the Spec Handle down to the Projectile
-			Projectile->DamageEffectSpecHandle = SpecHandle;
-		}
+		Projectile->DamageEffectParams = MakaDamageEffectParamsFromClassDefaults();
 
 		// Finish spawning
 		Projectile->FinishSpawning(SpawnTransform);

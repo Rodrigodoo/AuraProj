@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayEffectTypes.h"
+#include "AuraAbilityTypes.h"
 #include "GameFramework/Actor.h"
 #include "AuraProjectile.generated.h"
 
@@ -27,11 +27,14 @@ public:
 	
 	// A damage effect that goes with the projectile
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
-	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+	FAuraDamageEffectParams DamageEffectParams;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
+	
+	// Plays the Effects (sound and particles) whenever this actor hits something
+	void PlayEffectsOnHit();
 	
 private:
 

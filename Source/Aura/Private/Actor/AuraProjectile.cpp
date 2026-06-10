@@ -6,7 +6,6 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Aura/Aura.h"
-#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -59,15 +58,21 @@ void AAuraProjectile::BeginPlay()
 		FVector::Zero(), FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, true);
 }
 
+void AAuraProjectile::PlayEffectsOnHit()
+{
+	// Play impact sound and spawn particle system
+	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
+	bHit = true;
+}
+
 void AAuraProjectile::Destroyed()
 {
 	// If the actor did not overlap an actor, and it is a client
 	// Then stop the flight sound and play impact sound and spawn particle system
 	if (!bHit && !HasAuthority())
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
-		bHit = true;
+		PlayEffectsOnHit();
 	}
 
 	Super::Destroyed();
@@ -89,8 +94,8 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		return;
 	}
 	// If the causer of the effect is invalid, is trying to hit itself, or it's trying to do friendly fire, then ignore!
-	if (!DamageEffectSpecHandle.Data.IsValid() 
-		|| OtherActor == DamageEffectSpecHandle.Data.Get()->GetEffectContext().GetEffectCauser() 
+	if (!DamageEffectParams.SourceAbilitySystemComponent 
+		|| OtherActor == DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor() 
 		|| !UAuraAbilitySystemLibrary::IsNotFriend(OtherActor, ProjectileInstigator))
 	{
 		return;
@@ -99,11 +104,8 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// If no hit has been registered, spawn sound and effect at impact point
 	if (!bHit)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName());
 		// Play impact sound and spawn particle system
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,ImpactEffect,GetActorLocation());
-		bHit = true;
+		PlayEffectsOnHit();
 	}
 
 	// If we are the server
@@ -112,7 +114,8 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		// If the other actor as an ASC then apply the Gameplay Effect to it
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
-			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+			UAuraAbilitySystemLibrary::ApplyDamageGameplayEffect(DamageEffectParams);
 		}
 		
 		// Destroy the projectile
