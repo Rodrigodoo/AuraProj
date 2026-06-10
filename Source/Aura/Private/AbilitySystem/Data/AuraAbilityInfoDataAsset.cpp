@@ -17,6 +17,7 @@ namespace AuraRichStyle
 	FString Cooldown = "_Cooldown";
 	
 	// Damage Ability Markups
+	FString TotalDmg = "_TotalDmg";
 	FString FireDmg = "_FireDmg";
 	FString LightningDmg = "_LightningDmg";
 	FString ArcaneDmg = "_ArcaneDmg";
@@ -71,13 +72,15 @@ void FAuraAbilityInfo::FormatTextValues(FString& OutText, const int32 Level, con
 	if (const UAuraDamageGameplayAbility* DamageGameplayAbility = Cast<UAuraDamageGameplayAbility>(AbilityDefault))
 	{
 		// Get all the damage types
-		float Damage = DamageGameplayAbility->GetDamageAtLevel(AuraGameplayTagsManager::Damage_Fire, AbilityLevel);
+		float Damage = DamageGameplayAbility->GetTotalDamageByLevel(AbilityLevel);
+		NamesToValues.Add(AuraRichStyle::TotalDmg, FStringFormatArg(FMath::RoundToInt32(Damage)));
+		Damage = DamageGameplayAbility->GetDamageByTypeAndLevel(AuraGameplayTagsManager::Damage_Fire, AbilityLevel);
 		NamesToValues.Add(AuraRichStyle::FireDmg, FStringFormatArg(FMath::RoundToInt32(Damage)));
-		Damage = DamageGameplayAbility->GetDamageAtLevel(AuraGameplayTagsManager::Damage_Lightning, AbilityLevel);
+		Damage = DamageGameplayAbility->GetDamageByTypeAndLevel(AuraGameplayTagsManager::Damage_Lightning, AbilityLevel);
 		NamesToValues.Add(AuraRichStyle::LightningDmg, FStringFormatArg(FMath::RoundToInt32(Damage)));
-		Damage = DamageGameplayAbility->GetDamageAtLevel(AuraGameplayTagsManager::Damage_Arcane, AbilityLevel);
+		Damage = DamageGameplayAbility->GetDamageByTypeAndLevel(AuraGameplayTagsManager::Damage_Arcane, AbilityLevel);
 		NamesToValues.Add(AuraRichStyle::ArcaneDmg, FStringFormatArg(FMath::RoundToInt32(Damage)));
-		Damage = DamageGameplayAbility->GetDamageAtLevel(AuraGameplayTagsManager::Damage_Physical, AbilityLevel);
+		Damage = DamageGameplayAbility->GetDamageByTypeAndLevel(AuraGameplayTagsManager::Damage_Physical, AbilityLevel);
 		NamesToValues.Add(AuraRichStyle::PhysicalDmg, FStringFormatArg(FMath::RoundToInt32(Damage)));
 	}
 

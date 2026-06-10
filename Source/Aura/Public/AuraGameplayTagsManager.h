@@ -160,6 +160,19 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage_Physical);
 	//~ End - Damage & Damage Types
 	
+	//~ Begin - Debuffs
+	// Debuffs
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs);
+	// Debuff.Burn
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Burn);
+	// Debuff.Stun
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Stun);
+	// Debuff.Arcane
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Arcane);
+	// Debuff.Physical
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Physical);
+	//~ End - Debuffs
+	
 	//~ Begin - Montages
 	// Montage.Attack.Weapon
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_Weapon);
@@ -175,4 +188,7 @@ namespace AuraGameplayTagsManager
 	
 	// Stores all Damage Types tags and relates them to resistances
 	extern const TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+	
+	// Stores all Damage Types tags and relates them to Debuffs
+	extern const TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
 }

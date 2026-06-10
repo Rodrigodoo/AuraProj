@@ -194,6 +194,20 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage_Physical, "Damage.Physical", "Physical Damage Type");
 	
 	/*
+	 * Debuffs
+	 */
+	// Debuff
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff, "Debuff", "Debuff");
+	// Debuff.Burn
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Burn, "Debuff.Burn", "Burn Debuff Caused by Fire Damage");
+	// Debuff.Stun
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun, "Debuff.Stun", "Stun Debuff Caused by Lightning Damage");
+	// Debuff.Arcane
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane, "Debuff.Arcane", "Arcane Debuff Caused by Arcane Damage");
+	// Debuff.Physical
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical, "Debuff.Physical", "Physical Debuff Caused by Physical Damage");
+	
+	/*
 	 * Montages
 	 */
 	// Montage.Attack.Weapon
@@ -220,5 +234,20 @@ namespace AuraGameplayTagsManager
 		{Damage_Arcane, Attributes_Resistance_Arcane},
 		// Physical Damage - Physical Resistance
 		{Damage_Physical, Attributes_Resistance_Physical}
+	};
+	
+	/*
+	 * Mapping of Damage Types to Debuffs
+	 */
+	const TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs = 
+	{
+		// Fire Damage - Burn Debuffs
+		{Damage_Fire, Debuff_Burn},
+		// Lightning Damage - Stun Debuffs
+		{Damage_Lightning, Debuff_Stun},
+		// Arcane Damage - Arcane Debuffs
+		{Damage_Arcane, Debuff_Arcane},
+		// Physical Damage - Physical Debuffs
+		{Damage_Physical, Debuff_Physical}
 	};
 }

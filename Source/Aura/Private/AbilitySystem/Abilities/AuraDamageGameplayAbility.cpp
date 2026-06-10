@@ -24,7 +24,7 @@ void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 	;
 }
 
-float UAuraDamageGameplayAbility::GetDamageAtLevel(const FGameplayTag& DamageType, const float Level) const
+float UAuraDamageGameplayAbility::GetDamageByTypeAndLevel(const FGameplayTag& DamageType, const float Level) const
 {
 	const FScalableFloat* Damage = DamageTypes.Find(DamageType);
 	if (!Damage)
@@ -33,4 +33,16 @@ float UAuraDamageGameplayAbility::GetDamageAtLevel(const FGameplayTag& DamageTyp
 	}
 	
 	return Damage->GetValueAtLevel(Level);
+}
+
+float UAuraDamageGameplayAbility::GetTotalDamageByLevel(const float Level) const
+{
+	float TotalDamage = 0.0f;
+	for (const auto& Pair: DamageTypes)
+	{
+		// Get the damage from all types
+		TotalDamage += Pair.Value.GetValueAtLevel(Level);
+	}
+	
+	return TotalDamage;
 }

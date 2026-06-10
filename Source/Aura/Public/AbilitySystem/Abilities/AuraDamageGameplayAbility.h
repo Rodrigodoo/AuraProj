@@ -22,7 +22,10 @@ public:
 	void CauseDamage(AActor* TargetActor);
 	
 	// Get the damage value for said type and level
-	float GetDamageAtLevel(const FGameplayTag& DamageType, const float Level) const;
+	float GetDamageByTypeAndLevel(const FGameplayTag& DamageType, const float Level) const;
+	
+	// Get the total damage value (all damage type) for said level
+	float GetTotalDamageByLevel(const float Level) const;
 	
 protected:
 	// Damage Effect class to add to the projectile
