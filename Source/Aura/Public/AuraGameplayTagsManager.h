@@ -161,24 +161,24 @@ namespace AuraGameplayTagsManager
 	//~ End - Damage & Damage Types
 	
 	//~ Begin - Debuffs
-	// Debuffs
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs);
+	// Debuff
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff);
 	// Debuff.Burn
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Burn);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Burn);
 	// Debuff.Stun
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Stun);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun);
 	// Debuff.Arcane
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Arcane);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane);
 	// Debuff.Physical
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Physical);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical);
 	// Debuff.Chance
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Chance);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Chance);
 	// Debuff.Damage
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Damage);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Damage);
 	// Debuff.Frequency
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Frequency);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Frequency);
 	// Debuff.Duration
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Duration);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Duration);
 	//~ End - Debuffs
 	
 	//~ Begin - Montages

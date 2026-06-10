@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AuraAbilityTypes.h"
 #include "AuraGameplayTagsManager.h"
@@ -311,6 +312,48 @@ bool UAuraAbilitySystemLibrary::AbilityHasInputTag(const FGameplayAbilitySpec& A
 	// Get the Input Tag
 	const FGameplayTag& InputTag = GetInputTagFromSpec(AbilitySpec);
 	return InputTag.MatchesTagExact(InputTagToCheck);
+}
+
+FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffect(const FAuraDamageEffectParams& Params)
+{
+	// If there is no target or source, crash
+	check(Params.TargetAbilitySystemComponent && Params.SourceAbilitySystemComponent)
+
+	// Create a spec handle to store all damage type values and then apply them to the Target Actor
+	FGameplayEffectContextHandle ContextHandle = Params.SourceAbilitySystemComponent->MakeEffectContext();
+	const AActor* SourceAvatarActor = Params.SourceAbilitySystemComponent->GetAvatarActor();
+	ContextHandle.AddSourceObject(SourceAvatarActor);
+	const FGameplayEffectSpecHandle DamageSpecHandle = Params.SourceAbilitySystemComponent->MakeOutgoingSpec(
+		Params.DamageGameplayEffectClass, Params.AbilityLevel, ContextHandle);
+	
+	//  Key: GameplayTag (Damage Type tag) | FAuraDamage (Damage value and debuffs associated with type at a specific level)
+	for (const auto& Pair: Params.DamageTypes)
+	{
+		// Create a tag set by caller magnitude for:
+
+		// Damage type base value
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+			DamageSpecHandle, Pair.Key, Pair.Value.GetValueAtLevel(Params.AbilityLevel));
+		
+		// Debuffs *For now these debuffs only apply once (if several damage types)*
+		// Debuff Chance
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+			DamageSpecHandle, AuraGameplayTagsManager::Debuff_Chance, Pair.Value.Debuff.DebuffChance);
+		// Debuff Damage
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+			DamageSpecHandle, AuraGameplayTagsManager::Debuff_Damage, Pair.Value.Debuff.DebuffDamage);
+		// Debuff Frequency
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+			DamageSpecHandle, AuraGameplayTagsManager::Debuff_Frequency, Pair.Value.Debuff.DebuffFrequency);
+		// Debuff Duration
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+			DamageSpecHandle, AuraGameplayTagsManager::Debuff_Duration, Pair.Value.Debuff.DebuffDuration);
+	}
+
+	// Apply the damage ability to the target actor
+	Params.SourceAbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data,
+		Params.TargetAbilitySystemComponent);
+	return ContextHandle;
 }
 
 void UAuraAbilitySystemLibrary::AssignAndApplyToSelfSetByCallerEffect(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpecHandle& EffectSpecHandle, const FGameplayTag& DataTag, const float Magnitude, const bool

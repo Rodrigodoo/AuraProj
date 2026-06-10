@@ -10,12 +10,13 @@
 #include "AuraAbilitySystemLibrary.generated.h"
 
 class AAuraHUD;
-struct FGameplayAbilitySpec;
 class UAbilitySystemComponent;
 class UAuraAttributeMenuController;
 class UAuraCharacterClassInfoDataAsset;
 class UAuraOverlayController;
 enum class EAuraCharacterClass : uint8;
+struct FAuraDamageEffectParams;
+struct FGameplayAbilitySpec;
 struct FGameplayEffectContextHandle;
 
 /**
@@ -92,6 +93,10 @@ public:
 	
 	// checks if this Ability has a specific Input Tag
 	static bool AbilityHasInputTag(const FGameplayAbilitySpec& AbilitySpec, const FGameplayTag& InputTagToCheck);
+	
+	// Apply the damage effect its target
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+	static FGameplayEffectContextHandle ApplyDamageGameplayEffect(const FAuraDamageEffectParams& Params);
 	
 	// Assign a Tag set by caller magnitude and apply it to self
 	// Note: If SupressWarnings = true, then a set by caller magnitude will be created for all other modifiers 

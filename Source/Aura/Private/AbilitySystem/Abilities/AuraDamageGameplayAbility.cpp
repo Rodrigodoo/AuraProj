@@ -6,11 +6,6 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
-float FAuraDamage::GetValueAtLevel(const float Level, const FString* ContextString) const
-{
-	return Damage.GetValueAtLevel(Level, ContextString);
-}
-
 void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 {
 	// Create a spec handle to store all damage type values and then apply them to the Target Actor
@@ -22,11 +17,25 @@ void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
 			DamageSpecHandle, Pair.Key, Pair.Value.GetValueAtLevel(GetAbilityLevel()));
 	}
-	
+
 	// Apply  ability to the target actor
-	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(),
+	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data,
 		UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
-	;
+}
+
+FAuraDamageEffectParams UAuraDamageGameplayAbility::MakaDamageEffectParamsFromClassDefaults(AActor* TargetActor) const
+{
+	// Fill in with the default values
+	FAuraDamageEffectParams Params;
+	Params.DamageGameplayEffectClass = DamageEffectClass;
+	Params.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
+	// Note that GetAbilitySystemComponent can be null if TargetActor == null
+	Params.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	Params.TotalBaseDamage = GetTotalDamageByLevel(GetAbilityLevel());
+	Params.AbilityLevel = GetAbilityLevel();
+	Params.DamageTypes = DamageTypes;
+	
+	return Params;
 }
 
 float UAuraDamageGameplayAbility::GetDamageByTypeAndLevel(const FGameplayTag& DamageType, const float Level) const

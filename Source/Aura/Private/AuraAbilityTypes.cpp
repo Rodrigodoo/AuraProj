@@ -2,6 +2,11 @@
 #include "AuraAbilityTypes.h"
 
 
+float FAuraDamage::GetValueAtLevel(const float Level, const FString* ContextString) const
+{
+	return Damage.GetValueAtLevel(Level, ContextString);
+}
+
 bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
 {
 	// Bitmask

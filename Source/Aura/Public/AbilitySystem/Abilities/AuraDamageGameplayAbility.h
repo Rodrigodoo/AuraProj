@@ -3,49 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AuraAbilityTypes.h"
 #include "AbilitySystem/Abilities/AuraGameplayAbilityBase.h"
 #include "AuraDamageGameplayAbility.generated.h"
-
-// Debuff struct to gather all the debuffs cause by a certain damage type
-USTRUCT(BlueprintType)
-struct FAuraDebuff
-{
-	GENERATED_BODY()
-	
-	// Percentage chance to cause the debuff
-	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
-	float DebuffChange = 20.f;
-	
-	// Damage cause by the debuff
-	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
-	float DebuffDamage = 5.f;
-	
-	// Frequency that the debuff triggers
-	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
-	float DebuffFrequency = 1.f;
-	
-	// Duration of the Debuff
-	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
-	float DebuffDuration = 5.f;
-};
-
-// Damage struct that holds the damage caused by this ability with a specific type and the debuffs incurred
-USTRUCT(BlueprintType)
-struct FAuraDamage
-{
-	GENERATED_BODY()
-	
-	// Damage for this type
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	FScalableFloat Damage = 1.f;
-	
-	// Debuff for this type
-	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
-	FAuraDebuff Debuff = FAuraDebuff();
-	
-	// Return a scaled value for the respective level
-	float GetValueAtLevel(float Level, const FString* ContextString = nullptr) const;
-};
 
 /**
  * Base Ability specialized on dealing damage
@@ -61,6 +21,11 @@ public:
 	// Goes through all available damage types to set by caller magnitude
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* TargetActor);
+	
+	// Creates Damage Effect Params from this classes default settings
+	// Can provide a target actor if it is known.
+	UFUNCTION(BlueprintCallable)
+	FAuraDamageEffectParams MakaDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
 	
 	// Get the damage value for said type and level
 	float GetDamageByTypeAndLevel(const FGameplayTag& DamageType, const float Level) const;
