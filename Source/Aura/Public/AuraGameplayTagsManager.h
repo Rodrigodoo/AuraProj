@@ -171,6 +171,14 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Arcane);
 	// Debuff.Physical
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Physical);
+	// Debuff.Chance
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Chance);
+	// Debuff.Damage
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Damage);
+	// Debuff.Frequency
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Frequency);
+	// Debuff.Duration
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuffs_Duration);
 	//~ End - Debuffs
 	
 	//~ Begin - Montages

@@ -206,6 +206,14 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane, "Debuff.Arcane", "Arcane Debuff Caused by Arcane Damage");
 	// Debuff.Physical
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical, "Debuff.Physical", "Physical Debuff Caused by Physical Damage");
+	// Debuff.Chance
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Chance, "Debuff.Chance", "Chance to Cause the Debuff");
+	// Debuff.Damage
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Damage, "Debuff.Damage", "Damage Caused by the Debuff");
+	// Debuff.Frequency
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Frequency, "Debuff.Frequency", "Frequency of the Debuff");
+	// Debuff.Duration
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Duration, "Debuff.Duration", "Duration of the Debuff");
 	
 	/*
 	 * Montages

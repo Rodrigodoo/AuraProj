@@ -6,6 +6,11 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
+float FAuraDamage::GetValueAtLevel(const float Level, const FString* ContextString) const
+{
+	return Damage.GetValueAtLevel(Level, ContextString);
+}
+
 void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 {
 	// Create a spec handle to store all damage type values and then apply them to the Target Actor
@@ -26,7 +31,7 @@ void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 
 float UAuraDamageGameplayAbility::GetDamageByTypeAndLevel(const FGameplayTag& DamageType, const float Level) const
 {
-	const FScalableFloat* Damage = DamageTypes.Find(DamageType);
+	const FAuraDamage* Damage = DamageTypes.Find(DamageType);
 	if (!Damage)
 	{
 		return 0.0f;
