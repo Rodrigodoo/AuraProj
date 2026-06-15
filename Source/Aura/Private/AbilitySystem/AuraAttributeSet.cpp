@@ -82,6 +82,76 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 }
 
+void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& EffectProperties)
+{
+	// Get the incoming damage
+	const float LocalIncomingDamage = GetIncomingDamage();
+		
+	// Reset the Incoming Damage to process new sources of damage
+	SetIncomingDamage(0.f);
+		
+	// There was actual damage being applied
+	if (LocalIncomingDamage > 0)
+	{
+		// For now apply directly the damage to health
+		const float NewHealth = GetHealth() - LocalIncomingDamage;
+		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+			
+		// Damage was fatal!
+		if (NewHealth <= 0.f)
+		{
+			// Inform the Attacker (Source Character) of the XP Reward for killing its enemy (Target Character)
+			SendXPEvent(EffectProperties);
+				
+			// If the object dying has a combat interface call its Die method
+			if (IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(EffectProperties.TargetAvatarActor))
+			{
+				CombatInterface->Die();
+			}
+		}
+		else // No fatal damage
+		{
+			// Activate any Ability that has the Hit React Tag
+			const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Abilities_HitReact);
+			EffectProperties.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
+		}
+
+		// Display the Damage applied to the Target
+		const bool bBlockedHit = UAuraAbilitySystemLibrary::IsBlockedHit(EffectProperties.EffectContextHandle);
+		const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
+		ShowDamageAsFloatingText(EffectProperties, LocalIncomingDamage, bBlockedHit, bCriticalHit);
+
+		// Check if any debuff was applied
+		if (UAuraAbilitySystemLibrary::WasAnyDebuffApplied(EffectProperties.EffectContextHandle))
+		{
+			// If a debuff was applied, find out which was and handdle it
+			// Key: Damage type Tag (FGameplayTag) | Value: Debuff Tag (FGameplayTag)
+			for (const auto& Pair : AuraGameplayTagsManager::DamageTypesToDebuffs)
+			{
+				if (UAuraAbilitySystemLibrary::IsDebuffSuccessful(EffectProperties.EffectContextHandle, Pair.Key))
+				{
+					// Handle each debuff
+					HandleDebuff(EffectProperties, Pair.Value);
+				}
+			}
+		}
+	}
+}
+
+void UAuraAttributeSet::HandleIncomingXP(const FEffectProperties& EffectProperties)
+{
+	// Get the incoming XP and resetting the attribute so it can process new sources of XP
+	const float LocalIncomingXP = GetIncomingXP();
+	SetIncomingXP(0.f);
+
+	// Apply the XP change to the actor receiving the XP (it is an apply to self effect so we can use source)
+	IAuraPlayerInterface::Execute_AddToPlayerXP(EffectProperties.SourceCharacter, LocalIncomingXP);
+}
+
+void UAuraAttributeSet::HandleDebuff(const FEffectProperties& EffectProperties, const FGameplayTag& DamageType)
+{
+}
+
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -106,55 +176,14 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	// Note: This only gets called on the server
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
-		// Get the incoming damage
-		const float LocalIncomingDamage = GetIncomingDamage();
-		
-		// Reset the Incoming Damage to process new sources of damage
-		SetIncomingDamage(0.f);
-		
-		// There was actual damage being applied
-		if (LocalIncomingDamage > 0)
-		{
-			// For now apply directly the damage to health
-			const float NewHealth = GetHealth() - LocalIncomingDamage;
-			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-			
-			// Damage was fatal!
-			if (NewHealth <= 0.f)
-			{
-				// Inform the Attacker (Source Character) of the XP Reward for killing its enemy (Target Character)
-				SendXPEvent(EffectProperties);
-				
-				// If the object dying has a combat interface call its Die method
-				if (IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(EffectProperties.TargetAvatarActor))
-				{
-					CombatInterface->Die();
-				}
-			}
-			else // No fatal damage
-			{
-				// Activate any Ability that has the Hit React Tag
-				const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Abilities_HitReact);
-				EffectProperties.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
-			}
-
-			// Display the Damage applied to the Target
-			const bool bBlockedHit = UAuraAbilitySystemLibrary::IsBlockedHit(EffectProperties.EffectContextHandle);
-			const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
-			ShowDamageAsFloatingText(EffectProperties, LocalIncomingDamage, bBlockedHit, bCriticalHit);
-		}
+		HandleIncomingDamage(EffectProperties);
 	}
 	
 	// Process any Incoming XP change
 	// Note: This only gets called on the server
 	if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
 	{
-		// Get the incoming XP and resetting the attribute so it can process new sources of XP
-		const float LocalIncomingXP = GetIncomingXP();
-		SetIncomingXP(0.f);
-
-		// Apply the XP change to the actor receiving the XP (it is an apply to self effect so we can use source)
-		IAuraPlayerInterface::Execute_AddToPlayerXP(EffectProperties.SourceCharacter, LocalIncomingXP);
+		HandleIncomingXP(EffectProperties);
 	}
 }
 

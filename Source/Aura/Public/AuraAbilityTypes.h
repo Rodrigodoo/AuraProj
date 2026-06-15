@@ -12,6 +12,9 @@ USTRUCT(BlueprintType)
 struct FAuraDebuff
 {
 	GENERATED_BODY()
+	// Was this Debuff successful (Should only be used by FAuraGameplayEffectContext)
+	UPROPERTY()
+	bool bIsSuccessfulDebuff = false;
 	
 	// Percentage chance to cause the debuff
 	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
@@ -28,6 +31,9 @@ struct FAuraDebuff
 	// Duration of the Debuff
 	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
 	float DebuffDuration = 0.f;
+	
+	// Serialization method
+	bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess);
 };
 
 // Damage struct that holds the damage caused by this ability with a specific type and the debuffs incurred
@@ -46,6 +52,24 @@ struct FAuraDamage
 	
 	// Return a scaled value for the respective level
 	float GetValueAtLevel(const float Level, const FString* ContextString = nullptr) const;
+};
+
+// Struct wrapper to serialize the DamageTypeToDebuff map in FAuraGameplayEffectContext
+USTRUCT(BlueprintType)
+struct FDamageTypeToDebuffWrapper
+{
+	GENERATED_BODY()
+	
+	FDamageTypeToDebuffWrapper(){};
+	explicit FDamageTypeToDebuffWrapper(const TMap<FGameplayTag, FAuraDebuff>& InDamageTypeToDebuff) 
+	: DamageTypeToDebuff(InDamageTypeToDebuff) {};
+	
+	// Copy of damage type and associated debuff stats
+	UPROPERTY()
+	TMap<FGameplayTag, FAuraDebuff> DamageTypeToDebuff;
+	
+	// Serialization method
+	bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess);
 };
 
 // Struct to hold all damage effect parameters.
@@ -97,8 +121,31 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 	void SetIsCriticalHit(const bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
 	
 	// bIsSuccessfulDebuff Getter and Setter 
-	bool IsSuccessfulDebuff() const { return bIsCriticalHit; }
-	void SetSuccessfulDebuff(const bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
+	bool IsSuccessfulDebuff(const FGameplayTag& DamageType) const;
+	void SetSuccessfulDebuff(const FGameplayTag& DamageType, const bool bIsSuccessfulDebuff);
+	bool WasAnyDebuffApplied() const;
+	
+	// DebuffDamage Getter and Setter
+	float GetDebuffDamage(const FGameplayTag& DamageType) const;
+	void SetDebuffDamage(const FGameplayTag& DamageType, const float InDamage);
+	
+	// DebuffFrequency Getter and Setter
+	float GetDebuffFrequency(const FGameplayTag& DamageType) const;
+	void SetDebuffFrequency(const FGameplayTag& DamageType, const float InFrequency);
+	
+	// DebuffDuration Getter and Setter
+	float GetDebuffDuration(const FGameplayTag& DamageType) const;
+	void SetDebuffDuration(const FGameplayTag& DamageType, const float InDuration);
+	
+	// DamageType Getter and Setter
+	TArray<FGameplayTag> GetDamageTypes() const;
+	// Note: this does not add a value!
+	void AddDamageType(const FGameplayTag& InDamageType);
+	void AddDamageTypeAndDebuff(const FGameplayTag& InDamageType, const FAuraDebuff& InDebuff);
+	
+	/*// bIsSuccessfulDebuff Getter and Setter 
+	bool IsSuccessfulDebuff() const { return bIsSuccessfulDebuff; }
+	void SetSuccessfulDebuff(const bool bIsSuccessfulDebuff) { bIsCriticalHit = bIsSuccessfulDebuff; }
 	
 	// DebuffDamage Getter and Setter
 	float GetDebuffDamage() const { return DebuffDamage; }
@@ -110,11 +157,12 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 	
 	// DebuffDuration Getter and Setter
 	float GetDebuffDuration() const { return DebuffDuration; }
-	void SetDebuffDuration(const float InDuration) { DebuffDuration = InDuration; }
+	void SetDebuffDuration(const float InDuration) { DebuffDuration = InDuration; }*/
 	
+	/*
 	// DamageType Getter and Setter
 	const FGameplayTag& GetDebuffType() const { return DamageType; }
-	void SetDamageType(const FGameplayTag& InType) { DamageType = InType; }
+	void SetDamageType(const FGameplayTag& InType) { DamageType = InType; }*/
 	
 	//~ Begin - FGameplayEffectContext overrides
 	
@@ -138,7 +186,7 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 	}
 	
 	// Custom serialization, subclasses must override this
-	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess) override;
+	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess) override;
 	
 	//~ End - FGameplayEffectContext overrides
 	
@@ -151,13 +199,17 @@ protected:
 	UPROPERTY()
 	bool bIsCriticalHit = false;
 	
-	// Type of damage
+	// Damage type and associated debuff stats
+	UPROPERTY()
+	TMap<FGameplayTag, FAuraDebuff> DamageTypeToDebuff;
+	
+	/*// Type of damage
 	UPROPERTY()
 	FGameplayTag DamageType = FGameplayTag();
 	
 	//~ Begin - Debuff
-	
-	// Signals if Effect was a Successful Debuff
+	FAuraDebuff DebuffStats = FAuraDebuff();*/
+	/*// Signals if Effect was a Successful Debuff
 	UPROPERTY()
 	bool bIsSuccessfulDebuff = false;
 	
@@ -171,7 +223,7 @@ protected:
 	
 	// Duration of the debuff
 	UPROPERTY()
-	float DebuffDuration = 0.f;
+	float DebuffDuration = 0.f;*/
 
 	//~ End - Debuff
 };
@@ -184,5 +236,25 @@ struct TStructOpsTypeTraits<FAuraGameplayEffectContext> : TStructOpsTypeTraitsBa
 	{
 		WithNetSerializer = true,
 		WithCopy = true // Necessary so that TSharedPtr<FHitResult> Data is copied around
+	};
+};
+
+template<>
+struct TStructOpsTypeTraits<FAuraDebuff> : TStructOpsTypeTraitsBase2<FAuraDebuff>
+{
+	enum
+	{
+		WithNetSerializer = true, // Tells the engine to look for NetSerialize()
+		WithCopy = true
+	};
+};
+
+template<>
+struct TStructOpsTypeTraits<FDamageTypeToDebuffWrapper> : TStructOpsTypeTraitsBase2<FDamageTypeToDebuffWrapper>
+{
+	enum
+	{
+		WithNetSerializer = true, // Tells the engine to look for NetSerialize()
+		WithCopy = true
 	};
 };

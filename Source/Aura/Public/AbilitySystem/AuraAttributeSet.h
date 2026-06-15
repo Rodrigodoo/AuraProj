@@ -94,7 +94,7 @@ public:
 	// should only be used for clamping
 	// Later modifications might affect this value even after clamping it
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-	
+
 	// Called after a Gameplay Effect is executed
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
@@ -350,6 +350,15 @@ private:
 	// Retrieves the XP reward from the target
 	void SendXPEvent(const FEffectProperties& EffectProperties);
 	
+	// Handles incoming damage
+	void HandleIncomingDamage(const FEffectProperties& EffectProperties);
+	
+	// Handles incoming XP
+	void HandleIncomingXP(const FEffectProperties& EffectProperties);
+	
+	// Handles Debuff Application
+	void HandleDebuff(const FEffectProperties& EffectProperties, const FGameplayTag& DamageType);
+
 	// Flags
 	
 	// Flagg to signal that Health should be topped off

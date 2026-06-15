@@ -263,8 +263,7 @@ void UAuraExecCalc_Damage::DetermineDebuffs(const FGameplayEffectCustomExecution
 		
 		// Damage type value
 		// If value not found it returns -1.f.
-		float DamageTypeValue = EffectSpec.GetSetByCallerMagnitude(DamageType, false, -1.f);
-		if (DamageTypeValue < 0.f)
+		if (EffectSpec.GetSetByCallerMagnitude(DamageType, false, -1.f) < 0.f)
 		{
 			continue;
 		}
@@ -301,6 +300,19 @@ void UAuraExecCalc_Damage::DetermineDebuffs(const FGameplayEffectCustomExecution
 			continue;
 		}
 		
-		// TODO: Apply Debuff
+		// Apply Debuff to context handle
+		FGameplayEffectContextHandle ContextHandle = EffectSpec.GetContext();
+		FAuraDebuff Debuff;
+		Debuff.bIsSuccessfulDebuff = true;
+		Debuff.DebuffChance = SourceDebuffChance;
+		Debuff.DebuffDamage = EffectSpec.GetSetByCallerMagnitude(
+			AuraGameplayTagsManager::GetDebuffDamageByType(DebuffType),false, -1.f);
+		Debuff.DebuffFrequency = EffectSpec.GetSetByCallerMagnitude(
+			AuraGameplayTagsManager::GetDebuffFrequencyByType(DebuffType),false, -1.f);
+		Debuff.DebuffDuration = EffectSpec.GetSetByCallerMagnitude(
+			AuraGameplayTagsManager::GetDebuffDurationByType(DebuffType),false, -1.f);
+		
+		// Add the damage type and the debuff the to context handle
+		UAuraAbilitySystemLibrary::AddDamageTypeAndDebuff(ContextHandle, DamageType, Debuff);
 	}
 }

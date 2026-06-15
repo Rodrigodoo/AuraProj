@@ -439,88 +439,107 @@ void UAuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& E
 	}
 }
 
-bool UAuraAbilitySystemLibrary::IsDebuffSuccessful(const FGameplayEffectContextHandle& EffectContextHandle)
+bool UAuraAbilitySystemLibrary::IsDebuffSuccessful(const FGameplayEffectContextHandle& EffectContextHandle,
+	const FGameplayTag& DamageType)
 {
 	// Retrieve the Aura Gameplay Effect Context and check if it was a Successful Debuff Application
 	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
-	return AuraGameplayEffectContext ? AuraGameplayEffectContext->IsSuccessfulDebuff() : false;
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->IsSuccessfulDebuff(DamageType) : false;
 }
 
 void UAuraAbilitySystemLibrary::SetIsDebuffSuccessful(FGameplayEffectContextHandle& EffectContextHandle,
-                                                      const bool bInDebuffSuccessful)
+                                                      const FGameplayTag& DamageType, const bool bInDebuffSuccessful)
 {
 	// Retrieve the Aura Gameplay Effect Context and set its Successful Debuff flag
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
-		AuraGameplayEffectContext->SetSuccessfulDebuff(bInDebuffSuccessful);
+		AuraGameplayEffectContext->SetSuccessfulDebuff(DamageType, bInDebuffSuccessful);
 	}
 }
 
-float UAuraAbilitySystemLibrary::GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle)
+bool UAuraAbilitySystemLibrary::WasAnyDebuffApplied(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and check if it was a Successful Debuff Application
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->WasAnyDebuffApplied() : false;
+}
+
+float UAuraAbilitySystemLibrary::GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType)
 {
 	// Retrieve the Aura Gameplay Effect Context and check its Debuff Damage
 	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
-	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDebuffDamage() : 0.f;
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDebuffDamage(DamageType) : 0.f;
 }
 
 void UAuraAbilitySystemLibrary::SetDebuffDamage(FGameplayEffectContextHandle& EffectContextHandle,
-	const float InDebuffDamage)
+                                                const FGameplayTag& DamageType, const float InDebuffDamage)
 {
 	// Retrieve the Aura Gameplay Effect Context and set its Successful Debuff flag
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
-		AuraGameplayEffectContext->SetDebuffDamage(InDebuffDamage);
+		AuraGameplayEffectContext->SetDebuffDamage(DamageType, InDebuffDamage);
 	}
 }
 
-float UAuraAbilitySystemLibrary::GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle)
+float UAuraAbilitySystemLibrary::GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType)
 {
 	// Retrieve the Aura Gameplay Effect Context and check its Debuff Frequency
 	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
-	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDebuffFrequency() : 0.f;
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDebuffFrequency(DamageType) : 0.f;
 }
 
 void UAuraAbilitySystemLibrary::SetDebuffFrequency(FGameplayEffectContextHandle& EffectContextHandle,
-	const float InDebuffFrequency)
+                                                   const FGameplayTag& DamageType, const float InDebuffFrequency)
 {
 	// Retrieve the Aura Gameplay Effect Context and set its Successful Debuff flag
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
-		AuraGameplayEffectContext->SetDebuffFrequency(InDebuffFrequency);
+		AuraGameplayEffectContext->SetDebuffFrequency(DamageType, InDebuffFrequency);
 	}
 }
 
-float UAuraAbilitySystemLibrary::GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle)
+float UAuraAbilitySystemLibrary::GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType)
 {
 	// Retrieve the Aura Gameplay Effect Context and check its Debuff Duration
 	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
-	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDebuffDuration() : 0.f;
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDebuffDuration(DamageType) : 0.f;
 }
 
 void UAuraAbilitySystemLibrary::SetDebuffDuration(FGameplayEffectContextHandle& EffectContextHandle,
-	const float InDebuffDuration)
+                                                  const FGameplayTag& DamageType, const float InDebuffDuration)
 {
 	// Retrieve the Aura Gameplay Effect Context and set its Successful Debuff flag
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
-		AuraGameplayEffectContext->SetDebuffDuration(InDebuffDuration);
+		AuraGameplayEffectContext->SetDebuffDuration(DamageType, InDebuffDuration);
 	}
 }
 
-FGameplayTag UAuraAbilitySystemLibrary::GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle)
+TArray<FGameplayTag> UAuraAbilitySystemLibrary::GetDamageTypes(
+	const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	// Retrieve the Aura Gameplay Effect Context and check its Debuff Type
 	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
-	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDebuffType() : FGameplayTag();
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDamageTypes() : TArray<FGameplayTag>();
 }
 
-void UAuraAbilitySystemLibrary::SetDamageType(FGameplayEffectContextHandle& EffectContextHandle,
+void UAuraAbilitySystemLibrary::AddDamageType(FGameplayEffectContextHandle& EffectContextHandle,
                                               const FGameplayTag& DamageType)
 {
 	// Retrieve the Aura Gameplay Effect Context and set its Successful Debuff flag
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
-		AuraGameplayEffectContext->SetDamageType(DamageType);
+		AuraGameplayEffectContext->AddDamageType(DamageType);
+	}
+}
+
+void UAuraAbilitySystemLibrary::AddDamageTypeAndDebuff(FGameplayEffectContextHandle& EffectContextHandle,
+	const FGameplayTag& DamageType, const FAuraDebuff& Debuff)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Successful Debuff flag
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->AddDamageTypeAndDebuff(DamageType, Debuff);
 	}
 }
 

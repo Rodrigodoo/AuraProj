@@ -9,6 +9,7 @@
 #include "UI/WidgetController/AuraSpellMenuController.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
+struct FAuraDebuff;
 class AAuraHUD;
 class UAbilitySystemComponent;
 class UAuraAttributeMenuController;
@@ -125,43 +126,52 @@ public:
 	
 	// Checks if the Gameplay Effect pertains to a Successful Debuff application
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static bool IsDebuffSuccessful(const FGameplayEffectContextHandle& EffectContextHandle);
+	static bool IsDebuffSuccessful(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);
 	
 	// Sets the Gameplay Effect to record a Successful Debuff application
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static void SetIsDebuffSuccessful(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInDebuffSuccessful);
+	static void SetIsDebuffSuccessful(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType, const bool bInDebuffSuccessful);
+	
+	// Checks if any debuff was applied the Gameplay Effect
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static bool WasAnyDebuffApplied(const FGameplayEffectContextHandle& EffectContextHandle);
 	
 	// Retrieve the debuff Damage from the Effect Context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static float GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle);
+	static float GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);
 	
 	// Set the debuff Damage to the effect context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static void SetDebuffDamage(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const float InDebuffDamage);
+	static void SetDebuffDamage(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType, const float InDebuffDamage);
 	
 	// Retrieve the debuff Frequency from the Effect Context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static float GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle);
+	static float GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);
 	
 	// Set the debuff Frequency to the effect context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static void SetDebuffFrequency(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const float InDebuffFrequency);
+	static void SetDebuffFrequency(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType, const float InDebuffFrequency);
 	
 	// Retrieve the debuff Duration from the Effect Context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static float GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle);
+	static float GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);
 	
 	// Set the debuff Duration to the effect context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static void SetDebuffDuration(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const float InDebuffDuration);
+	static void SetDebuffDuration(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType, const float InDebuffDuration);
 	
 	// Retrieve the debuff Type from the Effect Context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static FGameplayTag GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle);
+	static TArray<FGameplayTag> GetDamageTypes(const FGameplayEffectContextHandle& EffectContextHandle);
 	
-	// Set the debuff Type to the effect context
+	// Add the debuff Type to the effect context (this will not have an associated Debuff)
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
-	static void SetDamageType(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);
+	static void AddDamageType(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);
+	
+	// Add the debuff Type and its associated Debuff to the effect context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void AddDamageTypeAndDebuff(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, 
+		const FGameplayTag& DamageType, const FAuraDebuff& Debuff);
 	
 	// Searches for live players within a certain radius from an origin point
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics", meta=(DefaultToSelf = "WorldContextObject"))
