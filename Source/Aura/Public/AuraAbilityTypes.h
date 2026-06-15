@@ -120,6 +120,9 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 	bool IsCriticalHit() const { return bIsCriticalHit; }
 	void SetIsCriticalHit(const bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
 	
+	// Retrieves the Debuff
+	FAuraDebuff GetDebuff(const FGameplayTag& DamageType) const;
+	
 	// bIsSuccessfulDebuff Getter and Setter 
 	bool IsSuccessfulDebuff(const FGameplayTag& DamageType) const;
 	void SetSuccessfulDebuff(const FGameplayTag& DamageType, const bool bIsSuccessfulDebuff);

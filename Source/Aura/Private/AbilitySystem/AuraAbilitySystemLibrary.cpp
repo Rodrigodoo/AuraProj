@@ -464,6 +464,14 @@ bool UAuraAbilitySystemLibrary::WasAnyDebuffApplied(const FGameplayEffectContext
 	return AuraGameplayEffectContext ? AuraGameplayEffectContext->WasAnyDebuffApplied() : false;
 }
 
+FAuraDebuff UAuraAbilitySystemLibrary::GetDebuff(const FGameplayEffectContextHandle& EffectContextHandle,
+	const FGameplayTag& DamageType)
+{
+	// Retrieve the Aura Gameplay Effect Context and check its Debuff Damage
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDebuff(DamageType) : FAuraDebuff();
+}
+
 float UAuraAbilitySystemLibrary::GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType)
 {
 	// Retrieve the Aura Gameplay Effect Context and check its Debuff Damage

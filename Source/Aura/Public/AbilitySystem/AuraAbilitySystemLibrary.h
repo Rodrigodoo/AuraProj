@@ -136,6 +136,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static bool WasAnyDebuffApplied(const FGameplayEffectContextHandle& EffectContextHandle);
 	
+	// Retrieve the debuff from the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static FAuraDebuff GetDebuff(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);
+	
 	// Retrieve the debuff Damage from the Effect Context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static float GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);

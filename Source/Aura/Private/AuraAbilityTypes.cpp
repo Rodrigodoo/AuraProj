@@ -108,6 +108,16 @@ bool FDamageTypeToDebuffWrapper::NetSerialize(FArchive& Ar, class UPackageMap* M
 	return true;
 }
 
+FAuraDebuff FAuraGameplayEffectContext::GetDebuff(const FGameplayTag& DamageType) const
+{
+	if (!DamageTypeToDebuff.Contains(DamageType))
+	{
+		return FAuraDebuff();
+	}
+	
+	return DamageTypeToDebuff[DamageType];
+}
+
 bool FAuraGameplayEffectContext::IsSuccessfulDebuff(const FGameplayTag& DamageType) const
 {
 	if (!DamageTypeToDebuff.Contains(DamageType))
@@ -194,7 +204,7 @@ TArray<FGameplayTag> FAuraGameplayEffectContext::GetDamageTypes() const
 
 void FAuraGameplayEffectContext::AddDamageType(const FGameplayTag& InDamageType)
 {
-	// Note: this does not add a value!
+	// Note: This does not add a value!
 	DamageTypeToDebuff.Add(InDamageType);
 }
 
