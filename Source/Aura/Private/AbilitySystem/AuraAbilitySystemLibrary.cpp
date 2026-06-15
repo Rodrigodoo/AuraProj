@@ -335,19 +335,22 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffec
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
 			DamageSpecHandle, Pair.Key, Pair.Value.GetValueAtLevel(Params.AbilityLevel));
 		
+		// Retrieve the Debuff Type
+		const FGameplayTag& DebuffType = AuraGameplayTagsManager::DamageTypesToDebuffs[Pair.Key];
+		
 		// Debuffs *For now these debuffs only apply once (if several damage types)*
 		// Debuff Chance
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			DamageSpecHandle, AuraGameplayTagsManager::Debuff_Chance, Pair.Value.Debuff.DebuffChance);
+			DamageSpecHandle, AuraGameplayTagsManager::GetDebuffChanceByType(DebuffType), Pair.Value.Debuff.DebuffChance);
 		// Debuff Damage
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			DamageSpecHandle, AuraGameplayTagsManager::Debuff_Damage, Pair.Value.Debuff.DebuffDamage);
+			DamageSpecHandle, AuraGameplayTagsManager::GetDebuffDamageByType(DebuffType), Pair.Value.Debuff.DebuffDamage);
 		// Debuff Frequency
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			DamageSpecHandle, AuraGameplayTagsManager::Debuff_Frequency, Pair.Value.Debuff.DebuffFrequency);
+			DamageSpecHandle, AuraGameplayTagsManager::GetDebuffFrequencyByType(DebuffType), Pair.Value.Debuff.DebuffFrequency);
 		// Debuff Duration
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			DamageSpecHandle, AuraGameplayTagsManager::Debuff_Duration, Pair.Value.Debuff.DebuffDuration);
+			DamageSpecHandle, AuraGameplayTagsManager::GetDebuffDurationByType(DebuffType), Pair.Value.Debuff.DebuffDuration);
 	}
 
 	// Apply the damage ability to the target actor

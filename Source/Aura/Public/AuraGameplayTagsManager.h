@@ -165,20 +165,47 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff);
 	// Debuff.Burn
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Burn);
-	// Debuff.Stun
+	// Debuff.Burn.Chance
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Burn_Chance);
+	// Debuff.Burn.Damage
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Burn_Damage);
+	// Debuff.Burn.Frequency
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Burn_Frequency);
+	// Debuff.Burn.Duration
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Burn_Duration);
+	
+	// Debuff.Burn.Stun
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun);
+	// Debuff.Stun.Chance
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun_Chance);
+	// Debuff.Stun.Damage
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun_Damage);
+	// Debuff.Stun.Frequency
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun_Frequency);
+	// Debuff.Stun.Duration
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun_Duration);
+	
 	// Debuff.Arcane
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane);
+	// Debuff.Arcane.Chance
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane_Chance);
+	// Debuff.Arcane.Damage
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane_Damage);
+	// Debuff.Arcane.Frequency
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane_Frequency);
+	// Debuff.Arcane.Duration
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane_Duration);
+	
 	// Debuff.Physical
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical);
-	// Debuff.Chance
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Chance);
-	// Debuff.Damage
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Damage);
-	// Debuff.Frequency
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Frequency);
-	// Debuff.Duration
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Duration);
+	// Debuff.Physical.Chance
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical_Chance);
+	// Debuff.Physical.Damage
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical_Damage);
+	// Debuff.Physical.Frequency
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical_Frequency);
+	// Debuff.Physical.Duration
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical_Duration);
 	//~ End - Debuffs
 	
 	//~ Begin - Montages
@@ -199,4 +226,16 @@ namespace AuraGameplayTagsManager
 	
 	// Stores all Damage Types tags and relates them to Debuffs
 	extern const TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
+	
+	// Stores all Debuff Type tags and relates them to their stats
+	extern const TMap<FGameplayTag, TArray<FGameplayTag>> DebuffTypeToStats;
+	
+	// Retrieve the Debuff Chance for this specific Debuff
+	const FGameplayTag& GetDebuffChanceByType(const FGameplayTag& DebuffTag);
+	// Retrieve the Debuff Damage for this specific Debuff
+	const FGameplayTag& GetDebuffDamageByType(const FGameplayTag& DebuffTag);
+	// Retrieve the Debuff Frequency for this specific Debuff
+	const FGameplayTag& GetDebuffFrequencyByType(const FGameplayTag& DebuffTag);
+	// Retrieve the Debuff Duration for this specific Debuff
+	const FGameplayTag& GetDebuffDurationByType(const FGameplayTag& DebuffTag);
 }

@@ -16,7 +16,6 @@ class AURA_API UAuraExecCalc_Damage : public UGameplayEffectExecutionCalculation
 	
 public:
 	UAuraExecCalc_Damage();
-	
 	//~ Begin - UGameplayEffectExecutionCalculation overrides
 	
 	// Called when the Gameplay Effect is executed and will perform all calculations required
@@ -24,4 +23,9 @@ public:
 		FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
 	//~ End - UGameplayEffectExecutionCalculation overrides
 	
+protected:
+	// Determine the debuffs to apply
+	void DetermineDebuffs(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+						 const FGameplayEffectSpec& EffectSpec,
+						 FAggregatorEvaluateParameters EvaluationParameters) const;
 };

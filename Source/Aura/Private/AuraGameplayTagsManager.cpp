@@ -5,6 +5,14 @@
 
 namespace AuraGameplayTagsManager
 {
+	namespace DebuffIndex
+	{
+		int32 Chance = 0;
+		int32 Damage = 1;
+		int32 Frequency = 2;
+		int32 Duration = 3;
+	}
+	
 	/*
 	 * Primary Attributes
 	 */
@@ -200,20 +208,44 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff, "Debuff", "Debuff");
 	// Debuff.Burn
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Burn, "Debuff.Burn", "Burn Debuff Caused by Fire Damage");
+	// Debuff.Burn.Chance
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Burn_Chance, "Debuff.Burn.Chance", "Chance to Cause the Burn Debuff");
+	// Debuff.Burn.Damage
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Burn_Damage, "Debuff.Burn.Damage", "Damage Caused by the Burn Debuff");
+	// Debuff.Burn.Frequency
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Burn_Frequency, "Debuff.Burn.Frequency", "Frequency of the Burn Debuff");
+	// Debuff.Burn.Duration
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Burn_Duration, "Debuff.Burn.Duration", "Duration of the Burn Debuff");
 	// Debuff.Stun
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun, "Debuff.Stun", "Stun Debuff Caused by Lightning Damage");
+	// Debuff.Stun.Chance
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun_Chance, "Debuff.Stun.Chance", "Chance to Cause the Stun Debuff");
+	// Debuff.Stun.Damage
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun_Damage, "Debuff.Stun.Damage", "Damage Caused by the Stun Debuff");
+	// Debuff.Stun.Frequency
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun_Frequency, "Debuff.Stun.Frequency", "Frequency of the Stun Debuff");
+	// Debuff.Stun.Duration
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun_Duration, "Debuff.Stun.Duration", "Duration of the Stun Debuff");
 	// Debuff.Arcane
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane, "Debuff.Arcane", "Arcane Debuff Caused by Arcane Damage");
+	// Debuff.Arcane.Chance
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane_Chance, "Debuff.Arcane.Chance", "Chance to Cause the Arcane Debuff");
+	// Debuff.Arcane.Damage
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane_Damage, "Debuff.Arcane.Damage", "Damage Caused by the Arcane Debuff");
+	// Debuff.Arcane.Frequency
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane_Frequency, "Debuff.Arcane.Frequency", "Frequency of the Arcane Debuff");
+	// Debuff.Arcane.Duration
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane_Duration, "Debuff.Arcane.Duration", "Duration of the Arcane Debuff");
 	// Debuff.Physical
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical, "Debuff.Physical", "Physical Debuff Caused by Physical Damage");
-	// Debuff.Chance
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Chance, "Debuff.Chance", "Chance to Cause the Debuff");
-	// Debuff.Damage
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Damage, "Debuff.Damage", "Damage Caused by the Debuff");
-	// Debuff.Frequency
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Frequency, "Debuff.Frequency", "Frequency of the Debuff");
-	// Debuff.Duration
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Duration, "Debuff.Duration", "Duration of the Debuff");
+	// Debuff.Physical.Chance
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical_Chance, "Debuff.Physical.Chance", "Chance to Cause the Physical Debuff");
+	// Debuff.Physical.Damage
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical_Damage, "Debuff.Physical.Damage", "Damage Caused by the Physical Debuff");
+	// Debuff.Physical.Frequency
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical_Frequency, "Debuff.Physical.Frequency", "Frequency of the Physical Debuff");
+	// Debuff.Physical.Duration
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical_Duration, "Debuff.Physical.Duration", "Duration of the Physical Debuff");
 	
 	/*
 	 * Montages
@@ -258,4 +290,39 @@ namespace AuraGameplayTagsManager
 		// Physical Damage - Physical Debuffs
 		{Damage_Physical, Debuff_Physical}
 	};
+
+	/*
+	 * Mapping of Debuff Types to Stats
+	 */
+	const TMap<FGameplayTag, TArray<FGameplayTag>> DebuffTypeToStats
+	{
+		// Burn Debuff - Debuff Stats
+		{Debuff_Burn, {Debuff_Burn_Chance, Debuff_Burn_Damage, Debuff_Burn_Frequency, Debuff_Burn_Duration}},
+		// Stun Debuff - Debuff Stats
+		{Debuff_Stun, {Debuff_Stun_Chance, Debuff_Stun_Damage, Debuff_Stun_Frequency, Debuff_Stun_Duration}},
+		// Arcane Debuff - Debuff Stats
+		{Debuff_Arcane, {Debuff_Arcane_Chance, Debuff_Arcane_Damage, Debuff_Arcane_Frequency, Debuff_Arcane_Duration}},
+		// Physical Debuff - Debuff Stats
+		{Debuff_Physical, {Debuff_Physical_Chance, Debuff_Physical_Damage, Debuff_Physical_Frequency, Debuff_Physical_Duration}}
+	};
+
+	const FGameplayTag& GetDebuffChanceByType(const FGameplayTag& DebuffTag)
+	{
+		return DebuffTypeToStats[DebuffTag][DebuffIndex::Chance];
+	}
+
+	const FGameplayTag& GetDebuffDamageByType(const FGameplayTag& DebuffTag)
+	{
+		return DebuffTypeToStats[DebuffTag][DebuffIndex::Damage];
+	}
+
+	const FGameplayTag& GetDebuffFrequencyByType(const FGameplayTag& DebuffTag)
+	{
+		return DebuffTypeToStats[DebuffTag][DebuffIndex::Frequency];
+	}
+
+	const FGameplayTag& GetDebuffDurationByType(const FGameplayTag& DebuffTag)
+	{
+		return DebuffTypeToStats[DebuffTag][DebuffIndex::Duration];
+	}
 }

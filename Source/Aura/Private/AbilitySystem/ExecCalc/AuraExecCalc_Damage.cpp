@@ -81,7 +81,7 @@ UAuraExecCalc_Damage::UAuraExecCalc_Damage()
 }
 
 void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
-	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
+                                                  FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
 	const UAbilitySystemComponent* SourceAbilitySystemComponent = ExecutionParams.GetSourceAbilitySystemComponent();
 	const UAbilitySystemComponent* TargetAbilitySystemComponent = ExecutionParams.GetTargetAbilitySystemComponent();
@@ -132,6 +132,11 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	
 	// Get the Effect Context Handle to pass information into the Effect
 	FGameplayEffectContextHandle EffectContextHandle = EffectSpec.GetContext();
+	
+	/*
+	 * Debuff Calculations
+	 */
+	DetermineDebuffs(ExecutionParams, EffectSpec, EvaluationParameters);
 	
 	/*
 	 * Damage Calculation (By Order):
@@ -245,4 +250,57 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	// Add any output modifier that need change
 	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
+}
+
+void UAuraExecCalc_Damage::DetermineDebuffs(const FGameplayEffectCustomExecutionParameters& ExecutionParams, const FGameplayEffectSpec& EffectSpec, FAggregatorEvaluateParameters EvaluationParameters) const
+{
+	// Loop over all debuffs and apply them
+	// Key: Damage type Tag (FGameplayTag) | Value: Debuff Tag (FGameplayTag)
+	for (const auto& Pair : AuraGameplayTagsManager::DamageTypesToDebuffs)
+	{
+		const FGameplayTag& DamageType = Pair.Key;
+		const FGameplayTag& DebuffType = Pair.Value;
+		
+		// Damage type value
+		// If value not found it returns -1.f.
+		float DamageTypeValue = EffectSpec.GetSetByCallerMagnitude(DamageType, false, -1.f);
+		if (DamageTypeValue < 0.f)
+		{
+			continue;
+		}
+		
+		// Determine if there was a successful debuff
+		const float SourceDebuffChance = EffectSpec.GetSetByCallerMagnitude(AuraGameplayTagsManager::GetDebuffChanceByType(DebuffType), 
+		                                                              false, -1.f);
+		if (SourceDebuffChance < 0.f)
+		{
+			continue;
+		}
+		
+		// Target's Resistance to this debuff type 
+		float TargetDebuffResistance = 0.f; // Percentage
+		const FGameplayTag& ResistanceTag = AuraGameplayTagsManager::DamageTypesToResistances[DamageType];
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().TagsToCaptureDefinitions[ResistanceTag], 
+		                                                           EvaluationParameters, TargetDebuffResistance);
+		TargetDebuffResistance = FMath::Clamp(TargetDebuffResistance, 0.f, 100.f);
+		
+		// The Chance this debuff actually applies
+		// The target's resistances removes percentage points from the source debuff chance to apply
+		// Effective Debuff Chance = SourceDebuffChance * (100 - TargetDebuffResistance) / 100.f
+		const float EffectiveDebuffChance = SourceDebuffChance * (100 -TargetDebuffResistance) / 100.f;
+		if (EffectiveDebuffChance <= 0.f)
+		{
+			// No chance to apply
+			continue;
+		}
+		
+		// Check if debuff is applied
+		// Use random number generator and if the number is was the same or above, the debuff was not applied
+		if (FMath::RandRange(1, 100) >= EffectiveDebuffChance)
+		{
+			continue;
+		}
+		
+		// TODO: Apply Debuff
+	}
 }
