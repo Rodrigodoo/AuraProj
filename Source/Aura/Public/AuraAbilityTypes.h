@@ -96,6 +96,26 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 	bool IsCriticalHit() const { return bIsCriticalHit; }
 	void SetIsCriticalHit(const bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
 	
+	// bIsSuccessfulDebuff Getter and Setter 
+	bool IsSuccessfulDebuff() const { return bIsCriticalHit; }
+	void SetSuccessfulDebuff(const bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
+	
+	// DebuffDamage Getter and Setter
+	float GetDebuffDamage() const { return DebuffDamage; }
+	void SetDebuffDamage(const float InDamage) { DebuffDamage = InDamage; }
+	
+	// DebuffFrequency Getter and Setter
+	float GetDebuffFrequency() const { return DebuffFrequency; }
+	void SetDebuffFrequency(const float InFrequency) { DebuffFrequency = InFrequency; }
+	
+	// DebuffDuration Getter and Setter
+	float GetDebuffDuration() const { return DebuffDuration; }
+	void SetDebuffDuration(const float InDuration) { DebuffDuration = InDuration; }
+	
+	// DamageType Getter and Setter
+	const FGameplayTag& GetDebuffType() const { return DamageType; }
+	void SetDamageType(const FGameplayTag& InType) { DamageType = InType; }
+	
 	//~ Begin - FGameplayEffectContext overrides
 	
 	// Returns the actual struct used for serialization, subclasses must override this!
@@ -131,6 +151,29 @@ protected:
 	UPROPERTY()
 	bool bIsCriticalHit = false;
 	
+	// Type of damage
+	UPROPERTY()
+	FGameplayTag DamageType = FGameplayTag();
+	
+	//~ Begin - Debuff
+	
+	// Signals if Effect was a Successful Debuff
+	UPROPERTY()
+	bool bIsSuccessfulDebuff = false;
+	
+	// Damage caused by debuff
+	UPROPERTY()
+	float DebuffDamage = 0.f;
+	
+	// Frequency of the debuff
+	UPROPERTY()
+	float DebuffFrequency = 0.f;
+	
+	// Duration of the debuff
+	UPROPERTY()
+	float DebuffDuration = 0.f;
+
+	//~ End - Debuff
 };
 
 // Template to establish stuct operations available
