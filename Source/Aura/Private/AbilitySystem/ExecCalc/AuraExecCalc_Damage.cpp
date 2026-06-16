@@ -137,7 +137,7 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	 * Debuff Calculations
 	 */
 	DetermineDebuffs(ExecutionParams, EffectSpec, EvaluationParameters);
-	
+
 	/*
 	 * Damage Calculation (By Order):
 	 * - Block Chance

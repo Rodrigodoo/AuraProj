@@ -167,6 +167,9 @@ void AAuraCharacter::InitCharacterAndComponents()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	
+	// Broadcast the Ability System Component validity
+	OnAbilitySystemComponentRegistered.Broadcast(AbilitySystemComponent);
+	
 	// Initialize Attribute values
 	InitializeDefaultAttributes();
 	

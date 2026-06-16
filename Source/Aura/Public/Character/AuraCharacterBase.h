@@ -9,6 +9,7 @@
 #include "Interaction/AuraCombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UAuraDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
@@ -84,7 +85,20 @@ public:
 	// Decrement the minion count by a certain amount for the alive minions bound to this object
 	// Negative numbers will not be considered
 	virtual void DecrementMinionCount_Implementation(int32 Amount = 1) override;
+	
+	// Retrieve the Ability System component delegate for when it is implemented
+	virtual FOnAbilitySystemComponentRegistered& GetAbilitySystemComponentRegisteredDelegate() override;
+	
+	// Retrieve the On Death delegate (Delegate called whenever the character dies)
+	virtual FOnDeathSignature& GetOnDeathDelegate() override;
+	
 	//~ End - IAuraCombatInterface overrides
+	
+	// Delegate for when the Ability System Component is Registered
+	FOnAbilitySystemComponentRegistered OnAbilitySystemComponentRegistered;
+	
+	// Delegate to broadcast whenever this character dies
+	FOnDeathSignature OnDeathDelegate;
 	
 	// To process on all clients and server when character dies
 	// Drop Weapon and Ragdoll
@@ -100,6 +114,10 @@ protected:
 	// Note: Not all character may have a weapon so always check validity!
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
+	
+	// Debuff component to apply effects to character whenever a debuff is applied
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UAuraDebuffNiagaraComponent> BurnDebuffComponent;
 
 	// Pointer to the character's Ability System Component (If there is one)
 	UPROPERTY()

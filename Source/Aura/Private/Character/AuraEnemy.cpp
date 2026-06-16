@@ -207,6 +207,9 @@ void AAuraEnemy::InitCharacterAndComponents()
 		AuraAbilitySystemComponent->AbilityActorInfoSet();
 	}
 
+	// Broadcast the Ability System Component validity
+	OnAbilitySystemComponentRegistered.Broadcast(AbilitySystemComponent);
+	
 	// If running on the server
 	if (HasAuthority())
 	{

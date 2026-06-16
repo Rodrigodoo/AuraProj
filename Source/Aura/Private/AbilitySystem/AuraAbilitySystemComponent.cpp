@@ -451,6 +451,6 @@ void UAuraAbilitySystemComponent::EffectApplied_Implementation(UAbilitySystemCom
 	EffectSpec.GetAllAssetTags(TagContainer);
 	
 	// Broadcast to listeners the Tags associated with this Effect Asset
-	//Note: This could be Widget Controllers, etc...
+	// Note: This could be Widget Controllers, etc...
 	EffectAssetTagsDelegate.Broadcast(TagContainer);
 }

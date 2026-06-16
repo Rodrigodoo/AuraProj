@@ -182,7 +182,9 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& EffectProperties, 
 	TargetTagsComponent.SetAndApplyTargetTagChanges(InheritedTagContainer);
 	
 	// Stacking
+	PRAGMA_DISABLE_DEPRECATION_WARNINGS
 	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
+	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 	Effect->StackLimitCount = 1;
 	
 	// Modifiers (Damage)

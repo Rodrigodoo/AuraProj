@@ -4,7 +4,9 @@
 #include "Character/AuraCharacterBase.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTagsManager.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/Debuff/AuraDebuffNiagaraComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -32,6 +34,11 @@ AAuraCharacterBase::AAuraCharacterBase()
 	
 	// Fix for generating impact on Client Only
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+	
+	// Create a Debuff Component
+	BurnDebuffComponent = CreateDefaultSubobject<UAuraDebuffNiagaraComponent>("BurnDebuffComponent");
+	BurnDebuffComponent->SetupAttachment(GetRootComponent());
+	BurnDebuffComponent->DebuffTag = AuraGameplayTagsManager::Debuff_Burn;
 }
 
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
@@ -161,6 +168,16 @@ void AAuraCharacterBase::DecrementMinionCount_Implementation(int32 Amount)
 	MinionCount -= Amount;
 }
 
+FOnAbilitySystemComponentRegistered& AAuraCharacterBase::GetAbilitySystemComponentRegisteredDelegate()
+{
+	return OnAbilitySystemComponentRegistered;
+}
+
+FOnDeathSignature& AAuraCharacterBase::GetOnDeathDelegate()
+{
+	return OnDeathDelegate;
+}
+
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	// Play death sound
@@ -190,6 +207,9 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	
 	// Mark the character as dead
 	bIsDead = true;
+	
+	// Broadcast that the character has died
+	OnDeathDelegate.Broadcast(this);
 }
 
 void AAuraCharacterBase::InitializeDefaultAttributes() const

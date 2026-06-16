@@ -7,9 +7,14 @@
 #include "UObject/Interface.h"
 #include "AuraCombatInterface.generated.h"
 
+class UAbilitySystemComponent;
 enum class ECharacterClass : uint8;
-
 class UNiagaraSystem;
+
+// Delegates
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnAbilitySystemComponentRegistered, UAbilitySystemComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, AActor*, DeathActor);
+
 // Structure to associate a Montage info to a GameplayTag
 // This will be used to decide what montages are played, which sockets are used, sounds to be played,
 // and which tags are going to trigger those montages.
@@ -82,6 +87,12 @@ public:
 	// Retrieves the Blood Effect for this actor
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UNiagaraSystem* GetBloodEffect();
+	
+	// Retrieve the Ability System Component delegate for when it is implemented
+	virtual FOnAbilitySystemComponentRegistered& GetAbilitySystemComponentRegisteredDelegate() = 0;
+	
+	// Retrieve the On Death delegate (Delegate called whenever the character dies)
+	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
 	
 	//~ Begin - Montages
 	
