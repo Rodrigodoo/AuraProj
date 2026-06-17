@@ -101,9 +101,13 @@ struct FAuraDamageEffectParams
 	UPROPERTY()
 	int32 AbilityLevel = 1;
 	
-	// Whenever this ability causes death, it applies this impulse to the target
+	// Whenever this ability causes death, it applies this impulse to the target (Magnitude)
 	UPROPERTY()
-	float DeathImpulse = 60.f;
+	float DeathImpulseMagnitude = 60.f;
+	
+	// Whenever this ability causes death, it applies this impulse to the target (Vector)
+	UPROPERTY()
+	FVector DeathImpulse = FVector::ZeroVector;
 	
 	// Map of all damage types (base damage + debuffs)
 	UPROPERTY()
@@ -116,13 +120,19 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 {
 	GENERATED_USTRUCT_BODY()
 	
-	// bIsBlockedHit Getter and Setter 
+	// bIsBlockedHit Getter and Setter
 	bool IsBlockedHit() const	{ return bIsBlockedHit;	}
 	void SetIsBlockedHit(const bool bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit;	}
 
-	// bIsCriticalHit Getter and Setter 
+	// bIsCriticalHit Getter and Setter
 	bool IsCriticalHit() const { return bIsCriticalHit; }
 	void SetIsCriticalHit(const bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
+	
+	// Death Impulse Getter and Setter
+	FVector GetDeathImpulse() const { return DeathImpulse; };
+	void SetDeathImpulse(const FVector& InDeathImpulse) {DeathImpulse = InDeathImpulse;};
+	
+	//~ Begin - Debuff
 	
 	// Retrieves the Debuff
 	FAuraDebuff GetDebuff(const FGameplayTag& DamageType) const;
@@ -144,33 +154,14 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 	float GetDebuffDuration(const FGameplayTag& DamageType) const;
 	void SetDebuffDuration(const FGameplayTag& DamageType, const float InDuration);
 	
+	//~ End - Debuff
+	
 	// DamageType Getter and Setter
 	TArray<FGameplayTag> GetDamageTypes() const;
 	// Note: this does not add a value!
 	void AddDamageType(const FGameplayTag& InDamageType);
 	void AddDamageTypeAndDebuff(const FGameplayTag& InDamageType, const FAuraDebuff& InDebuff);
-	
-	/*// bIsSuccessfulDebuff Getter and Setter 
-	bool IsSuccessfulDebuff() const { return bIsSuccessfulDebuff; }
-	void SetSuccessfulDebuff(const bool bIsSuccessfulDebuff) { bIsCriticalHit = bIsSuccessfulDebuff; }
-	
-	// DebuffDamage Getter and Setter
-	float GetDebuffDamage() const { return DebuffDamage; }
-	void SetDebuffDamage(const float InDamage) { DebuffDamage = InDamage; }
-	
-	// DebuffFrequency Getter and Setter
-	float GetDebuffFrequency() const { return DebuffFrequency; }
-	void SetDebuffFrequency(const float InFrequency) { DebuffFrequency = InFrequency; }
-	
-	// DebuffDuration Getter and Setter
-	float GetDebuffDuration() const { return DebuffDuration; }
-	void SetDebuffDuration(const float InDuration) { DebuffDuration = InDuration; }*/
-	
-	/*
-	// DamageType Getter and Setter
-	const FGameplayTag& GetDebuffType() const { return DamageType; }
-	void SetDamageType(const FGameplayTag& InType) { DamageType = InType; }*/
-	
+
 	//~ Begin - FGameplayEffectContext overrides
 	
 	// Returns the actual struct used for serialization, subclasses must override this!
@@ -210,29 +201,9 @@ protected:
 	UPROPERTY()
 	TMap<FGameplayTag, FAuraDebuff> DamageTypeToDebuff;
 	
-	/*// Type of damage
+	// Impulse applied whenever this effect causes the death of the character
 	UPROPERTY()
-	FGameplayTag DamageType = FGameplayTag();
-	
-	//~ Begin - Debuff
-	FAuraDebuff DebuffStats = FAuraDebuff();*/
-	/*// Signals if Effect was a Successful Debuff
-	UPROPERTY()
-	bool bIsSuccessfulDebuff = false;
-	
-	// Damage caused by debuff
-	UPROPERTY()
-	float DebuffDamage = 0.f;
-	
-	// Frequency of the debuff
-	UPROPERTY()
-	float DebuffFrequency = 0.f;
-	
-	// Duration of the debuff
-	UPROPERTY()
-	float DebuffDuration = 0.f;*/
-
-	//~ End - Debuff
+	FVector DeathImpulse = FVector::ZeroVector;
 };
 
 // Template to establish stuct operations available

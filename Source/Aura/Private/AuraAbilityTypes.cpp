@@ -7,7 +7,7 @@
 bool FAuraDebuff::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
 	// Bitmask
-	uint32 RepBits = 0;
+	uint8 RepBits = 0;
 	
 	// If Saving, signal in the bitmask what properties are to be saved
 	if (Ar.IsSaving())
@@ -261,10 +261,14 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, class UPackageMap* M
 		{
 			RepBits |= 1 << 9;
 		}
+		if (!DeathImpulse.IsZero())
+		{
+			RepBits |= 1 << 10;
+		}
 	}
 	
 	// Serialize/Deserialize the bit mask
-	Ar.Serialize(&RepBits, 9);
+	Ar.Serialize(&RepBits, 10);
 	
 	// Read the bitmask and Serialize/Deserialize the properties
 	// Note: At this point we can either be loading or saving, depends on context
@@ -328,6 +332,10 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, class UPackageMap* M
 		{
 			DamageTypeToDebuff = DebuffWrapper.DamageTypeToDebuff;
 		}
+	}
+	if (RepBits & (1 << 10))
+	{
+		DeathImpulse.NetSerialize(Ar, Map, bOutSuccess);
 	}
 
 	// If Loading, just initialize InstigatorAbilitySystemComponent

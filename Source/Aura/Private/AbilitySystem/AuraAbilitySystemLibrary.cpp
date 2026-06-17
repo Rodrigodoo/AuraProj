@@ -316,41 +316,48 @@ bool UAuraAbilitySystemLibrary::AbilityHasInputTag(const FGameplayAbilitySpec& A
 
 FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffect(const FAuraDamageEffectParams& Params)
 {
+	using namespace AuraGameplayTagsManager;
+	
 	// If there is no target or source, crash
 	check(Params.TargetAbilitySystemComponent && Params.SourceAbilitySystemComponent)
 
-	// Create a spec handle to store all damage type values and then apply them to the Target Actor
+	// Create a context handle and set its source object and Death impulse
 	FGameplayEffectContextHandle ContextHandle = Params.SourceAbilitySystemComponent->MakeEffectContext();
 	const AActor* SourceAvatarActor = Params.SourceAbilitySystemComponent->GetAvatarActor();
 	ContextHandle.AddSourceObject(SourceAvatarActor);
+	SetDeathImpulse(ContextHandle, Params.DeathImpulse);
+	
+	// Create a spec handle to store all damage type values and then apply them to the Target Actor
 	const FGameplayEffectSpecHandle DamageSpecHandle = Params.SourceAbilitySystemComponent->MakeOutgoingSpec(
 		Params.DamageGameplayEffectClass, Params.AbilityLevel, ContextHandle);
 	
 	//  Key: GameplayTag (Damage Type tag) | FAuraDamage (Damage value and debuffs associated with type at a specific level)
 	for (const auto& Pair: Params.DamageTypes)
 	{
+		// Local variable
+		const FAuraDamage& Damage = Pair.Value;
+		
 		// Create a tag set by caller magnitude for:
 
 		// Damage type base value
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			DamageSpecHandle, Pair.Key, Pair.Value.GetValueAtLevel(Params.AbilityLevel));
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, Pair.Key, Damage.GetValueAtLevel(Params.AbilityLevel));
 		
 		// Retrieve the Debuff Type
-		const FGameplayTag& DebuffType = AuraGameplayTagsManager::DamageTypesToDebuffs[Pair.Key];
+		const FGameplayTag& DebuffType = DamageTypesToDebuffs[Pair.Key];
 		
 		// Debuffs *For now these debuffs only apply once (if several damage types)*
 		// Debuff Chance
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			DamageSpecHandle, AuraGameplayTagsManager::GetDebuffChanceByType(DebuffType), Pair.Value.Debuff.DebuffChance);
+		FGameplayTag DebuffTag = GetDebuffChanceByType(DebuffType);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, Damage.Debuff.DebuffChance);
 		// Debuff Damage
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			DamageSpecHandle, AuraGameplayTagsManager::GetDebuffDamageByType(DebuffType), Pair.Value.Debuff.DebuffDamage);
+		DebuffTag = GetDebuffDamageByType(DebuffType);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, Damage.Debuff.DebuffDamage);
 		// Debuff Frequency
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			DamageSpecHandle, AuraGameplayTagsManager::GetDebuffFrequencyByType(DebuffType), Pair.Value.Debuff.DebuffFrequency);
+		DebuffTag = GetDebuffFrequencyByType(DebuffType);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, Damage.Debuff.DebuffFrequency);
 		// Debuff Duration
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-			DamageSpecHandle, AuraGameplayTagsManager::GetDebuffDurationByType(DebuffType), Pair.Value.Debuff.DebuffDuration);
+		DebuffTag = GetDebuffDurationByType(DebuffType);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, Damage.Debuff.DebuffDuration);
 	}
 
 	// Apply the damage ability to the target actor
@@ -439,8 +446,25 @@ void UAuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& E
 	}
 }
 
+FVector UAuraAbilitySystemLibrary::GetDeathImpulse(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and Get its death Impulse
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetDeathImpulse() : FVector::ZeroVector;
+}
+
+void UAuraAbilitySystemLibrary::SetDeathImpulse(FGameplayEffectContextHandle& EffectContextHandle,
+                                                const FVector& DeathImpulse)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its DeathImpulse
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetDeathImpulse(DeathImpulse);
+	}
+}
+
 bool UAuraAbilitySystemLibrary::IsDebuffSuccessful(const FGameplayEffectContextHandle& EffectContextHandle,
-	const FGameplayTag& DamageType)
+                                                   const FGameplayTag& DamageType)
 {
 	// Retrieve the Aura Gameplay Effect Context and check if it was a Successful Debuff Application
 	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());

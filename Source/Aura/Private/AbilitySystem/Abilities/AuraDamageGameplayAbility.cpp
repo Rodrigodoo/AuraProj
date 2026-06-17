@@ -33,7 +33,7 @@ FAuraDamageEffectParams UAuraDamageGameplayAbility::MakaDamageEffectParamsFromCl
 	Params.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	Params.TotalBaseDamage = GetTotalDamageByLevel(GetAbilityLevel());
 	Params.AbilityLevel = GetAbilityLevel();
-	Params.DeathImpulse = DeathImpulseMagnitude;
+	Params.DeathImpulseMagnitude = DeathImpulseMagnitude;
 	Params.DamageTypes = DamageTypes;
 	
 	return Params;

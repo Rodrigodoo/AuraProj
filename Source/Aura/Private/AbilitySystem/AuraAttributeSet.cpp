@@ -99,7 +99,9 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& EffectProp
 		const float NewHealth = GetHealth() - LocalIncomingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 			
-		// Damage was fatal!
+		/*
+		 * Fatal Damage!
+		 */ 
 		if (NewHealth <= 0.f)
 		{
 			// Inform the Attacker (Source Character) of the XP Reward for killing its enemy (Target Character)
@@ -111,7 +113,10 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& EffectProp
 				CombatInterface->Die();
 			}
 		}
-		else // No fatal damage
+		/*
+		 * No Fatal Damage!
+		 */ 
+		else
 		{
 			// Activate any Ability that has the Hit React Tag
 			const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Abilities_HitReact);
@@ -126,7 +131,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& EffectProp
 		// Check if any debuff was applied
 		if (UAuraAbilitySystemLibrary::WasAnyDebuffApplied(EffectProperties.EffectContextHandle))
 		{
-			// If a debuff was applied, find out which was and handdle it
+			// If a debuff was applied, find out which was and handle it
 			// Key: Damage type Tag (FGameplayTag) | Value: Debuff Tag (FGameplayTag)
 			for (const auto& Pair : AuraGameplayTagsManager::DamageTypesToDebuffs)
 			{
