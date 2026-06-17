@@ -55,6 +55,9 @@ public:
 	// Checks if this actor is dead
 	virtual bool IsDead_Implementation() const override;
 	
+	// Apply knockback to the character
+	virtual void ApplyKnockback(const FVector& Knockback = FVector::ZeroVector) override;
+	
 	// Get a reference to this actor
 	virtual AActor* GetAvatar_Implementation() override;
 	

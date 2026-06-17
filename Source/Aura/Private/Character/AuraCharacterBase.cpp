@@ -100,6 +100,11 @@ bool AAuraCharacterBase::IsDead_Implementation() const
 	return bIsDead;
 }
 
+void AAuraCharacterBase::ApplyKnockback(const FVector& Knockback)
+{
+	LaunchCharacter(Knockback, true, true);
+}
+
 AActor* AAuraCharacterBase::GetAvatar_Implementation()
 {
 	return this;

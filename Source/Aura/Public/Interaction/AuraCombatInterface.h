@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "UObject/Interface.h"
 #include "AuraCombatInterface.generated.h"
 
@@ -79,6 +80,9 @@ public:
 	// Checks if this interface owner is dead
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsDead() const;
+	
+	// Apply knockback to the character
+	virtual void ApplyKnockback(const FVector& Knockback = FVector::ZeroVector) = 0;
 	
 	// Get a reference to this interface owner
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

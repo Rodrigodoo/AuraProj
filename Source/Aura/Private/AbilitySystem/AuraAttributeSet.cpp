@@ -120,11 +120,22 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& EffectProp
 		else
 		{
 			// Check if the Ability should hit react and try to activate it if it should
-			if (UAuraAbilitySystemLibrary::ShouldAnyHitReact(EffectProperties.EffectContextHandle))
+			// Only Debuffs can negate the hit react, if they are signed as such
+			const bool ShouldHitReact = !UAuraAbilitySystemLibrary::IsDebuff(EffectProperties.EffectContextHandle) || 
+				UAuraAbilitySystemLibrary::ShouldAnyHitReact(EffectProperties.EffectContextHandle);
+			if (ShouldHitReact)
 			{
 				// Activate any Ability that has the Hit React Tag
 				const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Abilities_HitReact);
 				EffectProperties.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
+			}
+			
+			// If the object has a combat interface apply knockback
+			const FVector& Knockback = UAuraAbilitySystemLibrary::GetKnockback(EffectProperties.EffectContextHandle);
+			IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(EffectProperties.TargetAvatarActor);
+			if (!Knockback.IsNearlyZero() && CombatInterface)
+			{
+				CombatInterface->ApplyKnockback(Knockback);
 			}
 		}
 
@@ -133,8 +144,9 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& EffectProp
 		const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
 		ShowDamageAsFloatingText(EffectProperties, LocalIncomingDamage, bBlockedHit, bCriticalHit);
 
-		// Check if any debuff was applied
-		if (UAuraAbilitySystemLibrary::WasAnyDebuffApplied(EffectProperties.EffectContextHandle))
+		// Check if any debuff was applied (Debuffs cannot have other Debuffs)
+		if (!UAuraAbilitySystemLibrary::IsDebuff(EffectProperties.EffectContextHandle) && 
+			UAuraAbilitySystemLibrary::WasAnyDebuffApplied(EffectProperties.EffectContextHandle))
 		{
 			// If a debuff was applied, find out which was and handle it
 			// Key: Damage type Tag (FGameplayTag) | Value: Debuff Tag (FGameplayTag)
@@ -213,6 +225,8 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& EffectProperties, 
 			// Mark it for hit reacting in case it should
 			const bool bShouldHitReact = UAuraAbilitySystemLibrary::ShouldHitReact(EffectProperties.EffectContextHandle, DamageType);
 			AuraContext->SetShouldHitReact(DamageType, bShouldHitReact);
+			// Mark it as a Debuff
+			AuraContext->SetIsDebuff(true);
 			
 			// Apply the Effect
 			EffectProperties.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*MutableEffectSpec);

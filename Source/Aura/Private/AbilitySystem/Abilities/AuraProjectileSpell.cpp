@@ -54,7 +54,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
 		// Setup Projectile
-		Projectile->DamageEffectParams = MakaDamageEffectParamsFromClassDefaults();
+		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
 		// Finish spawning
 		Projectile->FinishSpawning(SpawnTransform);

@@ -23,7 +23,7 @@ void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 		UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
 }
 
-FAuraDamageEffectParams UAuraDamageGameplayAbility::MakaDamageEffectParamsFromClassDefaults(AActor* TargetActor) const
+FAuraDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor) const
 {
 	// Fill in with the default values
 	FAuraDamageEffectParams Params;
@@ -34,8 +34,13 @@ FAuraDamageEffectParams UAuraDamageGameplayAbility::MakaDamageEffectParamsFromCl
 	Params.TotalBaseDamage = GetTotalDamageByLevel(GetAbilityLevel());
 	Params.AbilityLevel = GetAbilityLevel();
 	Params.DeathImpulseMagnitude = DeathImpulseMagnitude;
+	Params.KnockbackChance = KnockbackChance;
+	Params.KnockbackMagnitude = KnockbackMagnitude;
 	Params.DamageTypes = DamageTypes;
 	
+	// If the target actor is not nullptr, then make default Knockback and Death Impulse
+	Params.MakeDeathImpulseAndKnockback(GetAvatarActorFromActorInfo(), TargetActor);
+
 	return Params;
 }
 

@@ -116,6 +116,28 @@ bool FDamageTypeToDebuffWrapper::NetSerialize(FArchive& Ar, class UPackageMap* M
 	return true;
 }
 
+void FAuraDamageEffectParams::MakeDeathImpulseAndKnockback(AActor* SourceActor, AActor* TargetActor)
+{
+	if (!IsValid(SourceActor) || !IsValid(TargetActor))
+	{
+		return;
+	}
+	
+	// Get the direction from the avatar actor to the target (Normalized)
+	FRotator Rotation = (TargetActor->GetActorLocation() - SourceActor->GetActorLocation()).Rotation();
+	Rotation.Pitch = KnockbackPitchOverride;
+	const FVector ToTarget = Rotation.Vector();
+		
+	// Set Death Impulse
+	DeathImpulse = ToTarget * DeathImpulseMagnitude;
+
+	// Only set knockback if it passes the chance
+	if (FMath::RandRange(1.f, 100.f) <= KnockbackChance)
+	{
+		Knockback = ToTarget * KnockbackMagnitude;
+	}
+}
+
 FAuraDebuff FAuraGameplayEffectContext::GetDebuff(const FGameplayTag& DamageType) const
 {
 	if (!DamageTypeToDebuff.Contains(DamageType))
@@ -217,7 +239,7 @@ bool FAuraGameplayEffectContext::ShouldHitReact(const FGameplayTag& DamageType) 
 {
 	if (!DamageTypeToDebuff.Contains(DamageType))
 	{
-		return false;
+		return true;
 	}
 	
 	return DamageTypeToDebuff[DamageType].bShouldHitReact;
@@ -233,6 +255,13 @@ void FAuraGameplayEffectContext::SetShouldHitReact(const FGameplayTag& DamageTyp
 
 bool FAuraGameplayEffectContext::ShouldHitReact() const
 {
+	// Early Check
+	if (DamageTypeToDebuff.Num() < 1)
+	{
+		// Default behaviour is to hit react
+		return true;
+	}
+	
 	// Check if any of the debuffs is marked for hit react
 	// Key: Damage type Tag (FGameplayTag) | Value: Debuff (FAuraDebuff)
 	for (const auto& Pair : DamageTypeToDebuff)
@@ -243,6 +272,8 @@ bool FAuraGameplayEffectContext::ShouldHitReact() const
 			return true;	
 		}
 	}
+	
+	// If all debuffs are set to not Hit React, do not do it
 	return false;
 }
 
@@ -316,10 +347,14 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, class UPackageMap* M
 		{
 			RepBits |= 1 << 10;
 		}
+		if (!Knockback.IsZero())
+		{
+			RepBits |= 1 << 11;
+		}
 	}
 	
 	// Serialize/Deserialize the bit mask
-	Ar.Serialize(&RepBits, 10);
+	Ar.Serialize(&RepBits, 11);
 	
 	// Read the bitmask and Serialize/Deserialize the properties
 	// Note: At this point we can either be loading or saving, depends on context
@@ -387,6 +422,10 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, class UPackageMap* M
 	if (RepBits & (1 << 10))
 	{
 		DeathImpulse.NetSerialize(Ar, Map, bOutSuccess);
+	}
+	if (RepBits & (1 << 11))
+	{
+		Knockback.NetSerialize(Ar, Map, bOutSuccess);
 	}
 
 	// If Loading, just initialize InstigatorAbilitySystemComponent

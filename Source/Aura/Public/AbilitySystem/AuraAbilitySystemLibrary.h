@@ -124,6 +124,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalHit);
 	
+	// Checks if the Gameplay Effect pertains to a Debuff
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static bool IsDebuff(const FGameplayEffectContextHandle& EffectContextHandle);
+	
+	// Sets the Gameplay Effect to record a Debuff
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetIsDebuff(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsDebuff);
+	
 	// Retrieve the Death Impulse from the Effect Context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static FVector GetDeathImpulse(const FGameplayEffectContextHandle& EffectContextHandle);
@@ -131,6 +139,14 @@ public:
 	// Set the Death Impulse to the Effect Context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetDeathImpulse(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FVector& DeathImpulse);
+	
+	// Retrieve the Knockback from the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static FVector GetKnockback(const FGameplayEffectContextHandle& EffectContextHandle);
+	
+	// Set the Death Impulse to the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetKnockback(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FVector& Knockback);
 	
 	// Checks if the Gameplay Effect pertains to a Successful Debuff application
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")

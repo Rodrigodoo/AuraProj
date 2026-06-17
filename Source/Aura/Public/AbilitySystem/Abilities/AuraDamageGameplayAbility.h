@@ -24,8 +24,8 @@ public:
 	
 	// Creates Damage Effect Params from this classes default settings
 	// Can provide a target actor if it is known.
-	UFUNCTION(BlueprintCallable)
-	FAuraDamageEffectParams MakaDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
+	UFUNCTION(BlueprintPure)
+	FAuraDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
 	
 	// Get the damage value for said type and level
 	float GetDamageByTypeAndLevel(const FGameplayTag& DamageType, const float Level) const;
@@ -39,8 +39,20 @@ protected:
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 	
 	// Whenever this ability causes death, it applies this impulse to the target
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	float DeathImpulseMagnitude = 60.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|DeathImpulse")
+	float DeathImpulseMagnitude = 10000.f;
+	
+	// chance this ability causes knockback, it applies this impulse to the target
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Knockback")
+	float KnockbackChance = 20.f;
+	
+	// Whenever this ability causes knockback, it applies this impulse to the target
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Knockback")
+	float KnockbackMagnitude = 500.f;
+	
+	// The pitch override for the knockback (degrees)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Knockback")
+	float KnockbackPitchOverride = 45.0f;
 	
 	// All existing damage types for this ability
 	// Map between gameplay tags and scalable floats

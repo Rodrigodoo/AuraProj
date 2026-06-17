@@ -86,36 +86,55 @@ struct FAuraDamageEffectParams
 	FAuraDamageEffectParams(){};
 	
 	// Gameplay effect associated with this damage
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TSubclassOf<UGameplayEffect> DamageGameplayEffectClass = nullptr;
 	
 	// Source Ability System Component for this damage
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<UAbilitySystemComponent> SourceAbilitySystemComponent = nullptr;
 	
 	// Target Ability System Component for this damage
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<UAbilitySystemComponent> TargetAbilitySystemComponent = nullptr;
 	
 	// Total base damage (sum of all damage types)
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	float TotalBaseDamage = 0.f;
 	
 	// Level of the Ability causing this damage
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	int32 AbilityLevel = 1;
 	
 	// Whenever this ability causes death, it applies this impulse to the target (Magnitude)
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	float DeathImpulseMagnitude = 10000.0f;
 	
 	// Whenever this ability causes death, it applies this impulse to the target (Vector)
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	FVector DeathImpulse = FVector::ZeroVector;
 	
+	// Chance this ability causes knockback
+	UPROPERTY(BlueprintReadWrite)
+	float KnockbackChance = 20.0f;
+	
+	// Whenever this ability causes knockback, it applies this impulse to the target (Magnitude)
+	UPROPERTY(BlueprintReadWrite)
+	float KnockbackMagnitude = 500.0f;
+	
+	// The pitch override for the knockback (degrees)
+	UPROPERTY(BlueprintReadWrite)
+	float KnockbackPitchOverride = 45.0f;
+	
+	// Whenever this ability causes knockback, it applies this impulse to the target (Vector)
+	UPROPERTY(BlueprintReadWrite)
+	FVector Knockback = FVector::ZeroVector;
+	
 	// Map of all damage types (base damage + debuffs)
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TMap<FGameplayTag, FAuraDamage> DamageTypes;
+	
+	// Creates the Death Impulse and Knockback from the target actor
+	void MakeDeathImpulseAndKnockback(AActor* SourceActor, AActor* TargetActor);
 };
 
 // Struct to hold specific gameplay effect contexts
@@ -132,9 +151,17 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 	bool IsCriticalHit() const { return bIsCriticalHit; }
 	void SetIsCriticalHit(const bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
 	
+	// bIsDebuff Getter and Setter
+	bool IsDebuff() const { return bIsDebuff; }
+	void SetIsDebuff(const bool bInIsDebuff) { bIsDebuff = bInIsDebuff; }
+	
 	// Death Impulse Getter and Setter
 	FVector GetDeathImpulse() const { return DeathImpulse; };
 	void SetDeathImpulse(const FVector& InDeathImpulse) {DeathImpulse = InDeathImpulse;};
+	
+	// Knockback Getter and Setter
+	FVector GetKnockback() const { return Knockback; };
+	void SetKnockback(const FVector& InKnockback) {Knockback = InKnockback;};
 	
 	//~ Begin - Debuff
 	
@@ -207,6 +234,10 @@ protected:
 	UPROPERTY()
 	bool bIsCriticalHit = false;
 	
+	// Signals if Effect is a Debuff
+	UPROPERTY()
+	bool bIsDebuff = false;
+	
 	// Damage type and associated debuff stats
 	UPROPERTY()
 	TMap<FGameplayTag, FAuraDebuff> DamageTypeToDebuff;
@@ -214,6 +245,10 @@ protected:
 	// Impulse applied whenever this effect causes the death of the character
 	UPROPERTY()
 	FVector DeathImpulse = FVector::ZeroVector;
+	
+	// Impulse applied whenever this effect causes the death of the character
+	UPROPERTY()
+	FVector Knockback = FVector::ZeroVector;
 };
 
 // Template to establish stuct operations available

@@ -326,7 +326,8 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffec
 	const AActor* SourceAvatarActor = Params.SourceAbilitySystemComponent->GetAvatarActor();
 	ContextHandle.AddSourceObject(SourceAvatarActor);
 	SetDeathImpulse(ContextHandle, Params.DeathImpulse);
-	
+	SetKnockback(ContextHandle, Params.Knockback);
+
 	// Create a spec handle to store all damage type values and then apply them to the Target Actor
 	const FGameplayEffectSpecHandle DamageSpecHandle = Params.SourceAbilitySystemComponent->MakeOutgoingSpec(
 		Params.DamageGameplayEffectClass, Params.AbilityLevel, ContextHandle);
@@ -449,6 +450,22 @@ void UAuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& E
 	}
 }
 
+bool UAuraAbilitySystemLibrary::IsDebuff(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and check if it was a Critical Hit
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->IsDebuff() : false; 
+}
+
+void UAuraAbilitySystemLibrary::SetIsDebuff(FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsDebuff)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Critical Hit flag
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetIsDebuff(bInIsDebuff);
+	}
+}
+
 FVector UAuraAbilitySystemLibrary::GetDeathImpulse(const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	// Retrieve the Aura Gameplay Effect Context and Get its death Impulse
@@ -463,6 +480,23 @@ void UAuraAbilitySystemLibrary::SetDeathImpulse(FGameplayEffectContextHandle& Ef
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		AuraGameplayEffectContext->SetDeathImpulse(DeathImpulse);
+	}
+}
+
+FVector UAuraAbilitySystemLibrary::GetKnockback(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and Get its knockback
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetKnockback() : FVector::ZeroVector;
+}
+
+void UAuraAbilitySystemLibrary::SetKnockback(FGameplayEffectContextHandle& EffectContextHandle,
+	const FVector& Knockback)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Knockback
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetKnockback(Knockback);
 	}
 }
 
@@ -555,14 +589,14 @@ bool UAuraAbilitySystemLibrary::ShouldHitReact(const FGameplayEffectContextHandl
 {
 	// Retrieve the Aura Gameplay Effect Context and check if it should Hit React
 	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
-	return AuraGameplayEffectContext ? AuraGameplayEffectContext->ShouldHitReact(DamageType) : false;
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->ShouldHitReact(DamageType) : true;
 }
 
 bool UAuraAbilitySystemLibrary::ShouldAnyHitReact(const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	// Retrieve the Aura Gameplay Effect Context and check if it should Hit React
 	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
-	return AuraGameplayEffectContext ? AuraGameplayEffectContext->ShouldHitReact() : false;
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->ShouldHitReact() : true;
 }
 
 void UAuraAbilitySystemLibrary::SetShouldHitReact(FGameplayEffectContextHandle& EffectContextHandle,
