@@ -35,8 +35,12 @@ public:
 	
 protected:
 	// Damage Effect class to add to the projectile
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+	
+	// Whenever this ability causes death, it applies this impulse to the target
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	float DeathImpulseMagnitude = 60.f;
 	
 	// All existing damage types for this ability
 	// Map between gameplay tags and scalable floats

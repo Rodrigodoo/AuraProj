@@ -101,6 +101,10 @@ struct FAuraDamageEffectParams
 	UPROPERTY()
 	int32 AbilityLevel = 1;
 	
+	// Whenever this ability causes death, it applies this impulse to the target
+	UPROPERTY()
+	float DeathImpulse = 60.f;
+	
 	// Map of all damage types (base damage + debuffs)
 	UPROPERTY()
 	TMap<FGameplayTag, FAuraDamage> DamageTypes;
