@@ -335,12 +335,12 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffec
 	for (const auto& Pair: Params.DamageTypes)
 	{
 		// Local variable
-		const FAuraDamage& Damage = Pair.Value;
+		const FAuraDamage& AuraDamage = Pair.Value;
 		
 		// Create a tag set by caller magnitude for:
 
 		// Damage type base value
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, Pair.Key, Damage.GetValueAtLevel(Params.AbilityLevel));
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, Pair.Key, AuraDamage.GetValueAtLevel(Params.AbilityLevel));
 		
 		// Retrieve the Debuff Type
 		const FGameplayTag& DebuffType = DamageTypesToDebuffs[Pair.Key];
@@ -348,16 +348,19 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffec
 		// Debuffs *For now these debuffs only apply once (if several damage types)*
 		// Debuff Chance
 		FGameplayTag DebuffTag = GetDebuffChanceByType(DebuffType);
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, Damage.Debuff.DebuffChance);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, AuraDamage.Debuff.DebuffChance);
 		// Debuff Damage
 		DebuffTag = GetDebuffDamageByType(DebuffType);
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, Damage.Debuff.DebuffDamage);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, AuraDamage.Debuff.DebuffDamage);
 		// Debuff Frequency
 		DebuffTag = GetDebuffFrequencyByType(DebuffType);
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, Damage.Debuff.DebuffFrequency);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, AuraDamage.Debuff.DebuffFrequency);
 		// Debuff Duration
 		DebuffTag = GetDebuffDurationByType(DebuffType);
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, Damage.Debuff.DebuffDuration);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, AuraDamage.Debuff.DebuffDuration);
+		// Debuff Should Hit React
+		DebuffTag = GetDebuffShouldHitReactByType(DebuffType);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DebuffTag, AuraDamage.Debuff.bShouldHitReact);
 	}
 
 	// Apply the damage ability to the target actor
@@ -544,6 +547,31 @@ void UAuraAbilitySystemLibrary::SetDebuffDuration(FGameplayEffectContextHandle& 
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		AuraGameplayEffectContext->SetDebuffDuration(DamageType, InDebuffDuration);
+	}
+}
+
+bool UAuraAbilitySystemLibrary::ShouldHitReact(const FGameplayEffectContextHandle& EffectContextHandle,
+                                               const FGameplayTag& DamageType)
+{
+	// Retrieve the Aura Gameplay Effect Context and check if it should Hit React
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->ShouldHitReact(DamageType) : false;
+}
+
+bool UAuraAbilitySystemLibrary::ShouldAnyHitReact(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and check if it should Hit React
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->ShouldHitReact() : false;
+}
+
+void UAuraAbilitySystemLibrary::SetShouldHitReact(FGameplayEffectContextHandle& EffectContextHandle,
+                                                  const FGameplayTag& DamageType, const bool InShouldHitReact)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Successful Debuff flag
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetShouldHitReact(DamageType, InShouldHitReact);
 	}
 }
 

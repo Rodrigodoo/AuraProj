@@ -311,6 +311,8 @@ void UAuraExecCalc_Damage::DetermineDebuffs(const FGameplayEffectCustomExecution
 			AuraGameplayTagsManager::GetDebuffFrequencyByType(DebuffType),false, -1.f);
 		Debuff.DebuffDuration = EffectSpec.GetSetByCallerMagnitude(
 			AuraGameplayTagsManager::GetDebuffDurationByType(DebuffType),false, -1.f);
+		Debuff.bShouldHitReact = static_cast<bool>(EffectSpec.GetSetByCallerMagnitude(
+			AuraGameplayTagsManager::GetDebuffShouldHitReactByType(DebuffType),false, 0.f));
 		
 		// Add the damage type and the debuff the to context handle
 		UAuraAbilitySystemLibrary::AddDamageTypeAndDebuff(ContextHandle, DamageType, Debuff);

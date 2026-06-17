@@ -181,7 +181,7 @@ int32 AAuraEnemy::GetCharacterLevel_Implementation() const
 	return CharacterLevel;
 }
 
-void AAuraEnemy::Die()
+void AAuraEnemy::Die(const FVector& DeathImpulse)
 {
 	// Stop the behavior tree when dead
 	if (AuraAIController)
@@ -193,7 +193,7 @@ void AAuraEnemy::Die()
 	SetLifeSpan(LifeSpan);
 	
 	// Drop weapon and apply rag-dolling 
-	Super::Die();
+	Super::Die(DeathImpulse);
 }
 
 void AAuraEnemy::InitCharacterAndComponents()

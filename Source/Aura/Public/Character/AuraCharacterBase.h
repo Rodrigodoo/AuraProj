@@ -50,7 +50,7 @@ public:
 	
 	// Process character's death (Only on server)
 	// Drop Weapon and Ragdoll
-	virtual void Die() override;
+	virtual void Die(const FVector& DeathImpulse = FVector::ZeroVector) override;
 	
 	// Checks if this actor is dead
 	virtual bool IsDead_Implementation() const override;
@@ -103,7 +103,7 @@ public:
 	// To process on all clients and server when character dies
 	// Drop Weapon and Ragdoll
 	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleDeath();
+	virtual void MulticastHandleDeath(const FVector& DeathImpulse = FVector::ZeroVector);
 	
 	// Montages to be played while attacking, which socket to use for said attack and what sound to play on impact.
 	UPROPERTY(EditAnywhere, Category = "Combat")

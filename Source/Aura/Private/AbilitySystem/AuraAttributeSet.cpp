@@ -110,7 +110,8 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& EffectProp
 			// If the object dying has a combat interface call its Die method
 			if (IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(EffectProperties.TargetAvatarActor))
 			{
-				CombatInterface->Die();
+				// Call the Die method with any existing Death Impulse
+				CombatInterface->Die(UAuraAbilitySystemLibrary::GetDeathImpulse(EffectProperties.EffectContextHandle));
 			}
 		}
 		/*
@@ -118,9 +119,13 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& EffectProp
 		 */ 
 		else
 		{
-			// Activate any Ability that has the Hit React Tag
-			const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Abilities_HitReact);
-			EffectProperties.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
+			// Check if the Ability should hit react and try to activate it if it should
+			if (UAuraAbilitySystemLibrary::ShouldAnyHitReact(EffectProperties.EffectContextHandle))
+			{
+				// Activate any Ability that has the Hit React Tag
+				const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Abilities_HitReact);
+				EffectProperties.TargetAbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTagContainer);
+			}
 		}
 
 		// Display the Damage applied to the Target
@@ -196,7 +201,7 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& EffectProperties, 
 	FGameplayModifierInfo& ModifierInfo = Effect->Modifiers.Emplace_GetRef();
 	ModifierInfo.ModifierMagnitude = FScalableFloat(DebuffDamage);
 	ModifierInfo.ModifierOp = EGameplayModOp::Additive;
-	ModifierInfo.Attribute = UAuraAttributeSet::GetIncomingDamageAttribute();
+	ModifierInfo.Attribute = GetIncomingDamageAttribute();
 	
 	// Create a mutable effect spect to hold the effect and apply it
 	if (const FGameplayEffectSpec* MutableEffectSpec = new FGameplayEffectSpec(Effect, EffectContextHandle, 1.f))
@@ -205,6 +210,9 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& EffectProperties, 
 		{
 			// Add only the Damage type so we do not apply another debuff (infinite loop)
 			AuraContext->AddDamageType(DamageType);
+			// Mark it for hit reacting in case it should
+			const bool bShouldHitReact = UAuraAbilitySystemLibrary::ShouldHitReact(EffectProperties.EffectContextHandle, DamageType);
+			AuraContext->SetShouldHitReact(DamageType, bShouldHitReact);
 			
 			// Apply the Effect
 			EffectProperties.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*MutableEffectSpec);

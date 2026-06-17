@@ -48,7 +48,7 @@ public:
 	
 	// Process character's death (Only on server)
 	// Drop Weapon and Ragdoll
-	virtual void Die() override;
+	virtual void Die(const FVector& DeathImpulse = FVector::ZeroVector) override;
 	//~ End - IAuraCombatInterface
 	
 	//~ Begin -AAuraCharacterBase overrides

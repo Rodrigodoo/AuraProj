@@ -7,10 +7,11 @@ namespace AuraGameplayTagsManager
 {
 	namespace DebuffIndex
 	{
-		int32 Chance = 0;
-		int32 Damage = 1;
-		int32 Frequency = 2;
-		int32 Duration = 3;
+		uint8 Chance = 0;
+		uint8 Damage = 1;
+		uint8 Frequency = 2;
+		uint8 Duration = 3;
+		uint8 ShouldHitReact = 4;
 	}
 	
 	/*
@@ -216,6 +217,8 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Burn_Frequency, "Debuff.Burn.Frequency", "Frequency of the Burn Debuff");
 	// Debuff.Burn.Duration
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Burn_Duration, "Debuff.Burn.Duration", "Duration of the Burn Debuff");
+	// Debuff.Burn.ShouldHitReact
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Burn_ShouldHitReact, "Debuff.Burn.ShouldHitReact", "Should Burn Hit React");
 	// Debuff.Stun
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun, "Debuff.Stun", "Stun Debuff Caused by Lightning Damage");
 	// Debuff.Stun.Chance
@@ -226,6 +229,8 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun_Frequency, "Debuff.Stun.Frequency", "Frequency of the Stun Debuff");
 	// Debuff.Stun.Duration
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun_Duration, "Debuff.Stun.Duration", "Duration of the Stun Debuff");
+	// Debuff.Stun.ShouldHitReact
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Stun_ShouldHitReact, "Debuff.Stun.ShouldHitReact", "Should Stun Hit React");
 	// Debuff.Arcane
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane, "Debuff.Arcane", "Arcane Debuff Caused by Arcane Damage");
 	// Debuff.Arcane.Chance
@@ -236,6 +241,8 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane_Frequency, "Debuff.Arcane.Frequency", "Frequency of the Arcane Debuff");
 	// Debuff.Arcane.Duration
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane_Duration, "Debuff.Arcane.Duration", "Duration of the Arcane Debuff");
+	// Debuff.Arcane.ShouldHitReact
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Arcane_ShouldHitReact, "Debuff.Arcane.ShouldHitReact", "Should Arcane Hit React");
 	// Debuff.Physical
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical, "Debuff.Physical", "Physical Debuff Caused by Physical Damage");
 	// Debuff.Physical.Chance
@@ -246,6 +253,8 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical_Frequency, "Debuff.Physical.Frequency", "Frequency of the Physical Debuff");
 	// Debuff.Physical.Duration
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical_Duration, "Debuff.Physical.Duration", "Duration of the Physical Debuff");
+	// Debuff.Physical.ShouldHitReact
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Debuff_Physical_ShouldHitReact, "Debuff.Physical.ShouldHitReact", "Should Physical Hit React");
 	
 	/*
 	 * Montages
@@ -297,13 +306,21 @@ namespace AuraGameplayTagsManager
 	const TMap<FGameplayTag, TArray<FGameplayTag>> DebuffTypeToStats
 	{
 		// Burn Debuff - Debuff Stats
-		{Debuff_Burn, {Debuff_Burn_Chance, Debuff_Burn_Damage, Debuff_Burn_Frequency, Debuff_Burn_Duration}},
+		{Debuff_Burn, 
+			{Debuff_Burn_Chance, Debuff_Burn_Damage, Debuff_Burn_Frequency, 
+				Debuff_Burn_Duration, Debuff_Burn_ShouldHitReact}},
 		// Stun Debuff - Debuff Stats
-		{Debuff_Stun, {Debuff_Stun_Chance, Debuff_Stun_Damage, Debuff_Stun_Frequency, Debuff_Stun_Duration}},
+		{Debuff_Stun, 
+			{Debuff_Stun_Chance, Debuff_Stun_Damage, Debuff_Stun_Frequency, 
+				Debuff_Stun_Duration, Debuff_Stun_ShouldHitReact}},
 		// Arcane Debuff - Debuff Stats
-		{Debuff_Arcane, {Debuff_Arcane_Chance, Debuff_Arcane_Damage, Debuff_Arcane_Frequency, Debuff_Arcane_Duration}},
+		{Debuff_Arcane, 
+			{Debuff_Arcane_Chance, Debuff_Arcane_Damage, Debuff_Arcane_Frequency, 
+				Debuff_Arcane_Duration, Debuff_Arcane_ShouldHitReact}},
 		// Physical Debuff - Debuff Stats
-		{Debuff_Physical, {Debuff_Physical_Chance, Debuff_Physical_Damage, Debuff_Physical_Frequency, Debuff_Physical_Duration}}
+		{Debuff_Physical, 
+			{Debuff_Physical_Chance, Debuff_Physical_Damage, Debuff_Physical_Frequency, 
+				Debuff_Physical_Duration, Debuff_Physical_ShouldHitReact}}
 	};
 
 	const FGameplayTag& GetDebuffChanceByType(const FGameplayTag& DebuffTag)
@@ -324,5 +341,10 @@ namespace AuraGameplayTagsManager
 	const FGameplayTag& GetDebuffDurationByType(const FGameplayTag& DebuffTag)
 	{
 		return DebuffTypeToStats[DebuffTag][DebuffIndex::Duration];
+	}
+
+	const FGameplayTag& GetDebuffShouldHitReactByType(const FGameplayTag& DebuffTag)
+	{
+		return DebuffTypeToStats[DebuffTag][DebuffIndex::ShouldHitReact];
 	}
 }

@@ -54,7 +54,12 @@ void UAuraDebuffNiagaraComponent::BeginPlay()
 
 void UAuraDebuffNiagaraComponent::DebuffTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
-	if (NewCount > 0)
+	// Check if the owner is alive before activating
+	const AActor* Owner = GetOwner();
+	const bool bOwnerAlive = IsValid(Owner) && 
+		Owner->Implements<UAuraCombatInterface>() && !IAuraCombatInterface::Execute_IsDead(Owner);
+	
+	if (bOwnerAlive && NewCount > 0)
 	{
 		Activate();
 	}

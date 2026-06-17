@@ -32,10 +32,14 @@ bool FAuraDebuff::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess
 		{
 			RepBits |= 1 << 4;
 		}
+		if (bShouldHitReact)
+		{
+			RepBits |= 1 << 5;
+		}
 	}
 	
 	// Serialize/Deserialize the bit mask
-	Ar.Serialize(&RepBits, 4);
+	Ar.Serialize(&RepBits, 5);
 	
 	if (RepBits & (1 << 0))
 	{
@@ -56,6 +60,10 @@ bool FAuraDebuff::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess
 	if (RepBits & (1 << 4))
 	{
 		Ar << DebuffDuration;
+	}
+	if (RepBits & (1 << 5))
+	{
+		Ar << bShouldHitReact;
 	}
 
 	// Always set bOutSuccess to true if serialization completed without errors
@@ -138,7 +146,17 @@ void FAuraGameplayEffectContext::SetSuccessfulDebuff(const FGameplayTag& DamageT
 
 bool FAuraGameplayEffectContext::WasAnyDebuffApplied() const
 {
-	return DamageTypeToDebuff.Num() > 0;
+	bool bWasAnyDebuffApplied = false;
+	for (const auto& Pair : DamageTypeToDebuff)
+	{
+		// If at least one was successful then return. 
+		bWasAnyDebuffApplied = Pair.Value.bIsSuccessfulDebuff;
+		if (bWasAnyDebuffApplied)
+		{
+			break;
+		}
+	}
+	return bWasAnyDebuffApplied;
 }
 
 float FAuraGameplayEffectContext::GetDebuffDamage(const FGameplayTag& DamageType) const
@@ -193,6 +211,39 @@ void FAuraGameplayEffectContext::SetDebuffDuration(const FGameplayTag& DamageTyp
 	{
 		DamageTypeToDebuff[DamageType].DebuffDuration = InDuration;
 	}
+}
+
+bool FAuraGameplayEffectContext::ShouldHitReact(const FGameplayTag& DamageType) const
+{
+	if (!DamageTypeToDebuff.Contains(DamageType))
+	{
+		return false;
+	}
+	
+	return DamageTypeToDebuff[DamageType].bShouldHitReact;
+}
+
+void FAuraGameplayEffectContext::SetShouldHitReact(const FGameplayTag& DamageType, const bool InShouldHitReact)
+{
+	if (DamageTypeToDebuff.Contains(DamageType))
+	{
+		DamageTypeToDebuff[DamageType].bShouldHitReact = InShouldHitReact;
+	}
+}
+
+bool FAuraGameplayEffectContext::ShouldHitReact() const
+{
+	// Check if any of the debuffs is marked for hit react
+	// Key: Damage type Tag (FGameplayTag) | Value: Debuff (FAuraDebuff)
+	for (const auto& Pair : DamageTypeToDebuff)
+	{
+		// If at least one should hit react then return
+		if (ShouldHitReact(Pair.Key))
+		{
+			return true;	
+		}
+	}
+	return false;
 }
 
 TArray<FGameplayTag> FAuraGameplayEffectContext::GetDamageTypes() const

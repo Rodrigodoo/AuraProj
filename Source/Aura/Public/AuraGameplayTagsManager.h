@@ -173,6 +173,8 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Burn_Frequency);
 	// Debuff.Burn.Duration
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Burn_Duration);
+	// Debuff.Burn.ShouldHitReact
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Burn_ShouldHitReact);
 	
 	// Debuff.Burn.Stun
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun);
@@ -184,6 +186,8 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun_Frequency);
 	// Debuff.Stun.Duration
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun_Duration);
+	// Debuff.Stun.ShouldHitReact
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Stun_ShouldHitReact);
 	
 	// Debuff.Arcane
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane);
@@ -195,6 +199,8 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane_Frequency);
 	// Debuff.Arcane.Duration
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane_Duration);
+	// Debuff.Arcane.ShouldHitReact
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Arcane_ShouldHitReact);
 	
 	// Debuff.Physical
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical);
@@ -206,6 +212,8 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical_Frequency);
 	// Debuff.Physical.Duration
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical_Duration);
+	// Debuff.Physical.ShouldHitReact
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Debuff_Physical_ShouldHitReact);
 	//~ End - Debuffs
 	
 	//~ Begin - Montages
@@ -238,4 +246,6 @@ namespace AuraGameplayTagsManager
 	const FGameplayTag& GetDebuffFrequencyByType(const FGameplayTag& DebuffTag);
 	// Retrieve the Debuff Duration for this specific Debuff
 	const FGameplayTag& GetDebuffDurationByType(const FGameplayTag& DebuffTag);
+	// Retrieve the Debuff ShouldHitReact for this specific Debuff
+	const FGameplayTag& GetDebuffShouldHitReactByType(const FGameplayTag& DebuffTag);
 }

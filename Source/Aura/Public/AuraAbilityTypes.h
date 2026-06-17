@@ -32,6 +32,10 @@ struct FAuraDebuff
 	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
 	float DebuffDuration = 0.f;
 	
+	// Duration of the Debuff
+	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
+	bool bShouldHitReact = false;
+	
 	// Serialization method
 	bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess);
 };
@@ -103,7 +107,7 @@ struct FAuraDamageEffectParams
 	
 	// Whenever this ability causes death, it applies this impulse to the target (Magnitude)
 	UPROPERTY()
-	float DeathImpulseMagnitude = 60.f;
+	float DeathImpulseMagnitude = 10000.0f;
 	
 	// Whenever this ability causes death, it applies this impulse to the target (Vector)
 	UPROPERTY()
@@ -153,6 +157,12 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 	// DebuffDuration Getter and Setter
 	float GetDebuffDuration(const FGameplayTag& DamageType) const;
 	void SetDebuffDuration(const FGameplayTag& DamageType, const float InDuration);
+	
+	// ShouldHitReact Getter and Setter
+	bool ShouldHitReact(const FGameplayTag& DamageType) const;
+	void SetShouldHitReact(const FGameplayTag& DamageType, const bool InShouldHitReact);
+	// Checks if any of the available debuffs was marked for Hit Reacting
+	bool ShouldHitReact() const;
 	
 	//~ End - Debuff
 	

@@ -74,7 +74,7 @@ public:
 	void UpdateFacingTarget(const FVector& TargetLocation);
 
 	// Method to be called when object/actor is destroyed/dies
-	virtual void Die() = 0;
+	virtual void Die(const FVector& DeathImpulse = FVector::ZeroVector) = 0;
 	
 	// Checks if this interface owner is dead
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

@@ -172,6 +172,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetDebuffDuration(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType, const float InDebuffDuration);
 	
+	// Check if it should Hit React from the Effect Context with a specific damage type
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static bool ShouldHitReact(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);
+	
+	// Check if it any of the Debuff should Hit React from the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static bool ShouldAnyHitReact(const FGameplayEffectContextHandle& EffectContextHandle);
+	
+	// Set if it should Hit React to the effect context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetShouldHitReact(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType, const bool InShouldHitReact);
+	
 	// Retrieve the debuff Type from the Effect Context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static TArray<FGameplayTag> GetDamageTypes(const FGameplayEffectContextHandle& EffectContextHandle);
