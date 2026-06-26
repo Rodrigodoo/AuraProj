@@ -5,12 +5,13 @@
 
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Actor/AuraProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, const FGameplayTag& MontageTag,
-                                     AActor* HomingTarget /*= nullptr*/, const bool bOverridePitch /*= false*/, const float PitchOverride /*= 0.f*/)
+                                     AActor* HomingTargetActor /*= nullptr*/, const bool bOverridePitch /*= false*/, const float PitchOverride /*= 0.f*/)
 {
 	// If we are not on the server then move along.
 	if (!GetAvatarActorFromActorInfo()->HasAuthority())
@@ -39,13 +40,9 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 		ForwardRotation.Pitch = PitchOverride;
 	}
 
+	// Get number of projectiles per level
 	const int32 NumProjectiles = ProjectileCount.GetValueAtLevel(GetAbilityLevel());
-	if (NumProjectiles <= 1)
-	{
-		// Spawn only one projectile
-		SpawnProjectile(ProjectileTargetLocation, MontageTag, bOverridePitch, PitchOverride);
-		return;
-	}
+	checkf(NumProjectiles > 0, TEXT("Number of projectiles must be greater than 0."));
 	
 	// Now spawn the projectiles inside of the projectile spread
 	const FVector ForwardVector = ForwardRotation.Vector();
@@ -69,9 +66,31 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
 		// Setup Projectile
+		// Set damage effects
 		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
+		// Set Homing Target
+		if (HomingTargetActor && HomingTargetActor->Implements<UAuraCombatInterface>())
+		{
+			Projectile->ProjectileMovementComponent->HomingTargetComponent = HomingTargetActor->GetRootComponent();
+		}
+		else // No Homing Target Actor was set
+		{
+			// Create a scene component as the target (added in the Projectile class to be GC)
+			Projectile->HomingTargetSceneComponent = NewObject<USceneComponent>(USceneComponent::StaticClass());
+			Projectile->HomingTargetSceneComponent->SetWorldLocation(ProjectileTargetLocation);
+			Projectile->ProjectileMovementComponent->HomingTargetComponent = Projectile->HomingTargetSceneComponent;
+		}
+
+		// Set a random homing acceleration
+		Projectile->ProjectileMovementComponent->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
+		Projectile->ProjectileMovementComponent->bIsHomingProjectile = bLaunchHomingProjectiles;
+		
 		// Finish spawning
 		Projectile->FinishSpawning(SpawnTransform);
+		
+		
 	}
+
+	
 }

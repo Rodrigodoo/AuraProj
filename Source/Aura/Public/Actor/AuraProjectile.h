@@ -28,6 +28,9 @@ public:
 	// A damage effect that goes with the projectile
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	FAuraDamageEffectParams DamageEffectParams;
+	
+	UPROPERTY()
+	TObjectPtr<USceneComponent> HomingTargetSceneComponent;
 
 protected:
 	virtual void BeginPlay() override;
