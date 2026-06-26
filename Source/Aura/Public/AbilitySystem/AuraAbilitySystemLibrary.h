@@ -229,10 +229,25 @@ public:
 	// Check if Child is actually a child of Parent.
 	static void CheckIsClassChildOf(const UClass* Parent, const UClass* Child);
 	
+	// Calculates evenly spread rotators around an axis and a forward vector.
+	// this will be limited by a spread and a number of Rotators to ascertain
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static TArray<FRotator> EvenlySpacedRotators(const FVector& ForwardVector, const FVector& Axis, const float Spread, const int32 NumRotators);
+	
+	// Calculates evenly spread rotators around an axis and a forward vector.
+	// this will be limited by a spread and a number of Rotators to ascertain
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static TArray<FVector> EvenlySpacedVectors(const FVector& ForwardVector, const FVector& Axis, const float Spread, const int32 NumVectors);
+
+	
 private:
 	// Creates Controller Parameters to be used in creating Widget Controllers
 	// Also returns a reference to the HUD, retrieved from the player controller
 	// Note: private method
 	static FWidgetControllerParams MakeWidgetControllerParams(const UObject* WorldContextObject, AAuraHUD*& AuraHUD);
+	
+	// DO NOT CALL DIRECTLY! (To be used by EvenlySpacedRotators and EvenlySpacedVectors)
+	// Calculates evenly spaced points around an axis and a forward vector. Then it call a callback on that point
+	static void InternalEvenlySpacedCalculation(const TFunction<void(FVector)>& Callback ,const FVector& ForwardVector, const FVector& Axis, const float Spread, const int32 NumObjects);
 	
 };

@@ -713,6 +713,36 @@ void UAuraAbilitySystemLibrary::CheckIsClassChildOf(const UClass* Parent, const 
 	checkf(Child->IsChildOf(Parent), TEXT("CheckIsClassChildOf() called with invalid Child class, %s must be a child of %s."), *Child->GetName(), *Parent->GetName());
 }
 
+TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& ForwardVector, const FVector& Axis,
+                                                                 const float Spread, const int32 NumRotators)
+{
+	TArray<FRotator> Rotators;
+	auto AddingRotators = [&](const FVector& Vector)
+	{
+		Rotators.Add(Vector.Rotation());
+	};
+	
+	// Call the internal calculation method 
+	InternalEvenlySpacedCalculation(AddingRotators, ForwardVector, Axis, Spread, NumRotators);
+	
+	return Rotators;
+}
+
+TArray<FVector> UAuraAbilitySystemLibrary::EvenlySpacedVectors(const FVector& ForwardVector, const FVector& Axis,
+                                                               const float Spread, const int32 NumVectors)
+{
+	TArray<FVector> Vectors;
+	auto AddingVector = [&](const FVector& Vector)
+	{
+		Vectors.Add(Vector);
+	};
+	
+	// Call the internal calculation method 
+	InternalEvenlySpacedCalculation(AddingVector, ForwardVector, Axis, Spread, NumVectors);
+	
+	return Vectors;
+}
+
 FWidgetControllerParams UAuraAbilitySystemLibrary::MakeWidgetControllerParams(const UObject* WorldContextObject, AAuraHUD*& AuraHUD)
 {
 	// Assumes this method is called from an autonomous client (Player), 
@@ -758,4 +788,26 @@ FWidgetControllerParams UAuraAbilitySystemLibrary::MakeWidgetControllerParams(co
 	
 	// Make the Widget Controller params
 	return FWidgetControllerParams(PlayerController, AuraPlayerState,AbilitySystemComponent, AttributeSet);
+}
+
+void UAuraAbilitySystemLibrary::InternalEvenlySpacedCalculation(const TFunction<void(FVector)>& Callback,
+	const FVector& ForwardVector, const FVector& Axis, const float Spread, const int32 NumObjects)
+{
+	// Find vectors around an axis and spread from a forward vector
+	const FVector LeftOfSpread = ForwardVector.RotateAngleAxis(-Spread / 2.f, Axis);
+	if (NumObjects > 1)
+	{
+		const float DeltaSpread = Spread / (NumObjects - 1);
+		for (int32 i = 0; i < NumObjects; i++)
+		{
+			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, Axis);
+			// Call the callback to act on this vector
+			Callback(Direction);
+		}
+	}
+	else
+	{
+		// Call the callback to act on this vector
+		Callback(ForwardVector);
+	}
 }

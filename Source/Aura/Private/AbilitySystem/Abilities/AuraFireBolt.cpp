@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/Abilities/AuraFireBolt.h"
 
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Actor/AuraProjectile.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -30,11 +32,11 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 	
 	// Get the rotation of the projectile to point at the target location
 	// Vector from socket location to target location
-	FRotator SpawnRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+	FRotator ForwardRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 	if (bOverridePitch)
 	{
 		// If the pitch override flag is set, then override the pitch
-		SpawnRotation.Pitch = PitchOverride;
+		ForwardRotation.Pitch = PitchOverride;
 	}
 
 	const int32 NumProjectiles = ProjectileCount.GetValueAtLevel(GetAbilityLevel());
@@ -46,67 +48,30 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 	}
 	
 	// Now spawn the projectiles inside of the projectile spread
-	const FVector ForwardVector = SpawnRotation.Vector();
-	FVector DebugVector;
-	// If Odd (Spawn first bolt in the forward vector then around it until the spread limit)
-	if (NumProjectiles % 2)
-	{
-		// Spawn in the Forward Vector
-		DebugVector = ForwardVector;
-		UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SocketLocation,
-										 SocketLocation + DebugVector * 100.f, 5, FLinearColor::Blue, 120.f,
-										 2);
-		
-		// Spawn the remaining bolts (should be a safe divide since we checked for NumProjectiles <= 1 before)
-		const float DeltaSpread = ProjectileSpread / (NumProjectiles - 1);
-		const float NumMProjectilesToSpawnOnEachSide = (NumProjectiles - 1) / 2;
-		for (int32 i = 0; i < NumMProjectilesToSpawnOnEachSide; i++)
-		{
-			// Angle from Forward vector to rotate the spawn direction
-			const float DeltaAngle = DeltaSpread + DeltaSpread * i;
-			
-			// Spawn in a random location in the Right Direction (DeltaAngle)
-			DebugVector = ForwardVector.RotateAngleAxis(DeltaAngle, FVector::UpVector);
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SocketLocation,
-										 SocketLocation + DebugVector * 100.f, 5, FLinearColor::Red, 120.f,
-										 2);
-
-			
-			// Spawn in a random location in the Left Direction (-DeltaAngle)
-			DebugVector = ForwardVector.RotateAngleAxis(-DeltaAngle, FVector::UpVector);
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SocketLocation,
-										 SocketLocation + DebugVector * 100.f, 5, FLinearColor::Green, 120.f,
-										 2);
-
-		}
-	}
-	else // If even (Spawn around the forward vector it until the spread limit - will not spawn on the forward vector)
-	{
-		// Spawn the bolts
-		const float DeltaSpread = ProjectileSpread / NumProjectiles;
-		const float NumMProjectilesToSpawnOnEachSide = NumProjectiles / 2;
-		for (int32 i = 0; i < NumMProjectilesToSpawnOnEachSide; i++)
-		{
-			// Angle from Forward vector to rotate the spawn direction
-			const float DeltaAngle = DeltaSpread + DeltaSpread * i;
-			
-			// Spawn in a random location in the Right Direction (DeltaAngle)
-			DebugVector = ForwardVector.RotateAngleAxis(DeltaAngle, FVector::UpVector);
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SocketLocation,
-							 SocketLocation + DebugVector * 100.f, 5, FLinearColor::Red, 120.f,
-							 2);
-			
-			// Spawn in a random location in the Left Direction (-DeltaAngle)
-			DebugVector = ForwardVector.RotateAngleAxis(-DeltaAngle, FVector::UpVector);
-			UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SocketLocation,
-							 SocketLocation + DebugVector * 100.f, 5, FLinearColor::Green, 120.f,
-							 2);
-
-		}
-	}
+	const FVector ForwardVector = ForwardRotation.Vector();
 	
+	// Get the spawn Rotators evenly spread around the forward vector
+	TArray<FRotator> SpawnRotations = UAuraAbilitySystemLibrary::EvenlySpacedRotators(ForwardVector, FVector::UpVector, ProjectileSpread, NumProjectiles);
+	
+	for (const FRotator& SpawnRotation : SpawnRotations)
+	{
+		// Spawn the projectile actor at the socket location and with the direction of the target
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetRotation(SpawnRotation.Quaternion());
+	
+		// Begin Spawning the projectile
+		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+			ProjectileClass,
+			SpawnTransform,
+			GetOwningActorFromActorInfo(), 
+			Cast<APawn>(GetAvatarActorFromActorInfo()),
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	
+		// Setup Projectile
+		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
-	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), SocketLocation,
-	                                     SocketLocation + SpawnRotation.Vector() * 100.f, 5, FLinearColor::White, 120.f,
-	                                     2);
+		// Finish spawning
+		Projectile->FinishSpawning(SpawnTransform);
+	}
 }
