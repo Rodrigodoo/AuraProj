@@ -69,23 +69,27 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 		// Set damage effects
 		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
-		// Set Homing Target
-		if (HomingTargetActor && HomingTargetActor->Implements<UAuraCombatInterface>())
+		// If it is a Homing projectile setup its projectile movement component
+		if (bLaunchHomingProjectiles)
 		{
-			Projectile->ProjectileMovementComponent->HomingTargetComponent = HomingTargetActor->GetRootComponent();
-		}
-		else // No Homing Target Actor was set
-		{
-			// Create a scene component as the target (added in the Projectile class to be GC)
-			Projectile->HomingTargetSceneComponent = NewObject<USceneComponent>(USceneComponent::StaticClass());
-			Projectile->HomingTargetSceneComponent->SetWorldLocation(ProjectileTargetLocation);
-			Projectile->ProjectileMovementComponent->HomingTargetComponent = Projectile->HomingTargetSceneComponent;
+			// Set Homing Target
+			if (HomingTargetActor && HomingTargetActor->Implements<UAuraCombatInterface>())
+			{
+				Projectile->ProjectileMovementComponent->HomingTargetComponent = HomingTargetActor->GetRootComponent();
+			}
+			else // No Homing Target Actor was set
+			{
+				// Create a scene component as the target (added in the Projectile class to be GC)
+				Projectile->HomingTargetSceneComponent = NewObject<USceneComponent>(USceneComponent::StaticClass());
+				Projectile->HomingTargetSceneComponent->SetWorldLocation(ProjectileTargetLocation);
+				Projectile->ProjectileMovementComponent->HomingTargetComponent = Projectile->HomingTargetSceneComponent;
+			}
+
+			// Set a random homing acceleration
+			Projectile->ProjectileMovementComponent->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
+			Projectile->ProjectileMovementComponent->bIsHomingProjectile = bLaunchHomingProjectiles;
 		}
 
-		// Set a random homing acceleration
-		Projectile->ProjectileMovementComponent->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
-		Projectile->ProjectileMovementComponent->bIsHomingProjectile = bLaunchHomingProjectiles;
-		
 		// Finish spawning
 		Projectile->FinishSpawning(SpawnTransform);
 		

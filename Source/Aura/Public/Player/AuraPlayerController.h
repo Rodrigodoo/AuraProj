@@ -7,6 +7,7 @@
 #include "AuraPlayerController.generated.h"
 
 
+class UNiagaraSystem;
 class UAuraDamageTextWidgetComponent;
 class USplineComponent;
 class UAuraAbilitySystemComponent;
@@ -118,6 +119,10 @@ private:
 	// Spline component that the character will follow when auto running
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> Spline;
+	
+	// Niagara system to spawn where the player just clicked (short press - geometry)
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UNiagaraSystem> ClickNiagaraSystem;
 	
 	// Executes the auto running movement
 	// Should be called every tick. (Should not run if bAutoRunning = false)

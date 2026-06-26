@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Aura/Aura.h"
 #include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
@@ -231,40 +232,12 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 			
 					// Flag that the character is now auto running
 					bAutoRunning = true;
+					
+					// Spawn Niagara system to tell the player where the character is moving
+					UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
 				}
 			}
 		}
-		
-		
-		/*// Find the path to the location synchronously, which should find all obstacles between 
-		// the character and the Cached Destination.
-		// It will create navigation point for the character to follow.
-		if (UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(
-			this, ControlledPawn->GetActorLocation(),CachedDestination))
-		{
-			// Add the navigation point to the Spline
-			
-			// Start by clearing any existing points
-			Spline->ClearSplinePoints();
-			
-			// Go through all the path points and add them to the Spline
-			for (const FVector& PathPointLocation :  NavigationPath->PathPoints)
-			{
-				// Add them in World coordinates (could call AddSplineWorldPoint but this way we have one less call)
-				Spline->AddSplinePoint(PathPointLocation, ESplineCoordinateSpace::World);
-			}
-
-			if (!NavigationPath->PathPoints.IsEmpty())
-			{
-				// Since the CachedDestination might not be on a valid point on the NavMesh 
-				// the character might never reach it and stop running.
-				// Therefore, need to update the CachedDestination to the last valid point on the Navigation Path/Spline
-				CachedDestination = NavigationPath->PathPoints.Last();
-			
-				// Flag that the character is now auto running
-				bAutoRunning = true;
-			}
-		}*/
 	}
 	
 	// Reset follow time and targeting

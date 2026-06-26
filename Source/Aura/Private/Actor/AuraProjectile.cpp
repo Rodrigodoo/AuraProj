@@ -49,6 +49,9 @@ void AAuraProjectile::BeginPlay()
 	// Set actor's life span
 	SetLifeSpan(LifeSpan);
 	
+	// Replicate the projectile movement since it can be homing
+	SetReplicateMovement(true);
+	
 	// Bind sphere overlap to AAuraProjectile::OnSphereOverlap
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraProjectile::OnSphereOverlap);
 	
