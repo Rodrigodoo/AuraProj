@@ -9,4 +9,4 @@ Some changes from the original course:
 * The Spell Menu has more functionality present in BPs
 * Gameplay Abilities can apply different damage types and the Debuffs associated with them (guaranteed working in a networking setting)
 * Gameplay Tags use the system implemented in the Lyra project
-* Minion Spawning uses a different logic to ascertain spawn locations
+* Shaman Minion Spawning uses a different logic to ascertain spawn locations
