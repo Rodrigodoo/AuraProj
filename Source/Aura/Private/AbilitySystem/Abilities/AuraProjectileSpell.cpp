@@ -43,22 +43,25 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	SpawnTransform.SetLocation(SocketLocation);
 	SpawnTransform.SetRotation(SpawnRotation.Quaternion());
 	
-	// Begin Spawning the current amount of projectiles
-	for (int Index = 0; Index < ProjectileCount.GetValueAtLevel(GetAbilityLevel()); Index++)
-	{
-		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+	// Begin Spawning the projectile (In this method we only spawn one projectile at the time)
+	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 		ProjectileClass,
 		SpawnTransform,
 		GetOwningActorFromActorInfo(), 
 		Cast<APawn>(GetAvatarActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
-		// Setup Projectile
-		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+	// Setup Projectile
+	Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
-		// Finish spawning
-		Projectile->FinishSpawning(SpawnTransform);
-	}
+	// Finish spawning
+	Projectile->FinishSpawning(SpawnTransform);
+}
+
+void UAuraProjectileSpell::SpawnProjectiles(const FVector& ProjectileTargetLocation, const FGameplayTag& MontageTag,
+	AActor* HomingTarget, const bool bOverridePitch, const float PitchOverride)
+{
+	// Implement on child classes
 }
 
 int32 UAuraProjectileSpell::GetProjectileCount(const int32 Level) const
