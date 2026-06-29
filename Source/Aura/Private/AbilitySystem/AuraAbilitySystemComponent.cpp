@@ -97,10 +97,6 @@ void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Inp
 			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle,
 				AbilityInstance->GetCurrentActivationInfo().GetActivationPredictionKey());
 		}
-		
-		// This Ability has the Input tag and is not yet activated
-		// So try to activate it
-		TryActivateAbility(AbilitySpec.Handle);
 	}
 }
 
@@ -150,13 +146,13 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 		{
 			continue;
 		}
-		
-		// Inform the Ability Spec that this Ability Input was released
-		AbilitySpecInputReleased(AbilitySpec);
-		
+
 		// Need to Invoke the Replicated Event (input released)
 		if (AbilitySpec.IsActive())
 		{
+			// Inform the Ability Spec that this Ability Input was released
+			AbilitySpecInputReleased(AbilitySpec);
+			
 			TArray<UGameplayAbility*> AbilityInstances = AbilitySpec.GetAbilityInstances();
 			for (const UGameplayAbility* AbilityInstance : AbilityInstances)
 			{
