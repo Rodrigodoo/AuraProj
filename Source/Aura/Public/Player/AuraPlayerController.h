@@ -86,11 +86,11 @@ private:
 	void ShiftReleased() { bShiftPressed = false; };
 	
 	// Callback method to deal with input pressed
-	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagPressed(const FGameplayTag InputTag);
 	// Callback method to deal with input released
-	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagReleased(const FGameplayTag InputTag);
 	// Callback method to deal with input held
-	void AbilityInputTagHeld(FGameplayTag InputTag);
+	void AbilityInputTagHeld(const FGameplayTag InputTag);
 	
 	// Input Config Data Asset that maps gameplay tags to actions
 	UPROPERTY(EditDefaultsOnly, Category = "Input")

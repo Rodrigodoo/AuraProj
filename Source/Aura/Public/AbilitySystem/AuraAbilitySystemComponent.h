@@ -39,8 +39,12 @@ public:
 	// Check if Startup Abilities have been given
 	bool AreStartupAbilitiesGiven() const;
 	
-	// Called when an Ability Action has been Pressed/Held
-	// InputTag - identifies the input Pressed/Held
+	// Called when an Ability Action has been Pressed
+	// InputTag - identifies the input Pressed
+	void AbilityInputTagPressed(const FGameplayTag& InputTag);
+	
+	// Called when an Ability Action has been Pressed and Held
+	// InputTag - identifies the input Pressed and Held
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
 	
 	// Called when an Ability Action has been released

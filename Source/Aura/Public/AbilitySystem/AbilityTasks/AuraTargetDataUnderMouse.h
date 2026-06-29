@@ -26,6 +26,11 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FMouseTargetDataSignature ValidData;
 	
+	
+	// Output pin for whenever this task has failed.
+	// This can be either from invalid pointers or no Blocking Hit
+	UPROPERTY(BlueprintAssignable)
+	FMouseTargetDataSignature OnFailed;
 private:
 	//~ Begin - UGameplayTask overrides
 	

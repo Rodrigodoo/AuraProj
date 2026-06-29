@@ -98,6 +98,10 @@ public:
 	// Retrieve the On Death delegate (Delegate called whenever the character dies)
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
 	
+	// Sets whenever this object should be in a shock loop
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetInShockLoop(bool InLoop);
+	
 	//~ Begin - Montages
 	
 	// Retrieve the Hit React Montage for this object

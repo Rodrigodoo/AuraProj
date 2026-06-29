@@ -13,8 +13,8 @@ UAuraTargetDataUnderMouse* UAuraTargetDataUnderMouse::CreateTargetDataUnderMouse
 
 void UAuraTargetDataUnderMouse::Activate()
 {
-	Super::Activate();
-	
+	//Super::Activate();
+    	
 	// Check if Locally controlled 
 	// Note: using this method instead of ActorInfo->IsLocallyControlled as it adds more checks, and it's not a critical method.
 	if (IsLocallyControlled())
@@ -51,6 +51,7 @@ void UAuraTargetDataUnderMouse::SendMouseCursorData()
 	if (!PlayerController)
 	{
 		// No player controller found we can return
+		OnFailed.Broadcast(FGameplayAbilityTargetDataHandle());
 		return;
 	}
 	
@@ -60,6 +61,7 @@ void UAuraTargetDataUnderMouse::SendMouseCursorData()
 	if (!CursorHit.bBlockingHit)
 	{
 		// No hit found, return
+		OnFailed.Broadcast(FGameplayAbilityTargetDataHandle());
 		return;
 	}
 	

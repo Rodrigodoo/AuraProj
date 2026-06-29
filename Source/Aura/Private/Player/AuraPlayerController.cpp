@@ -148,7 +148,7 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	ControlledPawn->AddMovementInput(RightDirection,InputAxisVector.X);
 }
 
-void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+void AAuraPlayerController::AbilityInputTagPressed(const FGameplayTag InputTag)
 {
 	// If the LMB was pressed (used for moving)
 	if (InputTag.MatchesTagExact(AuraGameplayTagsManager::InputTag_LMB))
@@ -159,6 +159,11 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 	
 		// A new possible destination was set so we should stop auto running
 		bAutoRunning = false;
+	}
+
+	if (GetAuraAbilitySystemComponent())
+	{
+		GetAuraAbilitySystemComponent()->AbilityInputTagPressed(InputTag);
 	}
 }
 

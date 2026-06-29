@@ -65,6 +65,45 @@ bool UAuraAbilitySystemComponent::AreStartupAbilitiesGiven() const
 	return bStartupAbilitiesGiven;
 }
 
+void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
+{
+	// Early check
+	if (!InputTag.IsValid())
+	{
+		return;
+	}
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		// If this Ability Spec does not have this Input tag, continue
+		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
+		{
+			continue;
+		}
+		
+		// Inform the Ability Spec that this Ability Input was pressed
+		AbilitySpecInputPressed(AbilitySpec);
+		
+		// If the Ability is not active, continue
+		if (!AbilitySpec.IsActive())
+		{
+			continue;
+		}
+		
+		// Need to Invoke the Replicated Event (input pressed)
+		TArray<UGameplayAbility*> AbilityInstances = AbilitySpec.GetAbilityInstances();
+		for (const UGameplayAbility* AbilityInstance : AbilityInstances)
+		{
+			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle,
+				AbilityInstance->GetCurrentActivationInfo().GetActivationPredictionKey());
+		}
+		
+		// This Ability has the Input tag and is not yet activated
+		// So try to activate it
+		TryActivateAbility(AbilitySpec.Handle);
+	}
+}
+
 void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
 {
 	// Early check
@@ -89,7 +128,7 @@ void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputT
 		{
 			continue;
 		}
-		
+
 		// This Ability has the Input tag and is not yet activated
 		// So try to activate it
 		TryActivateAbility(AbilitySpec.Handle);
@@ -114,6 +153,16 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 		
 		// Inform the Ability Spec that this Ability Input was released
 		AbilitySpecInputReleased(AbilitySpec);
+		
+		// Need to Invoke the Replicated Event (input released)
+		if (AbilitySpec.IsActive())
+		{
+			TArray<UGameplayAbility*> AbilityInstances = AbilitySpec.GetAbilityInstances();
+			for (const UGameplayAbility* AbilityInstance : AbilityInstances)
+			{
+				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, AbilitySpec.Handle, AbilityInstance->GetCurrentActivationInfo().GetActivationPredictionKey());
+			}
+		}
 	}
 }
 
