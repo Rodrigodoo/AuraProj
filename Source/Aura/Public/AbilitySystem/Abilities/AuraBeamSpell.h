@@ -24,7 +24,7 @@ public:
 	
 	// Caches the owner's player controller
 	UFUNCTION(BlueprintCallable)
-	void StoreOwnerPlayerController();
+	void StoreOwnerVariables();
 protected:
 	// Location of where the beam should hit
 	UPROPERTY(BlueprintReadWrite, Category="Beam")
@@ -37,4 +37,8 @@ protected:
 	// The owner's player controller
 	UPROPERTY(BlueprintReadWrite, Category="Beam")
 	TObjectPtr<APlayerController> OwnerPlayerController;
+	
+	// The owner's character
+	UPROPERTY(BlueprintReadWrite, Category="Beam")
+	TObjectPtr<ACharacter> OwnerCharacter;
 };
