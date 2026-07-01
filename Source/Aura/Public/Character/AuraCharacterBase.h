@@ -75,6 +75,9 @@ public:
 	// Retrieves the blood effect for this character
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	
+	// Retrieves the weapon's skeletal mesh (can return null)
+	virtual USkeletalMeshComponent* GetWeapon_Implementation() const override;
+	
 	// Get the number of alive minions bound to this character
 	virtual int32 GetMinionCount_Implementation() const override;
 	

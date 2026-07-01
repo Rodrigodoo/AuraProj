@@ -92,6 +92,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UNiagaraSystem* GetBloodEffect();
 	
+	// Retrieve the weapon's skeletal mesh (can return null)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	USkeletalMeshComponent* GetWeapon() const;
+	
 	// Retrieve the Ability System Component delegate for when it is implemented
 	virtual FOnAbilitySystemComponentRegistered& GetAbilitySystemComponentRegisteredDelegate() = 0;
 	

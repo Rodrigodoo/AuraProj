@@ -151,6 +151,11 @@ UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
 	return BloodEffect;
 }
 
+USkeletalMeshComponent* AAuraCharacterBase::GetWeapon_Implementation() const
+{
+	return Weapon;
+}
+
 int32 AAuraCharacterBase::GetMinionCount_Implementation() const
 {
 	return MinionCount;
