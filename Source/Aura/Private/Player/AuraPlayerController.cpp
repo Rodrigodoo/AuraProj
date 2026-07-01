@@ -120,6 +120,13 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetAuraAbilitySystemComponen
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
+	// The ASC has an Input Pressed block and exit early
+	if (GetAuraAbilitySystemComponent() && 
+		GetAuraAbilitySystemComponent()->HasMatchingGameplayTag(AuraGameplayTagsManager::Player_Block_InputPressed))
+	{
+		return;
+	}
+	
 	// Move the character
 	
 	// Early exit checks
@@ -150,6 +157,13 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::AbilityInputTagPressed(const FGameplayTag InputTag)
 {
+	// The ASC has an Input Pressed block and exit early
+	if (GetAuraAbilitySystemComponent() && 
+		GetAuraAbilitySystemComponent()->HasMatchingGameplayTag(AuraGameplayTagsManager::Player_Block_InputPressed))
+	{
+		return;
+	}
+	
 	// If the LMB was pressed (used for moving)
 	if (InputTag.MatchesTagExact(AuraGameplayTagsManager::InputTag_LMB))
 	{
@@ -169,6 +183,13 @@ void AAuraPlayerController::AbilityInputTagPressed(const FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 {
+	// The ASC has an Input Released block and exit early
+	if (GetAuraAbilitySystemComponent() && 
+		GetAuraAbilitySystemComponent()->HasMatchingGameplayTag(AuraGameplayTagsManager::Player_Block_InputReleased))
+	{
+		return;
+	}
+	
 	// If it is NOT the LMB being pressed (used for moving)
 	// Then check for Abilities
 	// Exception: LMB while targeting || LMB and Shift pressed
@@ -238,8 +259,15 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 					// Flag that the character is now auto running
 					bAutoRunning = true;
 					
-					// Spawn Niagara system to tell the player where the character is moving
-					UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+					
+					// The ASC does not have Input Pressed block so spawn the niagara system
+					// Otherwise, block the spawning.
+					if (GetAuraAbilitySystemComponent() && 
+						!GetAuraAbilitySystemComponent()->HasMatchingGameplayTag(AuraGameplayTagsManager::Player_Block_InputPressed))
+					{
+						// Spawn Niagara system to tell the player where the character is moving
+						UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+					}
 				}
 			}
 		}
@@ -252,6 +280,13 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 {
+	// The ASC has an Input Held block and exit early
+	if (GetAuraAbilitySystemComponent() && 
+		GetAuraAbilitySystemComponent()->HasMatchingGameplayTag(AuraGameplayTagsManager::Player_Block_InputHeld))
+	{
+		return;
+	}
+	
 	// If it is NOT the LMB being pressed (used for moving)
 	// Then check for Abilities
 	// Exception: LMB while targeting || LMB and Shift pressed
@@ -301,6 +336,14 @@ void AAuraPlayerController::AutoRun()
 		return;
 	}
 	
+	// The ASC has an Input Pressed block so cancel auto running
+	if (GetAuraAbilitySystemComponent() && 
+		GetAuraAbilitySystemComponent()->HasMatchingGameplayTag(AuraGameplayTagsManager::Player_Block_InputPressed))
+	{
+		bAutoRunning = false;
+		return;
+	}
+	
 	// If there is a Controlled Pawn move it towards the next point in the Spline with each tick
 	APawn* ControlledPawn = GetPawn<APawn>();
 	if (!IsValid(ControlledPawn))
@@ -332,6 +375,25 @@ void AAuraPlayerController::AutoRun()
 
 void AAuraPlayerController::CursorTrace()
 {
+	// The ASC has a cursor trace block so unhighlight current actor and exit
+	if (GetAuraAbilitySystemComponent() && 
+		GetAuraAbilitySystemComponent()->HasMatchingGameplayTag(AuraGameplayTagsManager::Player_Block_CursorTrace))
+	{
+		// Unhighlight all valid actors
+		if (LastActor)
+		{
+			LastActor->UnHighlightActor();
+		}
+		if (CurrentActor)
+		{
+			CurrentActor->UnHighlightActor();
+		}
+		// Reset pointers
+		LastActor = nullptr;
+		CurrentActor = nullptr;
+		return;
+	}
+	
 	// Get hit result under the cursor
 	GetHitResultUnderCursor(ECC_Visibility,false,CursorHit);
 	if (!CursorHit.bBlockingHit)

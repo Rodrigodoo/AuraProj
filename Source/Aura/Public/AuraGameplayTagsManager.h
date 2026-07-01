@@ -227,7 +227,20 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_RightTailSwipe);
 	// Montage.Attack.LeftTailSwipe
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Montage_Attack_LeftTailSwipe);
-	//~ End - Montages 
+	//~ End - Montages
+	
+	//~ Begin - Player
+	// Player
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player);
+	// Player.Block.InputPressed
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Block_InputPressed);
+	// Player.Block.InputHeld
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Block_InputHeld);
+	// Player.Block.InputReleased
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Block_InputReleased);
+	// Player.Block.CursorTrace
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Block_CursorTrace);
+	//~ End - Player
 	
 	// Stores all Damage Types tags and relates them to resistances
 	extern const TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;

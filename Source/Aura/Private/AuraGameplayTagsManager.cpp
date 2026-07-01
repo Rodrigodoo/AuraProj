@@ -271,6 +271,21 @@ namespace AuraGameplayTagsManager
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Montage_Attack_LeftTailSwipe, "Montage.Attack.LeftTailSwipe", "Left Tail Attack Montage");
 	
 	/*
+	 * Player
+	 */
+	// Player
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player, "Player", "Parent Player Tag");
+	// Player.Block.InputPressed
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player_Block_InputPressed, "Player.Block.InputPressed", "Block Input Pressed Callback");
+	// Player.Block.InputHeld
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player_Block_InputHeld, "Player.Block.InputHeld", "Block Input Held Callback");
+	// Player.Block.InputReleased
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player_Block_InputReleased, "Player.Block.InputReleased", "Block Input Released Callback");
+	// Player.Block.CursorTrace
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player_Block_CursorTrace, "Player.Block.CursorTrace", "Block Tracing under the cursor");
+
+	
+	/*
 	 * Mapping of Damage Types to Resistances
 	 */
 	const TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances = 
