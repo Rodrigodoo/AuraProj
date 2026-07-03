@@ -638,8 +638,12 @@ void UAuraAbilitySystemLibrary::AddDamageTypeAndDebuff(FGameplayEffectContextHan
 }
 
 void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldContextObject,
-                                                          TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius,
-                                                          const FVector& OriginPoint, const bool DebugSphere /*= false*/)
+                                                          TArray<AActor*>& OutOverlappingActors,
+                                                          const TArray<AActor*>& ActorsToIgnore,
+                                                          const float Radius,
+                                                          const FVector& OriginPoint,
+                                                          FName ActorTagToExclude /*= FGameplayTagContainer()*/,
+                                                          const bool DebugSphere /*= false*/)
 {
 	// Create the collision query parameters and signal the ignored actors
 	FCollisionQueryParams SphereParams;
@@ -674,12 +678,47 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldCo
 			continue;
 		}
 		
-		// Check if it implements the AuraCombatInterface and is not dead
-		if (OverlappedActor->Implements<UAuraCombatInterface>() && !IAuraCombatInterface::Execute_IsDead(OverlappedActor))
+		// Check if it implements the AuraCombatInterface, is not dead, and does not have a tag to exclude
+		if (OverlappedActor->Implements<UAuraCombatInterface>() && 
+			!IAuraCombatInterface::Execute_IsDead(OverlappedActor) &&
+			!OverlappedActor->ActorHasTag(ActorTagToExclude))
 		{
 			OutOverlappingActors.AddUnique(OverlappedActor);
 		}
 	}
+}
+
+void UAuraAbilitySystemLibrary::GetClosestActors(const int32 MaxNumActorsToChoose, const TArray<AActor*>& ActorsToEvaluate,
+                                                 TArray<AActor*>& OutClosestActors, const FVector& OriginPoint)
+{
+	// Early checks
+	if (MaxNumActorsToChoose < 1)
+	{
+		// No valid number of actors to choose
+		return;
+	}
+	OutClosestActors = ActorsToEvaluate;
+	if (MaxNumActorsToChoose >= ActorsToEvaluate.Num())
+	{
+		// The array of actors falls within the max num of actor to choose
+		return;
+	}
+	
+	// Sort the array according to distance
+	Algo::Sort(OutClosestActors, 
+		[&OriginPoint](const AActor* A, const AActor* B)
+		{
+			// Euclidean Distance = SQRT((A.x-OriginPoint.x)^2 + (A.y - OriginPoint.y)^2)
+			// NOTE: Calculating only the squared distance to avoid expensive Sqrt() call which would be called if we used length.
+			// And we only need the difference between the distance squared
+			const float DistanceA = FVector::DistSquared(A->GetActorLocation(), OriginPoint);
+			const float DistanceB = FVector::DistSquared(B->GetActorLocation(), OriginPoint);
+			return DistanceA < DistanceB;
+		});
+	
+	// Remove all the entries past the number of MaxNumActorsToChoose
+	// Note: (A Heap approach could have been more resource efficient, but we should never have that many actors to compare)
+	OutClosestActors.RemoveAt(MaxNumActorsToChoose, OutClosestActors.Num() - MaxNumActorsToChoose);
 }
 
 bool UAuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondActor)

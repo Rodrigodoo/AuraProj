@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/AuraBeamSpell.h"
 
 #include "AuraGameplayTagsManager.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "GameFramework/Character.h"
 #include "Interaction/AuraCombatInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -65,4 +66,23 @@ void UAuraBeamSpell::TraceFirstTarget(const FVector& BeamTargetLocation)
 		MouseHitLocation = HitResult.ImpactPoint;
 		MouseHitActor = HitResult.GetActor();
 	}
+}
+
+void UAuraBeamSpell::StoreAdditionalTarget(TArray<AActor*>& OutAdditionalTargets) const
+{
+	// Find all actors within a certain radius of the hit location that are not the caster and other players
+	TArray<AActor*> OverlappingActors;
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(OwnerCharacter);
+	ActorsToIgnore.Add(MouseHitActor);
+	UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(OwnerCharacter, OverlappingActors, ActorsToIgnore, 850.f,
+	                                                     MouseHitLocation, ACTOR_PlAYER_TAG);
+	
+	// From those actors choose the closest ones (up to the available amount of beams per ability level)
+	const int32 NumAdditionalTargets = AdditionalBeams.GetValueAtLevel(GetAbilityLevel());
+	UAuraAbilitySystemLibrary::GetClosestActors(
+		NumAdditionalTargets, 
+		OverlappingActors, 
+		OutAdditionalTargets, 
+		MouseHitLocation);
 }

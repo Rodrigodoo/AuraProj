@@ -215,8 +215,14 @@ public:
 	
 	// Searches for live players within a certain radius from an origin point
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics", meta=(DefaultToSelf = "WorldContextObject"))
-	static void GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, 
-		const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& OriginPoint, bool DebugSphere = false);
+	static void GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
+	                                      const TArray<AActor*>& ActorsToIgnore, const float Radius,
+	                                      const FVector& OriginPoint, FName ActorTagToExclude = NAME_None,
+	                                      bool DebugSphere = false);
+	
+	// Gets the closest actors to an origin point from a list of provided actors
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static void GetClosestActors(const int32 MaxNumActorsToChoose, const TArray<AActor*>& ActorsToEvaluate, TArray<AActor*>& OutClosestActors, const FVector& OriginPoint);
 	
 	// Checks if the actors are not friendly towards each-other
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")

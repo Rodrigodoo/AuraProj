@@ -29,6 +29,10 @@ public:
 	// Finds first target (blocking object) between the electric beam spawn point and the target location
 	UFUNCTION(BlueprintCallable)
 	void TraceFirstTarget(const FVector& BeamTargetLocation);
+	
+	// Finds additional targets surrounding the first target
+	UFUNCTION(BlueprintCallable)
+	void StoreAdditionalTarget(TArray<AActor*>& OutAdditionalTargets) const;
 protected:
 	// Location of where the beam should hit
 	UPROPERTY(BlueprintReadWrite, Category="Beam")
@@ -45,4 +49,7 @@ protected:
 	// The owner's character
 	UPROPERTY(BlueprintReadWrite, Category="Beam")
 	TObjectPtr<ACharacter> OwnerCharacter;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Beam")
+	FScalableFloat AdditionalBeams;
 };
