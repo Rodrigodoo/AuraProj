@@ -25,6 +25,10 @@ public:
 	// Caches the owner's player controller
 	UFUNCTION(BlueprintCallable)
 	void StoreOwnerVariables();
+	
+	// Finds first target (blocking object) between the electric beam spawn point and the target location
+	UFUNCTION(BlueprintCallable)
+	void TraceFirstTarget(const FVector& BeamTargetLocation);
 protected:
 	// Location of where the beam should hit
 	UPROPERTY(BlueprintReadWrite, Category="Beam")

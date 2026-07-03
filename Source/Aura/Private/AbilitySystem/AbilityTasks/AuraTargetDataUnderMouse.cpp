@@ -4,6 +4,7 @@
 #include "AbilitySystem/AbilityTasks/AuraTargetDataUnderMouse.h"
 
 #include "AbilitySystemComponent.h"
+#include "Aura/Aura.h"
 
 UAuraTargetDataUnderMouse* UAuraTargetDataUnderMouse::CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility)
 {
