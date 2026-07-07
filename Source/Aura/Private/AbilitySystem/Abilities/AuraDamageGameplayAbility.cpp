@@ -19,8 +19,10 @@ void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 	}
 
 	// Apply  ability to the target actor
-	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data,
-		UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
+	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor))
+	{
+		GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data, TargetASC);
+	}
 }
 
 FAuraDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor) const
