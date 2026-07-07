@@ -119,6 +119,8 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown);
 	// Cooldown.Fire.FireBolt
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Fire_FireBolt);
+	// Cooldown.Lightning.Electrocute
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Lightning_Electrocute);
 	//~ End - Cooldowns
 	
 	//~ Begin - Inputs

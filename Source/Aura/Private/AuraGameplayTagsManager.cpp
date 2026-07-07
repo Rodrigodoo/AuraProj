@@ -159,6 +159,9 @@ namespace AuraGameplayTagsManager
 	// Cooldown.Fire.FireBolt
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", 
 		"Firebolt Cooldown Tag");
+	// Cooldown.Lightning.Electrocute
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Lightning_Electrocute, "Cooldown.Lightning.Electrocute", 
+		"Electrocute Cooldown Tag");
 	
 	/*
 	 * Input
