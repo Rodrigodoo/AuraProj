@@ -72,10 +72,6 @@ public:
 	
 	// Base walking speed for the character.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	float BaseWalkSpeed = 250.f;
-	
-	// Base walking speed for the character.
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float LifeSpan = 5.f;
 	
 	// Target actor this character if fighting.
@@ -87,7 +83,10 @@ protected:
 	virtual void BeginPlay() override;
 	
 	//~ Begin - AAuraCharacterBase Overrides
+	// Initializing the Default attributes for this character
 	virtual void InitializeDefaultAttributes() const override;
+	// Whenever the Stun Tag changed for this character
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
 	//~ End - AAuraCharacterBase Overrides
 	
 	// Delegate to be called when a Hit React Gameplay Tag is added or removed

@@ -4,6 +4,7 @@
 #include "Character/AuraCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTagsManager.h"
 #include "NiagaraComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
@@ -169,6 +170,10 @@ void AAuraCharacter::InitCharacterAndComponents()
 	
 	// Broadcast the Ability System Component validity
 	OnAbilitySystemComponentRegistered.Broadcast(AbilitySystemComponent);
+	
+	// Bind Stun Tag changed
+	AbilitySystemComponent->RegisterGameplayTagEvent(AuraGameplayTagsManager::Debuff_Stun, EGameplayTagEventType::NewOrRemoved).
+	AddUObject(this, &AAuraCharacter::StunTagChanged);
 	
 	// Initialize Attribute values
 	InitializeDefaultAttributes();

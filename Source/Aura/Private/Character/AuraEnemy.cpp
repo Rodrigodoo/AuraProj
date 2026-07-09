@@ -29,6 +29,7 @@ AAuraEnemy::AAuraEnemy()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	BaseWalkSpeed = 250.f;
 	
 	// Construct and setup the Ability System Component
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
@@ -109,7 +110,8 @@ void AAuraEnemy::BeginPlay()
 	
 	// Bind to Effect.HitReact Gameplay Tag changes\
 	// Using EGameplayTagEventType::NewOrRemoved
-	AbilitySystemComponent->RegisterGameplayTagEvent(AuraGameplayTagsManager::Effects_HitReact).AddUObject(this, &AAuraEnemy::HitReactTagChanged);
+	AbilitySystemComponent->RegisterGameplayTagEvent(AuraGameplayTagsManager::Effects_HitReact, EGameplayTagEventType::NewOrRemoved).
+	AddUObject(this, &AAuraEnemy::HitReactTagChanged);
 	
 	// Broadcast initial values
 	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
@@ -122,6 +124,17 @@ void AAuraEnemy::InitializeDefaultAttributes() const
 	// Initializes the character information based on Level and RPG Class
 	UAuraAbilitySystemLibrary::InitializeDefaultAttributes(
 		this, CharacterClass, CharacterLevel,AbilitySystemComponent);
+}
+
+void AAuraEnemy::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	Super::StunTagChanged(CallbackTag, NewCount);
+	
+	// On the client AuraAIController will not be set.
+	if (AuraAIController && AuraAIController->GetBlackboardComponent())
+	{
+		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Stunned"), bIsStunned);
+	}
 }
 
 void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
@@ -209,6 +222,10 @@ void AAuraEnemy::InitCharacterAndComponents()
 
 	// Broadcast the Ability System Component validity
 	OnAbilitySystemComponentRegistered.Broadcast(AbilitySystemComponent);
+	
+	// Bind Stun Tag changed
+	AbilitySystemComponent->RegisterGameplayTagEvent(AuraGameplayTagsManager::Debuff_Stun, EGameplayTagEventType::NewOrRemoved).
+	AddUObject(this, &AAuraEnemy::StunTagChanged);
 	
 	// If running on the server
 	if (HasAuthority())

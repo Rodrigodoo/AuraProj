@@ -24,6 +24,8 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
 public:
 	AAuraCharacterBase();
+	// Replication method
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 	// Returns the ability system component to use for this actor.
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -110,10 +112,14 @@ public:
 	// Drop Weapon and Ragdoll
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse = FVector::ZeroVector);
-	
+
 	// Montages to be played while attacking, which socket to use for said attack and what sound to play on impact.
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
+
+	// Flag to signal this character is stunned
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Combat")
+	bool bIsStunned = false;
 
 protected:
 	// Skeletal mesh of weapon used by character
@@ -154,6 +160,21 @@ protected:
 	// This Character's RPG Class
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= "Character Class Defaults")
 	EAuraCharacterClass CharacterClass = EAuraCharacterClass::Warrior;
+	
+	// Base walking speed for the character.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 600.f;
+	
+	// Flag to signal this character has died
+	bool bIsDead = false;
+	
+	// Blood effect to be spawned when taking damage
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UNiagaraSystem> BloodEffect;
+	
+	// Sound to be played when character dies
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<USoundBase> DeathSound;
 
 	// Initializes all default attributes for this character
 	virtual void InitializeDefaultAttributes() const;
@@ -163,6 +184,9 @@ protected:
 	
 	// Add abilities to the character
 	void AddCharacterAbilities();
+	
+	// Method to watch for changes in the Stun Tag
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	
 	//~ Begin - Dissolve Effects
 	
@@ -186,18 +210,7 @@ protected:
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 	
 	//~ End - Dissolve Effects
-	
-	// Flag to signal this character has died
-	bool bIsDead = false;
-	
-	// Blood effect to be spawned when taking damage
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	TObjectPtr<UNiagaraSystem> BloodEffect;
-	
-	// Sound to be played when character dies
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	TObjectPtr<USoundBase> DeathSound;
-	
+
 	//~ Begin - Minions
 	// Number of currently alive minions bound to this character
 	int32 MinionCount = 0;

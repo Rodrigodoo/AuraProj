@@ -200,7 +200,17 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& EffectProperties, 
 	// Add the Debuff tag (retrieved from the DamageType)
 	FInheritedTagContainer InheritedTagContainer = FInheritedTagContainer();
 	UTargetTagsGameplayEffectComponent& TargetTagsComponent = Effect->FindOrAddComponent<UTargetTagsGameplayEffectComponent>();
-	InheritedTagContainer.Added.AddTag(AuraGameplayTagsManager::DamageTypesToDebuffs[DamageType]);
+	const FGameplayTag DebuffTag = AuraGameplayTagsManager::DamageTypesToDebuffs[DamageType];
+	InheritedTagContainer.Added.AddTag(DebuffTag);
+	if (DebuffTag.MatchesTagExact(AuraGameplayTagsManager::Debuff_Stun))
+	{
+		// If the Debuff is Stun, then remove all inputs while active
+		InheritedTagContainer.Added.AddTag(AuraGameplayTagsManager::Player_Block_CursorTrace);
+		InheritedTagContainer.Added.AddTag(AuraGameplayTagsManager::Player_Block_InputHeld);
+		InheritedTagContainer.Added.AddTag(AuraGameplayTagsManager::Player_Block_InputPressed);
+		InheritedTagContainer.Added.AddTag(AuraGameplayTagsManager::Player_Block_InputReleased);
+	}
+	
 	TargetTagsComponent.SetAndApplyTargetTagChanges(InheritedTagContainer);
 	
 	// Stacking
