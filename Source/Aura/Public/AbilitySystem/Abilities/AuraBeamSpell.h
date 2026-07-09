@@ -33,6 +33,14 @@ public:
 	// Finds additional targets surrounding the first target
 	UFUNCTION(BlueprintCallable)
 	void StoreAdditionalTarget(TArray<AActor*>& OutAdditionalTargets) const;
+	
+	// Callback for when the first target dies
+	UFUNCTION(BlueprintImplementableEvent)
+	void PrimaryTargetDied(AActor* DeadActor);
+	
+	// Callback for when an additional target dies
+	UFUNCTION(BlueprintImplementableEvent)
+	void AdditionalTargetDied(AActor* DeadActor);
 protected:
 	// Location of where the beam should hit
 	UPROPERTY(BlueprintReadWrite, Category="Beam")

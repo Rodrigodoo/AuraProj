@@ -65,6 +65,15 @@ void UAuraBeamSpell::TraceFirstTarget(const FVector& BeamTargetLocation)
 	{
 		MouseHitLocation = HitResult.ImpactPoint;
 		MouseHitActor = HitResult.GetActor();
+		
+		// Check if the target actor implements the Combat Interface,
+		// And if it not already bound, do it for the primary target died
+		IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(MouseHitActor);
+		if (CombatInterface && 
+			!CombatInterface->GetOnDeathDelegate().IsAlreadyBound(this, &UAuraBeamSpell::PrimaryTargetDied))
+		{
+			CombatInterface->GetOnDeathDelegate().AddDynamic(this, &UAuraBeamSpell::PrimaryTargetDied);
+		}
 	}
 }
 
@@ -85,4 +94,15 @@ void UAuraBeamSpell::StoreAdditionalTarget(TArray<AActor*>& OutAdditionalTargets
 		OverlappingActors, 
 		OutAdditionalTargets, 
 		MouseHitLocation);
+	
+	// Bind additional targets' death
+	for (AActor* Actor : OutAdditionalTargets)
+	{
+		IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(Actor);
+		if (CombatInterface && 
+			!CombatInterface->GetOnDeathDelegate().IsAlreadyBound(this, &UAuraBeamSpell::AdditionalTargetDied))
+		{
+			CombatInterface->GetOnDeathDelegate().AddDynamic(this, &UAuraBeamSpell::AdditionalTargetDied);
+		}
+	}
 }
