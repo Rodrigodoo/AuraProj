@@ -96,6 +96,14 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	USkeletalMeshComponent* GetWeapon() const;
 	
+	// Check if object is being shocked
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool IsBeingShocked() const;
+	
+	// Set if object is being shocked
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetIsBeingShocked(bool InIsBeingShocked);
+	
 	// Retrieve the Ability System Component delegate for when it is implemented
 	virtual FOnAbilitySystemComponentRegistered& GetAbilitySystemComponentRegisteredDelegate() = 0;
 	

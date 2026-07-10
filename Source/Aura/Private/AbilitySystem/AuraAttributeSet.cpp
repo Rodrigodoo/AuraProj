@@ -119,11 +119,11 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& EffectProp
 		 */ 
 		else
 		{
-			// Check if the Ability should hit react and try to activate it if it should
-			// Only Debuffs can negate the hit react, if they are signed as such
-			const bool ShouldHitReact = !UAuraAbilitySystemLibrary::IsDebuff(EffectProperties.EffectContextHandle) || 
-				UAuraAbilitySystemLibrary::ShouldAnyHitReact(EffectProperties.EffectContextHandle);
-			if (ShouldHitReact)
+			// Check if the actor should hit react:
+			// - Actor cannot currently being shocked
+			// - Apart from that, only Debuffs can negate the hit react
+			if (UAuraAbilitySystemLibrary::CanActorHitReact(
+				EffectProperties.TargetAvatarActor, EffectProperties.EffectContextHandle))
 			{
 				// Activate any Ability that has the Hit React Tag
 				const FGameplayTagContainer AbilityTagContainer(AuraGameplayTagsManager::Abilities_HitReact);

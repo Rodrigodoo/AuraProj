@@ -188,6 +188,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetDebuffDuration(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType, const float InDebuffDuration);
 	
+	// Check if this actor can hit react (also checks if the Effect being applied causes a Hit React)
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static bool CanActorHitReact(AActor* Actor, const FGameplayEffectContextHandle& EffectContextHandle);
+	
 	// Check if it should Hit React from the Effect Context with a specific damage type
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static bool ShouldHitReact(const FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& DamageType);

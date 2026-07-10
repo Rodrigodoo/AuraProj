@@ -100,6 +100,12 @@ public:
 	// Retrieve the On Death delegate (Delegate called whenever the character dies)
 	virtual FOnDeathSignature& GetOnDeathDelegate() override;
 	
+	// Check if this character is being shocked
+	virtual bool IsBeingShocked_Implementation() const override;
+	
+	// Set if this character is being shocked
+	virtual void SetIsBeingShocked_Implementation(const bool InIsBeingShocked) override;
+	
 	//~ End - IAuraCombatInterface overrides
 	
 	// Delegate for when the Ability System Component is Registered
@@ -120,6 +126,10 @@ public:
 	// Flag to signal this character is stunned
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Combat")
 	bool bIsStunned = false;
+	
+	// Flag to signal this character is being shocked
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Combat")
+	bool bIsBeingShocked = false;
 
 protected:
 	// Skeletal mesh of weapon used by character

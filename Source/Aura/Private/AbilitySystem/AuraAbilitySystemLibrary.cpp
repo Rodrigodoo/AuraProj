@@ -584,6 +584,16 @@ void UAuraAbilitySystemLibrary::SetDebuffDuration(FGameplayEffectContextHandle& 
 	}
 }
 
+bool UAuraAbilitySystemLibrary::CanActorHitReact(AActor* Actor, const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (Actor->Implements<UAuraCombatInterface>() && IAuraCombatInterface::Execute_IsBeingShocked(Actor))
+	{
+		return false;
+	}
+	
+	return !IsDebuff(EffectContextHandle) || ShouldAnyHitReact(EffectContextHandle);
+}
+
 bool UAuraAbilitySystemLibrary::ShouldHitReact(const FGameplayEffectContextHandle& EffectContextHandle,
                                                const FGameplayTag& DamageType)
 {
