@@ -37,10 +37,15 @@ AAuraCharacterBase::AAuraCharacterBase()
 	// Fix for generating impact on Client Only
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 	
-	// Create a Debuff Component
+	// Create a Burn Debuff Component
 	BurnDebuffComponent = CreateDefaultSubobject<UAuraDebuffNiagaraComponent>("BurnDebuffComponent");
 	BurnDebuffComponent->SetupAttachment(GetRootComponent());
 	BurnDebuffComponent->DebuffTag = AuraGameplayTagsManager::Debuff_Burn;
+	
+	// Create a Stun Debuff Component
+	StunDebuffComponent = CreateDefaultSubobject<UAuraDebuffNiagaraComponent>("StunDebuffComponent");
+	StunDebuffComponent->SetupAttachment(GetRootComponent());
+	StunDebuffComponent->DebuffTag = AuraGameplayTagsManager::Debuff_Stun;
 }
 
 void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

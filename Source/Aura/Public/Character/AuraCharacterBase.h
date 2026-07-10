@@ -127,9 +127,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 	
-	// Debuff component to apply effects to character whenever a debuff is applied
+	// Debuff component to apply burn effects to character whenever the debuff is applied
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<UAuraDebuffNiagaraComponent> BurnDebuffComponent;
+	
+	// Debuff component to apply stun effects to character whenever the debuff is applied
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UAuraDebuffNiagaraComponent> StunDebuffComponent;
 
 	// Pointer to the character's Ability System Component (If there is one)
 	UPROPERTY()

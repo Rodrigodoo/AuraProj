@@ -95,6 +95,9 @@ namespace AuraGameplayTagsManager
 	// Abilities
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities, "Abilities", 
 		"Ability Tag");
+	// Abilities.Passive
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Passive, "Abilities.Passive", 
+		"Passive Ability Tag");
 	// Abilities.Attack
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Attack, "Abilities.Attack", 
 		"Attack Ability Tag");

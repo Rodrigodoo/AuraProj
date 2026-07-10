@@ -204,11 +204,18 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& EffectProperties, 
 	InheritedTagContainer.Added.AddTag(DebuffTag);
 	if (DebuffTag.MatchesTagExact(AuraGameplayTagsManager::Debuff_Stun))
 	{
-		// If the Debuff is Stun, then remove all inputs while active
+		// If the Debuff is Stun:
+		
+		// Remove all inputs while active
 		InheritedTagContainer.Added.AddTag(AuraGameplayTagsManager::Player_Block_CursorTrace);
 		InheritedTagContainer.Added.AddTag(AuraGameplayTagsManager::Player_Block_InputHeld);
 		InheritedTagContainer.Added.AddTag(AuraGameplayTagsManager::Player_Block_InputPressed);
 		InheritedTagContainer.Added.AddTag(AuraGameplayTagsManager::Player_Block_InputReleased);
+		
+		// Cancel all abilities
+		const FGameplayTagContainer AbilitiesToCancelTags(AuraGameplayTagsManager::Abilities);
+		const FGameplayTagContainer AbilitiesToIgnoreTags(AuraGameplayTagsManager::Abilities_Passive);
+		EffectProperties.TargetAbilitySystemComponent->CancelAbilities(&AbilitiesToCancelTags, &AbilitiesToIgnoreTags);
 	}
 	
 	TargetTagsComponent.SetAndApplyTargetTagChanges(InheritedTagContainer);
