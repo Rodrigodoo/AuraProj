@@ -22,15 +22,15 @@ void UAuraSpellMenuController::BroadcastInitialValues()
 void UAuraSpellMenuController::BindCallbacksToDependencies()
 {
 	GetAuraAbilitySystemComponent()->AbilityStatusChangedDelegate.AddLambda(
-		[&](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel)
+		[&](const FGameplayTag& AbilityTag, const FGameplayTag& InputTag, const FGameplayTag& StatusTag, int32 AbilityLevel)
 		{
 			if (AbilityInfoDataAsset)
 			{
 				// Grab the ability info, update its status tag and broadcast it
 				FAuraAbilityInfo AbilityInfo = AbilityInfoDataAsset->FindAuraAbilityInfoForTag(AbilityTag);
 				
-				// Set the Input tag retrieved from the spec into the data asset entry
-				AbilityInfo.InputTag = GetAuraAbilitySystemComponent()->GetInputTagFromAbilityTag(AbilityTag);
+				// Set the Input tag and Status Tag
+				AbilityInfo.InputTag = InputTag;
 				AbilityInfo.StatusTag = StatusTag;
 				AbilityInfoDelegate.Broadcast(AbilityInfo);
 			}

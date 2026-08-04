@@ -97,11 +97,11 @@ void AAuraPlayerState::AddToPlayerXP(const int32 XPToAdd)
 		// Add the spell point reward
 		const int32 SpellPointReward = FindSpellPointRewardForLevel(Level);
 		AddToSpellPoints(SpellPointReward);
-
-		// Add a player level
-		AddToPlayerLevel(1);
 	}
 
+	// Add to the player level (only call this once so we do not trigger multiple UpdateAbilityStatuses)
+	AddToPlayerLevel(NumLevelUps);
+	
 	// If a level up occured maximize Health and Mana (only needs to happen once!)
 	if (UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(GetAttributeSet()))
 	{

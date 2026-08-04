@@ -16,8 +16,8 @@ DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven)
 // Delegate to loop over each given ability
 DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&)
 // Delegate to call whenever an Ability Status changed
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChanged, 
-	const FGameplayTag& /*Ability Tag*/, const FGameplayTag&/*Status Tag*/, int32 /*Ability Level*/)
+DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityStatusChanged, 
+	const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Input Tag*/, const FGameplayTag&/*Status Tag*/, int32 /*Ability Level*/)
 //~ End Delegates
 /**
  * The Aura Ability System Component, in charge of dealing with all Gameplay Ability Systems features for this project
@@ -117,7 +117,7 @@ protected:
 	// This is a Client RPC that informs the owning client that an ability status has changed (Reliable to make sure it runs on client)
 	// This is needed since UpdateAbilityStatuses is only run on the server
 	UFUNCTION(Client, Reliable)
-	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
+	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
 
 	// Finds the ability spec from all activatable abilities using the ability's tag 
 	const FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);
@@ -136,5 +136,5 @@ protected:
 	
 private:
 	// Internal Method to Broadcast and Ability Status Update
-	void BroadCastAbilityStatusUpdate(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
+	void BroadcastAbilityStatusUpdate(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag, const FGameplayTag& StatusTag, int32 AbilityLevel);
 };

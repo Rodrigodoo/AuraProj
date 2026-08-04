@@ -359,7 +359,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 	
 	// Now Broadcast the change in status
 	// This should update the UI
-	ClientUpdateAbilityStatus(AbilityTag, AuraGameplayTagsManager::Abilities_Status_Equipped, AbilitySpec->Level);
+	ClientUpdateAbilityStatus(AbilityTag, InputTag, AuraGameplayTagsManager::Abilities_Status_Equipped, AbilitySpec->Level);
 }
 
 void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGameplayTag& AbilityTag)
@@ -407,7 +407,7 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 	IAuraPlayerInterface::Execute_AddToPlayerSpellPoints(GetAvatarActor(), -1);
 	
 	// Inform the client UI that the Ability status has changed
-	ClientUpdateAbilityStatus(AbilityTag, StatusTag, AbilitySpec->Level);
+	ClientUpdateAbilityStatus(AbilityTag, UAuraAbilitySystemLibrary::GetInputTagFromSpec(*AbilitySpec), StatusTag, AbilitySpec->Level);
 	MarkAbilitySpecDirty(*AbilitySpec);
 }
 
@@ -425,10 +425,10 @@ void UAuraAbilitySystemComponent::ServerUpgradeAttributes_Implementation(const F
 }
 
 void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
-                                                                           const FGameplayTag& StatusTag, const int32 AbilityLevel)
+                                                                           const FGameplayTag& InputTag, const FGameplayTag& StatusTag, const int32 AbilityLevel)
 {
 	// Broadcast that this ability changed status
-	BroadCastAbilityStatusUpdate(AbilityTag, StatusTag, AbilityLevel);
+	BroadcastAbilityStatusUpdate(AbilityTag, InputTag, StatusTag, AbilityLevel);
 }
 
 const FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)
@@ -475,17 +475,18 @@ void UAuraAbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec& AbilitySpe
 	if (StatusTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Status_Eligible))
 	{
 		// Broadcast that this ability changed status
-		BroadCastAbilityStatusUpdate(
-			UAuraAbilitySystemLibrary::GetAbilityTagFromSpec(AbilitySpec), StatusTag, AbilitySpec.Level);
+		BroadcastAbilityStatusUpdate(
+			UAuraAbilitySystemLibrary::GetAbilityTagFromSpec(AbilitySpec),
+			UAuraAbilitySystemLibrary::GetInputTagFromSpec(AbilitySpec), StatusTag, AbilitySpec.Level);
 	}
 	
 }
 
-void UAuraAbilitySystemComponent::BroadCastAbilityStatusUpdate(const FGameplayTag& AbilityTag,
-	const FGameplayTag& StatusTag, const int32 AbilityLevel)
+void UAuraAbilitySystemComponent::BroadcastAbilityStatusUpdate(const FGameplayTag& AbilityTag,
+                                                               const FGameplayTag& InputTag, const FGameplayTag& StatusTag, const int32 AbilityLevel)
 {
 	// Broadcast that this ability changed status
-	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, AbilityLevel);
+	AbilityStatusChangedDelegate.Broadcast(AbilityTag, InputTag, StatusTag, AbilityLevel);
 }
 
 void UAuraAbilitySystemComponent::EffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent,
