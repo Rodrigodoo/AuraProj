@@ -75,6 +75,12 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities);
 	// Abilities.Passive
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Passive);
+	// Abilities.Passive.HaloOfProtection
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Passive_HaloOfProtection);
+	// Abilities.Passive.LifeSiphon
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Passive_LifeSiphon);
+	// Abilities.Passive.ManaSiphon
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Passive_ManaSiphon);
 	// Abilities.Attack
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Attack);
 	// Abilities.Summon

@@ -98,6 +98,15 @@ namespace AuraGameplayTagsManager
 	// Abilities.Passive
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Passive, "Abilities.Passive", 
 		"Passive Ability Tag");
+	// Abilities.Passive.HaloOfProtection
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Passive_HaloOfProtection, "Abilities.Passive.HaloOfProtection", 
+		"Halo of Protection Passive Ability Tag");
+	// Abilities.Passive.LifeSiphon
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Passive_LifeSiphon, "Abilities.Passive.LifeSiphon", 
+		"Life Siphon Passive Ability Tag");
+	// Abilities.Passive.ManaSiphon
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Passive_ManaSiphon, "Abilities.Passive.ManaSiphon", 
+		"Mana Siphon Passive Ability Tag");
 	// Abilities.Attack
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Attack, "Abilities.Attack", 
 		"Attack Ability Tag");
