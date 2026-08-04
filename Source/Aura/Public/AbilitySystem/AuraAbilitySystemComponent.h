@@ -9,6 +9,8 @@
 
 // Delegate to broadcast Effect Asset tags
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/)
+// Delegate to Deactivate Passive Abilities
+DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveAbility, const FGameplayTag& /*PassiveAbilityTag*/)
 // Delegate to broadcast when all abilities have been given
 DECLARE_MULTICAST_DELEGATE(FAbilitiesGiven)
 // Delegate to loop over each given ability
@@ -95,6 +97,9 @@ public:
 	
 	// Delegate to broadcast the effect's asset tags via a FGameplayTagContainer
 	FEffectAssetTags EffectAssetTagsDelegate;
+	
+	// Delegate to broadcast the deactivation of a Passive Ability
+	FDeactivatePassiveAbility DeactivatePassiveAbilityDelegate;
 	
 	// Delegate to broadcast when all abilities have been given
 	FAbilitiesGiven AbilitiesGivenDelegate;
