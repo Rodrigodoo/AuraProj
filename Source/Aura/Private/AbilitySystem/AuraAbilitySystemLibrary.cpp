@@ -306,12 +306,42 @@ bool UAuraAbilitySystemLibrary::ClearInputTagFromSpec(FGameplayAbilitySpec& Abil
 	return AbilitySpec.GetDynamicSpecSourceTags().RemoveTag(InputTag);
 }
 
+void UAuraAbilitySystemLibrary::AssignInputTagToSpec(FGameplayAbilitySpec& AbilitySpec,
+                                                     const FGameplayTag& InputTagToAssign)
+{
+	// Clear any old input tag from the spec
+	ClearInputTagFromSpec(AbilitySpec);
+	
+	// Add the new Input Tag
+	AbilitySpec.GetDynamicSpecSourceTags().AddTag(InputTagToAssign);
+}
+
 bool UAuraAbilitySystemLibrary::AbilityHasInputTag(const FGameplayAbilitySpec& AbilitySpec,
                                                    const FGameplayTag& InputTagToCheck)
 {
 	// Get the Input Tag
 	const FGameplayTag& InputTag = GetInputTagFromSpec(AbilitySpec);
 	return InputTag.MatchesTagExact(InputTagToCheck);
+}
+
+bool UAuraAbilitySystemLibrary::AbilityHasAnyInputTag(const FGameplayAbilitySpec& AbilitySpec)
+{
+	// Get the Input Tag
+	const FGameplayTag& InputTag = GetInputTagFromSpec(AbilitySpec);
+	return InputTag.MatchesTag(AuraGameplayTagsManager::InputTag);
+}
+
+bool UAuraAbilitySystemLibrary::IsPassiveAbility(const UObject* WorldContextObject, const FGameplayAbilitySpec& AbilitySpec)
+{
+	// Get the Ability Info Data Asset and check if the specific Ability is Passive
+	const UAuraAbilityInfoDataAsset* AbilityInfoDataAsset = GetAbilityInfoDataAsset(WorldContextObject);
+	if (!AbilityInfoDataAsset)
+	{
+		return false;
+	}
+	
+	const FAuraAbilityInfo& AbilityInfo = AbilityInfoDataAsset->FindAuraAbilityInfoForTag(GetAbilityTagFromSpec(AbilitySpec));
+	return AbilityInfo.TypeTag.MatchesTagExact(AuraGameplayTagsManager::Abilities_Type_Passive);
 }
 
 FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffect(const FAuraDamageEffectParams& Params)

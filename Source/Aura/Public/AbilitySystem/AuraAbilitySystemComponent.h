@@ -122,6 +122,9 @@ protected:
 	// Finds the ability spec from all activatable abilities using the ability's tag 
 	const FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);
 	
+	// Finds the ability spec from all activatable abilities using its Input tag
+	FGameplayAbilitySpec* GetAbilitySpecWithInputTag(const FGameplayTag& InputTag); 
+	
 	//~ Begin - UAbilitySystemComponent Overrides
 	// Activatable Abilities replication method
 	virtual void OnRep_ActivateAbilities() override;

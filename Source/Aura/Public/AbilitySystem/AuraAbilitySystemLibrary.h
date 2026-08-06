@@ -92,8 +92,17 @@ public:
 	// Clear the Input Tag from this Ability Spec if it exists
 	static bool ClearInputTagFromSpec(FGameplayAbilitySpec& AbilitySpec);
 	
-	// checks if this Ability has a specific Input Tag
+	// Assing the Input Tag to this Ability Spec
+	static void AssignInputTagToSpec(FGameplayAbilitySpec& AbilitySpec, const FGameplayTag& InputTagToAssign);
+	
+	// Checks if this Ability has a specific Input Tag
 	static bool AbilityHasInputTag(const FGameplayAbilitySpec& AbilitySpec, const FGameplayTag& InputTagToCheck);
+	
+	// Checks if this Ability has any Input Tag
+	static bool AbilityHasAnyInputTag(const FGameplayAbilitySpec& AbilitySpec);
+	
+	// Checks if this is a Passive Ability
+	static bool IsPassiveAbility(const UObject* WorldContextObject, const FGameplayAbilitySpec& AbilitySpec);
 	
 	// Apply the damage effect its target
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
