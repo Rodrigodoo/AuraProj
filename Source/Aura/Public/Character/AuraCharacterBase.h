@@ -9,6 +9,7 @@
 #include "Interaction/AuraCombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UAuraPassiveNiagaraComponent;
 class UAuraDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UGameplayAbility;
@@ -246,4 +247,20 @@ private:
 	// Hit React montage to play when Character is hit
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+	
+	// Niagara component for the Halo of Protection passive Spell
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAuraPassiveNiagaraComponent> HaloOfProtectionNiagaraComponent;
+	
+	// Niagara component for the Life Siphon passive Spell
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAuraPassiveNiagaraComponent> LifeSiphonNiagaraComponent;
+	
+	// Niagara component for the Mana Siphon passive Spell
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAuraPassiveNiagaraComponent> ManaSiphonNiagaraComponent;
+	
+	// Scene component to have effects attach to
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USceneComponent> EffectAttachComponent;
 };

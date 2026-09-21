@@ -18,6 +18,8 @@ DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&)
 // Delegate to call whenever an Ability Status changed
 DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityStatusChanged, 
 	const FGameplayTag& /*Ability Tag*/, const FGameplayTag& /*Input Tag*/, const FGameplayTag&/*Status Tag*/, int32 /*Ability Level*/)
+// Delegate to inform if a certain passive ability was activated or deactivated
+DECLARE_MULTICAST_DELEGATE_TwoParams(FActivatePassiveEffect, const FGameplayTag& /*Ability Tag*/, bool /*bActivate*/)
 //~ End Delegates
 /**
  * The Aura Ability System Component, in charge of dealing with all Gameplay Ability Systems features for this project
@@ -92,6 +94,10 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputTag);
 	
+	// RPC to activate passive Ability Effects
+	UFUNCTION(NetMulticast, Unreliable)
+	void MultiCastActivatePassiveEffect(const FGameplayTag& AbilityTag, const bool bActivate);
+	
 	// Retrieve the Input Tag from this Ability Tag
 	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag);
 	
@@ -104,8 +110,11 @@ public:
 	// Delegate to broadcast when all abilities have been given
 	FAbilitiesGiven AbilitiesGivenDelegate;
 	
-	// Delegate to broadcast whenever and ability status has changed
+	// Delegate to broadcast whenever an ability status has changed
 	FAbilityStatusChanged AbilityStatusChangedDelegate;
+	
+	// Delegate to broadcast whenever a passive ability has been activated/deactivated
+	FActivatePassiveEffect ActivatePassiveEffectDelegate;
 	
 protected:
 	// Method bound to delegate OnGameplayEffectAppliedDelegateToSelf(FOnGameplayEffectAppliedDelegate)

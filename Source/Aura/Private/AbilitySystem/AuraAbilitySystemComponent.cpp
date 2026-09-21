@@ -310,6 +310,12 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(const int32 Level)
 	}
 }
 
+void UAuraAbilitySystemComponent::MultiCastActivatePassiveEffect_Implementation(const FGameplayTag& AbilityTag,
+	const bool bActivate)
+{
+	ActivatePassiveEffectDelegate.Broadcast(AbilityTag, bActivate);
+}
+
 FGameplayTag UAuraAbilitySystemComponent::GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag)
 {
 	const FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag);
@@ -360,6 +366,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 		// If it is a passive ability different from the new one, then deactivate it
 		if (UAuraAbilitySystemLibrary::IsPassiveAbility(GetAvatarActor(), *AbilitySpec))
 		{
+			MultiCastActivatePassiveEffect(AbilityTagInSlot, false);
 			DeactivatePassiveAbilityDelegate.Broadcast(AbilityTagInSlot);
 			UAuraAbilitySystemLibrary::ClearInputTagFromSpec(*SpecWithInputTag);
 		}
@@ -372,6 +379,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 	{
 		// Then try to activate it
 		TryActivateAbility(AbilitySpec->Handle);
+		MultiCastActivatePassiveEffect(AbilityTag, true);
 	}
 	
 	// Reassign the Input Tag to the new Ability Spec
