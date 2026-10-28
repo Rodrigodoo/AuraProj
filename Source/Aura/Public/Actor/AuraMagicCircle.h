@@ -23,6 +23,6 @@ protected:
 	virtual void BeginPlay() override;
 	
 	// Decall to be displayed on the ground
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDecalComponent> MagicCircleDecal;
 };

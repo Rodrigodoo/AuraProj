@@ -7,6 +7,7 @@
 #include "AuraPlayerController.generated.h"
 
 
+class AAuraMagicCircle;
 class UNiagaraSystem;
 class UAuraDamageTextWidgetComponent;
 class USplineComponent;
@@ -36,6 +37,13 @@ public:
 	// bBlockedHit and bCriticalHit will change the color of the text
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit);
+	
+	// Show the Magic Circle on the floor
+	UFUNCTION(BlueprintCallable)
+	void ShowMagicCircle();
+	// Hide the Magic Circle on the floor
+	UFUNCTION(BlueprintCallable)
+	void HideMagicCircle();
 
 protected:
 	virtual void BeginPlay() override;
@@ -142,4 +150,19 @@ private:
 	// Damage Text Widget Component Class to display damage above the target hit
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UAuraDamageTextWidgetComponent> DamageTextWidgetComponentClass;
+	
+	//~ Start - Magic Circle
+	
+	// Class of the Magic Circle to be displayed under the cursor
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AAuraMagicCircle> MagicCircleClass;
+	
+	// Magic Circle to be displayed under the cursor
+	UPROPERTY()
+	TObjectPtr<AAuraMagicCircle> MagicCircle;
+	
+	// Update the Magic Circle Location evry tick if there is a valid Magic Circle
+	void UpdateMagicCircleLocation();
+	//~ End - Magic Circle
+
 };

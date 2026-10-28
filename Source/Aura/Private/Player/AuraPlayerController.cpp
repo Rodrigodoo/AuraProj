@@ -11,6 +11,7 @@
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Actor/AuraMagicCircle.h"
 #include "Aura/Aura.h"
 #include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
@@ -36,6 +37,33 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	
 	// Perform Auto Running if required
 	AutoRun();
+	
+	// Update Magic Circle
+	UpdateMagicCircleLocation();
+}
+
+void AAuraPlayerController::ShowMagicCircle()
+{
+	if (IsValid(MagicCircle))
+	{
+		// If there is already a valid magic circle return early
+		return;
+	}
+	
+	// Otherwise spawn it
+	FVector MagicCircleLoc = CursorHit.ImpactPoint;
+	MagicCircle = GetWorld()->SpawnActor<AAuraMagicCircle>(MagicCircleClass, MagicCircleLoc, FRotator::ZeroRotator);
+}
+
+void AAuraPlayerController::HideMagicCircle()
+{
+	if (!IsValid(MagicCircle))
+	{
+		// If magic circle is not valid then return early
+		return;
+	}
+	
+	MagicCircle->Destroy();
 }
 
 void AAuraPlayerController::ShowDamageNumber_Implementation(const float DamageAmount, ACharacter* TargetCharacter, const bool bBlockedHit, const bool bCriticalHit)
@@ -421,4 +449,15 @@ void AAuraPlayerController::CursorTrace()
 			CurrentActor->HighlightActor();
 		}
 	}
+}
+
+void AAuraPlayerController::UpdateMagicCircleLocation()
+{
+	if (!IsValid(MagicCircle))
+	{
+		// If it's not valid return early
+		return;
+	}
+	
+	MagicCircle->SetActorLocation(CursorHit.ImpactPoint);
 }
