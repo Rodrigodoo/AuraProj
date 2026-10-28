@@ -60,4 +60,12 @@ public:
 	// Levels up the player
 	UFUNCTION(BlueprintNativeEvent)
 	void LevelUp();
+	
+	// Show the Magic Circle on the floor
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ShowMagicCircle(UMaterialInterface* DecalMaterial = nullptr);
+	
+	// Hide the Magic Circle on the floor
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void HideMagicCircle();
 };

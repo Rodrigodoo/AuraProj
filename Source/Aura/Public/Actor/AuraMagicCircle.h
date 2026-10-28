@@ -19,10 +19,10 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 
-protected:
-	virtual void BeginPlay() override;
-	
 	// Decall to be displayed on the ground
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDecalComponent> MagicCircleDecal;
+protected:
+	virtual void BeginPlay() override;
+
 };

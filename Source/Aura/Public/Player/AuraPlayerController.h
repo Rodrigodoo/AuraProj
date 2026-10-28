@@ -40,7 +40,8 @@ public:
 	
 	// Show the Magic Circle on the floor
 	UFUNCTION(BlueprintCallable)
-	void ShowMagicCircle();
+	void ShowMagicCircle(UMaterialInterface* DecalMaterial = nullptr);
+	
 	// Hide the Magic Circle on the floor
 	UFUNCTION(BlueprintCallable)
 	void HideMagicCircle();

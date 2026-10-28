@@ -63,6 +63,12 @@ public:
 	// Only for cosmetics (Player State deals with other level up systems)
 	virtual void LevelUp_Implementation() override;
 	
+	// Show the Magic Circle on the floor
+	virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial = nullptr) override;
+	
+	// Hide the Magic Circle on the floor
+	virtual void HideMagicCircle_Implementation() override;
+	
 	//~ End - IAuraPlayerInterface
 	
 	//~ Begin - AAuraCharacterBase Overrides

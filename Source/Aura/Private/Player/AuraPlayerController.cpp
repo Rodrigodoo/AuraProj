@@ -17,6 +17,7 @@
 #include "Input/AuraInputComponent.h"
 #include "Interaction/AuraEnemyInterface.h"
 #include "UI/Widget/AuraDamageTextWidgetComponent.h"
+#include "Components/DecalComponent.h"
 
 
 AAuraPlayerController::AAuraPlayerController()
@@ -42,7 +43,7 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	UpdateMagicCircleLocation();
 }
 
-void AAuraPlayerController::ShowMagicCircle()
+void AAuraPlayerController::ShowMagicCircle(UMaterialInterface* DecalMaterial)
 {
 	if (IsValid(MagicCircle))
 	{
@@ -53,6 +54,12 @@ void AAuraPlayerController::ShowMagicCircle()
 	// Otherwise spawn it
 	FVector MagicCircleLoc = CursorHit.ImpactPoint;
 	MagicCircle = GetWorld()->SpawnActor<AAuraMagicCircle>(MagicCircleClass, MagicCircleLoc, FRotator::ZeroRotator);
+	
+	// Set the Decal material
+	if (DecalMaterial)
+	{
+		MagicCircle->MagicCircleDecal->SetDecalMaterial(DecalMaterial);
+	}
 }
 
 void AAuraPlayerController::HideMagicCircle()
