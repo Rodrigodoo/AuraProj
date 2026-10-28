@@ -123,6 +123,11 @@ namespace AuraGameplayTagsManager
 	// Abilities.Lightning.Electrocute
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Lightning_Electrocute, "Abilities.Lightning.Electrocute",
 		"Electrocute Ability Tag");
+	// Abilities.Arcane
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Arcane, "Abilities.Arcane", "Arcane Ability type Tag");
+	// Abilities.Arcane.ArcaneShards
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Arcane_ArcaneShards, "Abilities.Arcane.ArcaneShards",
+		"Arcane Shards Ability Tag");
 	// Abilities.HitReact
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_HitReact, "Abilities.HitReact", 
 		"Hit React Ability Tag");

@@ -93,6 +93,10 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Lightning);
 	// Abilities.Lightning.Electrocute
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Lightning_Electrocute);
+	// Abilities.Arcane
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Arcane);
+	// Abilities.Arcane.ArcaneShards
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Arcane_ArcaneShards);
 	// Abilities.HitReact
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_HitReact);
 	
