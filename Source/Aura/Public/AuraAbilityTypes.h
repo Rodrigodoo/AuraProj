@@ -129,6 +129,22 @@ struct FAuraDamageEffectParams
 	UPROPERTY(BlueprintReadWrite)
 	FVector Knockback = FVector::ZeroVector;
 	
+	// Is this damage radial
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsRadialDamage = false;
+	
+	// Inner Radius where enemy takes full damage 
+	UPROPERTY(BlueprintReadWrite, meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
+	float RadialDamageInnerRadius = 0.f;
+	
+	// Outer Radius where enemy takes minimal damage 
+	UPROPERTY(BlueprintReadWrite, meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
+	float RadialDamageOuterRadius = 0.f;
+	
+	// Radial Damage Origin Point 
+	UPROPERTY(BlueprintReadWrite, meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
+	FVector RadialDamageOrigin = FVector::ZeroVector;
+
 	// Map of all damage types (base damage + debuffs)
 	UPROPERTY(BlueprintReadWrite)
 	TMap<FGameplayTag, FAuraDamage> DamageTypes;
@@ -157,11 +173,27 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
 	
 	// Death Impulse Getter and Setter
 	FVector GetDeathImpulse() const { return DeathImpulse; };
-	void SetDeathImpulse(const FVector& InDeathImpulse) {DeathImpulse = InDeathImpulse;};
+	void SetDeathImpulse(const FVector& InDeathImpulse) { DeathImpulse = InDeathImpulse;};
 	
 	// Knockback Getter and Setter
 	FVector GetKnockback() const { return Knockback; };
-	void SetKnockback(const FVector& InKnockback) {Knockback = InKnockback;};
+	void SetKnockback(const FVector& InKnockback) { Knockback = InKnockback;};
+	
+	// bIsRadial Getter and Setter
+	bool IsRadialDamage() const { return bIsRadialDamage; }
+	void SetIsRadialDamage(const bool bInIsRadialDamage) { bIsRadialDamage = bInIsRadialDamage; }
+	
+	// RadialDamageInnerRadius Getter and Setter
+	float GetRadialDamageInnerRadius() const { return RadialDamageInnerRadius; }
+	void SetRadialDamageInnerRadius(const float InRadialDamageInnerRadius) { RadialDamageInnerRadius = InRadialDamageInnerRadius; }
+	
+	// RadialDamageOuterRadius Getter and Setter
+	float GetRadialDamageOuterRadius() const { return RadialDamageOuterRadius; }
+	void SetRadialDamageOuterRadius(const float InRadialDamageOuterRadius) { RadialDamageOuterRadius = InRadialDamageOuterRadius; }
+	
+	// RadialDamageOrigin Getter and Setter
+	FVector GetRadialDamageOrigin() const { return RadialDamageOrigin; }
+	void SetRadialDamageOrigin(const FVector& InRadialDamageOrigin) { RadialDamageOrigin = InRadialDamageOrigin; }
 	
 	//~ Begin - Debuff
 	
@@ -249,6 +281,22 @@ protected:
 	// Impulse applied whenever this effect causes the death of the character
 	UPROPERTY()
 	FVector Knockback = FVector::ZeroVector;
+	
+	// Is this damage radial
+	UPROPERTY()
+	bool bIsRadialDamage = false;
+	
+	// Inner Radius where enemy takes full damage 
+	UPROPERTY()
+	float RadialDamageInnerRadius = 0.f;
+	
+	// Outer Radius where enemy takes minimal damage 
+	UPROPERTY()
+	float RadialDamageOuterRadius = 0.f;
+	
+	// Radial Damage Origin Point 
+	UPROPERTY()
+	FVector RadialDamageOrigin = FVector::ZeroVector;
 };
 
 // Template to establish stuct operations available

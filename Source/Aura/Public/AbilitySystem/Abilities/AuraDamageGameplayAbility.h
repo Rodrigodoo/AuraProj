@@ -54,6 +54,22 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Knockback")
 	float KnockbackPitchOverride = 45.0f;
 	
+	// Is this damage radial
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial")
+	bool bIsRadialDamage = false;
+	
+	// Inner Radius where enemy takes full damage 
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial", meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
+	float RadialDamageInnerRadius = 0.f;
+	
+	// Outer Radius where enemy takes minimal damage 
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial", meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
+	float RadialDamageOuterRadius = 0.f;
+	
+	// Radial Damage Origin Point 
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial", meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
+	FVector RadialDamageOrigin = FVector::ZeroVector;
+	
 	// All existing damage types for this ability
 	// Map between gameplay tags and scalable floats
 	UPROPERTY(EditDefaultsOnly, Category = "Damage", meta = (Categories = "Damage"))

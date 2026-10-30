@@ -351,10 +351,27 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, class UPackageMap* M
 		{
 			RepBits |= 1 << 11;
 		}
+		if (bIsRadialDamage)
+		{
+			RepBits |= 1 << 12;
+
+			if (RadialDamageInnerRadius > 0.f)
+			{
+				RepBits |= 1 << 13;
+			}
+			if (RadialDamageOuterRadius > 0.f)
+			{
+				RepBits |= 1 << 14;
+			}
+			if (!RadialDamageOrigin.IsNearlyZero())
+			{
+				RepBits |= 1 << 15;
+			}
+		}
 	}
 	
 	// Serialize/Deserialize the bit mask
-	Ar.Serialize(&RepBits, 11);
+	Ar.Serialize(&RepBits, 15);
 	
 	// Read the bitmask and Serialize/Deserialize the properties
 	// Note: At this point we can either be loading or saving, depends on context
@@ -426,6 +443,23 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, class UPackageMap* M
 	if (RepBits & (1 << 11))
 	{
 		Knockback.NetSerialize(Ar, Map, bOutSuccess);
+	}
+	if (RepBits & (1 << 12))
+	{
+		Ar << bIsRadialDamage;
+		
+		if (RepBits & (1 << 13))
+		{
+			Ar << RadialDamageInnerRadius;
+		}
+		if (RepBits & (1 << 14))
+		{
+			Ar << RadialDamageOuterRadius;
+		}
+		if (RepBits & (1 << 15))
+		{
+			RadialDamageOrigin.NetSerialize(Ar, Map, bOutSuccess);
+		}
 	}
 
 	// If Loading, just initialize InstigatorAbilitySystemComponent

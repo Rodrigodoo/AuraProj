@@ -39,7 +39,16 @@ FAuraDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromCl
 	Params.KnockbackChance = KnockbackChance;
 	Params.KnockbackMagnitude = KnockbackMagnitude;
 	Params.DamageTypes = DamageTypes;
-	
+	// Check for Radial damage
+	// For now, Radial damage is applied to all types in the Ability
+	if (bIsRadialDamage)
+	{
+		Params.bIsRadialDamage = true;
+		Params.RadialDamageInnerRadius = RadialDamageInnerRadius;
+		Params.RadialDamageOuterRadius = RadialDamageOuterRadius;
+		Params.RadialDamageOrigin = RadialDamageOrigin;
+	}
+
 	// If the target actor is not nullptr, then make default Knockback and Death Impulse
 	Params.MakeDeathImpulseAndKnockback(GetAvatarActorFromActorInfo(), TargetActor);
 
