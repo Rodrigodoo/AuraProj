@@ -357,6 +357,7 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffec
 	ContextHandle.AddSourceObject(SourceAvatarActor);
 	SetDeathImpulse(ContextHandle, Params.DeathImpulse);
 	SetKnockback(ContextHandle, Params.Knockback);
+	
 
 	// Create a spec handle to store all damage type values and then apply them to the Target Actor
 	const FGameplayEffectSpecHandle DamageSpecHandle = Params.SourceAbilitySystemComponent->MakeOutgoingSpec(
@@ -527,6 +528,74 @@ void UAuraAbilitySystemLibrary::SetKnockback(FGameplayEffectContextHandle& Effec
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		AuraGameplayEffectContext->SetKnockback(Knockback);
+	}
+}
+
+bool UAuraAbilitySystemLibrary::IsRadialDamage(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and check if it was a Radial Damage
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->IsRadialDamage() : false; 
+}
+
+void UAuraAbilitySystemLibrary::SetIsRadialDamage(FGameplayEffectContextHandle& EffectContextHandle,
+	const bool bInIsRadialDamage)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Radial Damage flag
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetIsRadialDamage(bInIsRadialDamage);
+	}
+}
+
+float UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and get its Radial Damage Inner Radius
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetRadialDamageInnerRadius() : 0.f;
+}
+
+void UAuraAbilitySystemLibrary::SetRadialDamageInnerRadius(FGameplayEffectContextHandle& EffectContextHandle,
+	const float InRadialDamageInnerRadius)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Radial Damage Inner Radius
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetRadialDamageInnerRadius(InRadialDamageInnerRadius);
+	}
+}
+
+float UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and get its Radial Damage Outer Radius
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetRadialDamageOuterRadius() : 0.f;
+}
+
+void UAuraAbilitySystemLibrary::SetRadialDamageOuterRadius(FGameplayEffectContextHandle& EffectContextHandle,
+	const float InRadialDamageOuterRadius)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Radial Damage Outer Radius
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetRadialDamageOuterRadius(InRadialDamageOuterRadius);
+	}
+}
+
+FVector UAuraAbilitySystemLibrary::GetRadialDamageOrigin(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	// Retrieve the Aura Gameplay Effect Context and get its Radial Damage Origin
+	const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get());
+	return AuraGameplayEffectContext ? AuraGameplayEffectContext->GetRadialDamageOrigin() : FVector::ZeroVector;
+}
+
+void UAuraAbilitySystemLibrary::SetRadialDamageOrigin(FGameplayEffectContextHandle& EffectContextHandle,
+	const FVector& InRadialDamageOrigin)
+{
+	// Retrieve the Aura Gameplay Effect Context and set its Radial Damage Origin
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetRadialDamageOrigin(InRadialDamageOrigin);
 	}
 }
 

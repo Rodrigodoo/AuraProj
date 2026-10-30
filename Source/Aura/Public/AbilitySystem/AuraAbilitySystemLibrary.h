@@ -29,6 +29,11 @@ class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
+	
+	/*
+	 * Widget Controller
+	 */
+	
 	// Get the Overlay Controller
 	// Assumes it's called from an autonomous client
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController", meta=(DefaultToSelf = "WorldContextObject"))
@@ -43,6 +48,10 @@ public:
 	// Assumes it's called from an autonomous client
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController", meta=(DefaultToSelf = "WorldContextObject"))
 	static UAuraSpellMenuController* GetSpellMenuController(const UObject* WorldContextObject);
+	
+	/*
+	 * Character Class Defaults
+	 */
 	
 	// Initializes the Default Attributes relating to this RPG Class
 	// It reads this information from the UAuraCharacterClassInfoDataAsset stored in the AuraGameMode 
@@ -77,6 +86,10 @@ public:
 	// Finds how much XP should be rewarded when killing a character of said class and level
 	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, EAuraCharacterClass CharacterClass, const int32 CharacterLevel);
 	
+	/*
+	 * Ability Spec Funcs
+	 */
+
 	// Retrieves the Ability's tag from its Ability Spec
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	
@@ -100,6 +113,10 @@ public:
 	
 	// Checks if this Ability has any Input Tag
 	static bool AbilityHasAnyInputTag(const FGameplayAbilitySpec& AbilitySpec);
+	
+	/*
+	 * Gameplay Effects
+	 */
 	
 	// Checks if this is a Passive Ability
 	static bool IsPassiveAbility(const UObject* WorldContextObject, const FGameplayAbilitySpec& AbilitySpec);
@@ -156,6 +173,38 @@ public:
 	// Set the Death Impulse to the Effect Context
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetKnockback(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FVector& Knockback);
+	
+	// Check if it is Radial Damage from the Effect Context
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static bool IsRadialDamage(const FGameplayEffectContextHandle& EffectContextHandle);
+	
+	// Set if it is Radial Damage to the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetIsRadialDamage(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsRadialDamage);
+	
+	// Retrieve the Radial Damage Inner Radius from the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static float GetRadialDamageInnerRadius(const FGameplayEffectContextHandle& EffectContextHandle);
+	
+	// Set the Radial Damage Inner Radius to the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetRadialDamageInnerRadius(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const float InRadialDamageInnerRadius);
+	
+	// Retrieve the Radial Damage Outer Radius from the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static float GetRadialDamageOuterRadius(const FGameplayEffectContextHandle& EffectContextHandle);
+	
+	// Set the Radial Damage Outer Radius to the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetRadialDamageOuterRadius(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const float InRadialDamageOuterRadius);
+	
+	// Retrieve the Radial Damage Origin from the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static FVector GetRadialDamageOrigin(const FGameplayEffectContextHandle& EffectContextHandle);
+	
+	// Set the Radial Damage Origin to the Effect Context
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetRadialDamageOrigin(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FVector& InRadialDamageOrigin);
 	
 	// Checks if the Gameplay Effect pertains to a Successful Debuff application
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
@@ -225,6 +274,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void AddDamageTypeAndDebuff(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, 
 		const FGameplayTag& DamageType, const FAuraDebuff& Debuff);
+	
+	/*
+	 * Gameplay Mechanics
+	 */
 	
 	// Searches for live players within a certain radius from an origin point
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics", meta=(DefaultToSelf = "WorldContextObject"))
