@@ -286,6 +286,13 @@ public:
 	                                      const FVector& OriginPoint, FName ActorTagToExclude = NAME_None,
 	                                      bool DebugSphere = false);
 	
+	// Calculate damage linear damage falloff for a certain distance from the origin
+	// Note: this method was comes from UGameplayStatic::ApplyRadialDamageWithFalloff
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static float GetRadialDamageWithFalloffForTarget(UPARAM(ref) FVector& TargetLocation, const float BaseDamage,
+	                                                 const FVector& Origin, const float DamageInnerRadius,
+	                                                 const float DamageOuterRadius);
+	
 	// Gets the closest actors to an origin point from a list of provided actors
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static void GetClosestActors(const int32 MaxNumActorsToChoose, const TArray<AActor*>& ActorsToEvaluate, TArray<AActor*>& OutClosestActors, const FVector& OriginPoint);

@@ -803,6 +803,30 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldCo
 	}
 }
 
+float UAuraAbilitySystemLibrary::GetRadialDamageWithFalloffForTarget(FVector& TargetLocation, const float BaseDamage,
+                                                                     const FVector& Origin,
+                                                                     const float DamageInnerRadius,
+                                                                     const float DamageOuterRadius)
+{
+	TargetLocation.Z = Origin.Z; // TargetAvatar halfheight may be above the InnerRadius
+    
+	const float SquareDistance = FVector::DistSquared(TargetLocation, Origin);
+	const float SquareInnerRadius = FMath::Square(DamageInnerRadius);
+	const float SquareOuterRadius = FMath::Square(DamageOuterRadius);
+    
+	// Full damage taken
+	if (SquareDistance <= SquareInnerRadius) return BaseDamage;
+ 
+	// Linearly scale off damage
+	const TRange<float> DistanceRange(SquareInnerRadius, SquareOuterRadius);
+	const TRange<float> DamageScaleRange(1.0f, 0.f);
+	const float DamageScale = 
+		FMath::GetMappedRangeValueClamped(DistanceRange, DamageScaleRange, SquareDistance);
+	const float RadialDamage = BaseDamage * DamageScale;
+ 
+	return RadialDamage;
+}
+
 void UAuraAbilitySystemLibrary::GetClosestActors(const int32 MaxNumActorsToChoose, const TArray<AActor*>& ActorsToEvaluate,
                                                  TArray<AActor*>& OutClosestActors, const FVector& OriginPoint)
 {

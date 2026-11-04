@@ -88,14 +88,6 @@ void AAuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-float AAuraCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
-{
-	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	OnDamageDelegate.Broadcast(DamageAmount);
-	return DamageTaken;
-}
-
 EAuraCharacterClass AAuraCharacterBase::GetCharacterClass_Implementation() const
 {
 	return CharacterClass;
@@ -226,11 +218,6 @@ FOnAbilitySystemComponentRegistered& AAuraCharacterBase::GetAbilitySystemCompone
 FOnDeathSignature& AAuraCharacterBase::GetOnDeathDelegate()
 {
 	return OnDeathDelegate;
-}
-
-FOnDamageSignature& AAuraCharacterBase::GetOnDamageDelegate()
-{
-	return OnDamageDelegate;
 }
 
 bool AAuraCharacterBase::IsBeingShocked_Implementation() const
