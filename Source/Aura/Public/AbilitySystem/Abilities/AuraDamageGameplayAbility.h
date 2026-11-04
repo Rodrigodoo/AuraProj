@@ -55,15 +55,15 @@ protected:
 	float KnockbackPitchOverride = 45.0f;
 	
 	// Is this damage radial
-	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Radial")
 	bool bIsRadialDamage = false;
 	
 	// Inner Radius where enemy takes full damage 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial", meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Radial", meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
 	float RadialDamageInnerRadius = 0.f;
 	
 	// Outer Radius where enemy takes minimal damage 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial", meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Radial", meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
 	float RadialDamageOuterRadius = 0.f;
 	
 	// Radial Damage Origin Point 
