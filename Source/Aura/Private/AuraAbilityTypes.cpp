@@ -116,15 +116,16 @@ bool FDamageTypeToDebuffWrapper::NetSerialize(FArchive& Ar, class UPackageMap* M
 	return true;
 }
 
-void FAuraDamageEffectParams::MakeDeathImpulseAndKnockback(AActor* SourceActor, AActor* TargetActor)
+void FAuraDamageEffectParams::MakeDeathImpulseAndKnockback(const FVector& SourceLocation, const FVector& TargetLocation)
 {
-	if (!IsValid(SourceActor) || !IsValid(TargetActor))
+	// If their location is the same nothing to be done
+	if (SourceLocation == TargetLocation)
 	{
 		return;
 	}
 	
 	// Get the direction from the avatar actor to the target (Normalized)
-	FRotator Rotation = (TargetActor->GetActorLocation() - SourceActor->GetActorLocation()).Rotation();
+	FRotator Rotation = (TargetLocation - SourceLocation).Rotation();
 	Rotation.Pitch = KnockbackPitchOverride;
 	const FVector ToTarget = Rotation.Vector();
 		

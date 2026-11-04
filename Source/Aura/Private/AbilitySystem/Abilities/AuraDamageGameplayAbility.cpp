@@ -49,8 +49,24 @@ FAuraDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromCl
 		Params.RadialDamageOrigin = RadialDamageOrigin;
 	}
 
-	// If the target actor is not nullptr, then make default Knockback and Death Impulse
-	Params.MakeDeathImpulseAndKnockback(GetAvatarActorFromActorInfo(), TargetActor);
+	// If the target actor is nullptr, then return early as there is nothing more to do
+	if (!TargetActor)
+	{
+		return Params;
+	}
+	
+	// Otherwise, make Knockback and Death Impulse
+	if (bIsRadialDamage)
+	{
+		// If we are using a radial damage then make the impulse from its origin point
+		Params.MakeDeathImpulseAndKnockback(RadialDamageOrigin, TargetActor->GetActorLocation());
+
+	}
+	else if (AActor* SourceActor = GetAvatarActorFromActorInfo())
+	{
+		// If there is an avatar actor for these params then use it as the source of the impulse
+		Params.MakeDeathImpulseAndKnockback(SourceActor->GetActorLocation(), TargetActor->GetActorLocation());
+	}
 
 	return Params;
 }

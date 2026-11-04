@@ -118,7 +118,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
 			// Get the death impulse and the knockback before applying the damage effect to the target
-			DamageEffectParams.MakeDeathImpulseAndKnockback(this, OtherActor);
+			DamageEffectParams.MakeDeathImpulseAndKnockback(GetActorLocation(), OtherActor->GetActorLocation());
 
 			// Apply the effect to the target
 			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;

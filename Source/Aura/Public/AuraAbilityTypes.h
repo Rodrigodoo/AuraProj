@@ -150,7 +150,7 @@ struct FAuraDamageEffectParams
 	TMap<FGameplayTag, FAuraDamage> DamageTypes;
 	
 	// Creates the Death Impulse and Knockback from the target actor
-	void MakeDeathImpulseAndKnockback(AActor* SourceActor, AActor* TargetActor);
+	void MakeDeathImpulseAndKnockback(const FVector& SourceLocation, const FVector& TargetLocation);
 };
 
 // Struct to hold specific gameplay effect contexts

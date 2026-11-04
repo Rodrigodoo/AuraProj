@@ -275,6 +275,10 @@ public:
 	static void AddDamageTypeAndDebuff(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, 
 		const FGameplayTag& DamageType, const FAuraDebuff& Debuff);
 	
+	// Makes the Knockback and death impulse for the damage Effect Params according tot eh source and target locations
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void MakeDeathImpulseAndKnockback(UPARAM(ref)FAuraDamageEffectParams& Params, const FVector& SourceLocation, const FVector& TargetLocation);
+	
 	/*
 	 * Gameplay Mechanics
 	 */

@@ -752,6 +752,12 @@ void UAuraAbilitySystemLibrary::AddDamageTypeAndDebuff(FGameplayEffectContextHan
 	}
 }
 
+void UAuraAbilitySystemLibrary::MakeDeathImpulseAndKnockback(FAuraDamageEffectParams& Params,
+	const FVector& SourceLocation, const FVector& TargetLocation)
+{
+	Params.MakeDeathImpulseAndKnockback(SourceLocation, TargetLocation);
+}
+
 void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldContextObject,
                                                           TArray<AActor*>& OutOverlappingActors,
                                                           const TArray<AActor*>& ActorsToIgnore,
