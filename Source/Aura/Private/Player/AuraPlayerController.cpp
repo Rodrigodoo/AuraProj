@@ -430,7 +430,8 @@ void AAuraPlayerController::CursorTrace()
 	}
 	
 	// Get hit result under the cursor
-	GetHitResultUnderCursor(ECC_Visibility,false,CursorHit);
+	const ECollisionChannel TraceChannel = IsValid(MagicCircle) ? ECC_EXCLUDEPAWNS : ECC_Visibility;
+	GetHitResultUnderCursor(TraceChannel,false,CursorHit);
 	if (!CursorHit.bBlockingHit)
 	{
 		// No hit found
