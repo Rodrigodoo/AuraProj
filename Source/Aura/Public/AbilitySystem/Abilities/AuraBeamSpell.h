@@ -41,6 +41,9 @@ public:
 	// Callback for when an additional target dies
 	UFUNCTION(BlueprintImplementableEvent)
 	void AdditionalTargetDied(AActor* DeadActor);
+	
+	// Gets the number of additional beams for the level
+	int32 GetAdditionalBeamCount(const int32 AbilityLevel) const;
 protected:
 	// Location of where the beam should hit
 	UPROPERTY(BlueprintReadWrite, Category="Beam")

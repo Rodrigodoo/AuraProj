@@ -106,3 +106,8 @@ void UAuraBeamSpell::StoreAdditionalTarget(TArray<AActor*>& OutAdditionalTargets
 		}
 	}
 }
+
+int32 UAuraBeamSpell::GetAdditionalBeamCount(const int32 AbilityLevel) const
+{
+	return AdditionalBeams.GetValueAtLevel(AbilityLevel);
+}

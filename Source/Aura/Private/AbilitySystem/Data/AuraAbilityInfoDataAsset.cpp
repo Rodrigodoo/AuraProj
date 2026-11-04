@@ -4,6 +4,8 @@
 #include "AbilitySystem/Data/AuraAbilityInfoDataAsset.h"
 
 #include "AuraGameplayTagsManager.h"
+#include "AbilitySystem/Abilities/AuraArcaneShards.h"
+#include "AbilitySystem/Abilities/AuraBeamSpell.h"
 #include "AbilitySystem/Abilities/AuraDamageGameplayAbility.h"
 #include "AbilitySystem/Abilities/AuraGameplayAbilityBase.h"
 #include "AbilitySystem/Abilities/AuraProjectileSpell.h"
@@ -25,6 +27,12 @@ namespace AuraRichStyle
 	
 	// Projectile Spell Ability Markups
 	FString ProjectileNum = "_ProjectileNum";
+	
+	// Beam Spell Ability Markups
+	FString AdditionalBeams = "_AdditionalBeams";
+	
+	// Arcane Shards Spell Ability Markups
+	FString ShardNum = "_ShardNum";
 }
 
 FString FAuraAbilityInfo::GetDescription(const int32 Level) const
@@ -90,6 +98,18 @@ void FAuraAbilityInfo::FormatTextValues(FString& OutText, const int32 Level, con
 		// Get the number of Projectiles
 		NamesToValues.Add(AuraRichStyle::ProjectileNum, 
 			FStringFormatArg(ProjectileSpell->GetProjectileCount(AbilityLevel)));
+	}
+	else if (const UAuraBeamSpell* BeamSpell = Cast<UAuraBeamSpell>(AbilityDefault))
+	{
+		// Get the number of Additional Beams
+		NamesToValues.Add(AuraRichStyle::AdditionalBeams, 
+			FStringFormatArg(BeamSpell->GetAdditionalBeamCount(AbilityLevel)));
+	}
+	else if (const UAuraArcaneShards* ArcaneShards = Cast<UAuraArcaneShards>(AbilityDefault))
+	{
+		// Get the number of Shards
+		NamesToValues.Add(AuraRichStyle::ShardNum, 
+			FStringFormatArg(ArcaneShards->GetShardCount(AbilityLevel)));
 	}
 	
 	// Makes the necessary replacements
