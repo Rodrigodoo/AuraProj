@@ -15,6 +15,7 @@ class UNiagaraSystem;
 // Delegates
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAbilitySystemComponentRegistered, UAbilitySystemComponent*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, AActor*, DeathActor);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDamageSignature, float /*DamageAmount*/);
 
 // Structure to associate a Montage info to a GameplayTag
 // This will be used to decide what montages are played, which sockets are used, sounds to be played,
@@ -109,6 +110,9 @@ public:
 	
 	// Retrieve the On Death delegate (Delegate called whenever the character dies)
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
+	
+	// Retrieve the On Damage delegate (Delegate called whenever the character takes damage)
+	virtual FOnDamageSignature& GetOnDamageDelegate() = 0;
 	
 	//~ Begin - Montages
 	

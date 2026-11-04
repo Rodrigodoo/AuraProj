@@ -40,6 +40,10 @@ public:
 	
 	virtual void BeginPlay() override;
 	
+	//~ APawn Override
+	// Method called whenever this character takes damage
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	
 	//~ Begin - IAuraCombatInterface overrides
 	
 	// Retrieves the Character's class
@@ -101,6 +105,9 @@ public:
 	// Retrieve the On Death delegate (Delegate called whenever the character dies)
 	virtual FOnDeathSignature& GetOnDeathDelegate() override;
 	
+	// Retrieve the On Damage delegate (Delegate called whenever the character takes damage)
+	virtual FOnDamageSignature& GetOnDamageDelegate() override;
+	
 	// Check if this character is being shocked
 	virtual bool IsBeingShocked_Implementation() const override;
 	
@@ -114,6 +121,9 @@ public:
 	
 	// Delegate to broadcast whenever this character dies
 	FOnDeathSignature OnDeathDelegate;
+	
+	// Delegate to broadcast whenever damage was taken
+	FOnDamageSignature OnDamageDelegate;
 	
 	// To process on all clients and server when character dies
 	// Drop Weapon and Ragdoll

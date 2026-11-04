@@ -358,6 +358,12 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffec
 	SetDeathImpulse(ContextHandle, Params.DeathImpulse);
 	SetKnockback(ContextHandle, Params.Knockback);
 	
+	// Radial Damage
+	SetIsRadialDamage(ContextHandle, Params.bIsRadialDamage);
+	SetRadialDamageInnerRadius(ContextHandle, Params.RadialDamageInnerRadius);
+	SetRadialDamageOuterRadius(ContextHandle, Params.RadialDamageOuterRadius);
+	SetRadialDamageOrigin(ContextHandle, Params.RadialDamageOrigin);
+	
 
 	// Create a spec handle to store all damage type values and then apply them to the Target Actor
 	const FGameplayEffectSpecHandle DamageSpecHandle = Params.SourceAbilitySystemComponent->MakeOutgoingSpec(

@@ -10,6 +10,7 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AuraCharacterClassInfoDataAsset.h"
 #include "Interaction/AuraCombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 // Internal struct to store Attribute Capture Definitions
 struct AuraDamageStatics
@@ -86,8 +87,8 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 	const UAbilitySystemComponent* SourceAbilitySystemComponent = ExecutionParams.GetSourceAbilitySystemComponent();
 	const UAbilitySystemComponent* TargetAbilitySystemComponent = ExecutionParams.GetTargetAbilitySystemComponent();
 	
-	const AActor* SourceAvatar = SourceAbilitySystemComponent ? SourceAbilitySystemComponent->GetAvatarActor() : nullptr;
-	const AActor* TargetAvatar = TargetAbilitySystemComponent ? TargetAbilitySystemComponent->GetAvatarActor() : nullptr;
+	AActor* SourceAvatar = SourceAbilitySystemComponent ? SourceAbilitySystemComponent->GetAvatarActor() : nullptr;
+	AActor* TargetAvatar = TargetAbilitySystemComponent ? TargetAbilitySystemComponent->GetAvatarActor() : nullptr;
 
 	//~  Begin - Early checks
 	//
@@ -140,6 +141,8 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 
 	/*
 	 * Damage Calculation (By Order):
+	 * - Resistance to Damage Type
+	 * - Radial Damage (if exists)
 	 * - Block Chance
 	 * - Effective Armor (Armor + Armor Penetration)
 	 * - Critical Hit (Critical Hit Chance + Critical Hit Damage)
@@ -171,8 +174,37 @@ void UAuraExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExe
 		// DamageTypeValue = DamageTypeValue * (100 - Resistance Percentage)
 		DamageTypeValue *= (100.f - TargetResistanceMagnitude) / 100.f;
 		
+		// Radial Damage Falloff
+		if (UAuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle))
+		{
+			// Bind the Damage amount taken on the character (After Radial Damage applied) to the Damage Type Value 
+			if (IAuraCombatInterface* CombatInterface = Cast<IAuraCombatInterface>(TargetAvatar))
+			{
+				CombatInterface->GetOnDamageDelegate().AddLambda(
+					[&DamageTypeValue](const float DamageAmount)
+					{
+						DamageTypeValue = DamageAmount;
+					});
+			}
+			
+			// Apply the radial damage calculation
+			UGameplayStatics::ApplyRadialDamageWithFalloff(TargetAvatar, 
+															DamageTypeValue, 
+															0.f,
+			                                               UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle),
+			                                               UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+			                                               UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle), 
+			                                               1.f, 
+			                                               UDamageType::StaticClass(),
+			                                               TArray<AActor*>(), 
+			                                               SourceAvatar, 
+			                                               nullptr);
+		}
+		
+		
 		// Apply the type damage to the current Incoming Damage
 		Damage += DamageTypeValue;
+
 	}
 
 	//~ Block Chance
