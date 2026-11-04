@@ -133,6 +133,8 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Fire_FireBolt);
 	// Cooldown.Lightning.Electrocute
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Lightning_Electrocute);
+	// Cooldown.Arcane.ArcaneShards
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Arcane_ArcaneShards);
 	//~ End - Cooldowns
 	
 	//~ Begin - Inputs

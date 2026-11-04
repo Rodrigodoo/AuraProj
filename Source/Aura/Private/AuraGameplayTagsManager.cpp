@@ -179,6 +179,9 @@ namespace AuraGameplayTagsManager
 	// Cooldown.Lightning.Electrocute
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Lightning_Electrocute, "Cooldown.Lightning.Electrocute", 
 		"Electrocute Cooldown Tag");
+	// Cooldown.Arcane.ArcaneShards
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Arcane_ArcaneShards, "Cooldown.Arcane.ArcaneShards", 
+		"Arcane Shards Cooldown Tag");
 	
 	/*
 	 * Input
