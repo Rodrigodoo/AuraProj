@@ -81,8 +81,7 @@ void AAuraProjectile::Destroyed()
 	Super::Destroyed();
 }
 
-void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                      UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+bool AAuraProjectile::IsValidOverlap(AActor* OtherActor)
 {
 	AActor* ProjectileInstigator = GetInstigator();
 	if (!IsValid(ProjectileInstigator))
@@ -94,12 +93,24 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		// Currently, the Instigator is being used for friendly fire validation.
 		bHit = true;
 		Destroy();
-		return;
+		return false;
 	}
 	// If the causer of the effect is invalid, is trying to hit itself, or it's trying to do friendly fire, then ignore!
 	if (!DamageEffectParams.SourceAbilitySystemComponent 
 		|| OtherActor == DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor() 
 		|| !UAuraAbilitySystemLibrary::IsNotFriend(OtherActor, ProjectileInstigator))
+	{
+		return false;
+	}
+	
+	return true;
+}
+
+void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                      UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// Check for valid overlaps
+	if (!IsValidOverlap(OtherActor))
 	{
 		return;
 	}

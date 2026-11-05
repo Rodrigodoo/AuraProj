@@ -55,7 +55,7 @@ TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 		
 		// Set the Effect Parameters (No Target yet)
-		FireBall->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults(nullptr);;
+		FireBall->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults(nullptr);
 		
 		// Add Fire Ball to Array
 		SpawnedFireBalls.Add(FireBall);

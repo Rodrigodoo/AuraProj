@@ -35,7 +35,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
-	
+	// check if the overlap with the other actor is valid
+	bool IsValidOverlap(AActor* OtherActor);
+
 	// Plays the Effects (sound and particles) whenever this actor hits something
 	UFUNCTION(BlueprintCallable)
 	void PlayEffectsOnHit();
@@ -44,6 +46,10 @@ protected:
 	UFUNCTION()
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, 
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	// If the actor overlapped a target
+	// Note: Only use on client!
+	bool bHit = false;
 private:
 
 	// Sphere component for projectile collisions
@@ -68,8 +74,4 @@ private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> ImpactSound;
 	//~ End - Effects
-	
-	// If the actor overlapped a target
-	// Note: Only use on client!
-	bool bHit = false;
 };
