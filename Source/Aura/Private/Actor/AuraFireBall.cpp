@@ -4,6 +4,8 @@
 #include "Actor/AuraFireBall.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AuraGameplayTagsManager.h"
+#include "GameplayCueManager.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -44,4 +46,22 @@ void AAuraFireBall::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			UAuraAbilitySystemLibrary::ApplyDamageGameplayEffect(DamageEffectParams);
 		}
 	}
+	else
+	{
+		// Signal in the client that a target was hit
+		bHit = true;
+	}
+}
+
+void AAuraFireBall::PlayEffectsOnHit()
+{
+	// Execute a local Gameplay Cue at the actor location
+	if (GetOwner())
+	{
+		FGameplayCueParameters GameplayCueParameters;
+		GameplayCueParameters.Location = GetActorLocation();
+		UGameplayCueManager::ExecuteGameplayCue_NonReplicated(GetOwner(), AuraGameplayTagsManager::GameplayCue_FireBlast, GameplayCueParameters);
+	}
+	
+	bHit = true;
 }

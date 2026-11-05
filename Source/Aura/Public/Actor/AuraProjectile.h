@@ -40,7 +40,7 @@ protected:
 
 	// Plays the Effects (sound and particles) whenever this actor hits something
 	UFUNCTION(BlueprintCallable)
-	void PlayEffectsOnHit();
+	virtual void PlayEffectsOnHit();
 	
 	// To be called when the sphere is overlapped
 	UFUNCTION()

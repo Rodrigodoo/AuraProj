@@ -30,4 +30,7 @@ protected:
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                             UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
 	                             const FHitResult& SweepResult) override;
+	
+	// Plays the Effects (sound and particles) whenever this actor hits something
+	virtual void PlayEffectsOnHit() override;
 };

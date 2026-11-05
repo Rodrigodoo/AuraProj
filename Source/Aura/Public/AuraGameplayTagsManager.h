@@ -262,6 +262,13 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Block_CursorTrace);
 	//~ End - Player
 	
+	//~ Begin - Gameplay Cue
+	// GameplayCue
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue);
+	// GameplayCue.FireBlast
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_FireBlast);
+	//~ End - Gameplay Cue
+	
 	// Stores all Damage Types tags and relates them to resistances
 	extern const TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 	

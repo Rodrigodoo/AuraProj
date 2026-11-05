@@ -139,10 +139,5 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		// Destroy the projectile
 		Destroy();
 	}
-	else
-	{
-		// Signal in the client that a target was hit
-		bHit = true;
-	}
 }
 

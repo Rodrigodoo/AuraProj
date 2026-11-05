@@ -313,6 +313,13 @@ namespace AuraGameplayTagsManager
 	// Player.Block.CursorTrace
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Player_Block_CursorTrace, "Player.Block.CursorTrace", "Block Tracing under the cursor");
 
+	/*
+	 * Gameplay Cue
+	 */
+	// GameplayCue
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue, "GameplayCue", "Gameplay Cue Tag");
+	// GameplayCue.FireBlast
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_FireBlast, "GameplayCue.FireBlast", "Gameplay Cue Fire Blast Tag");
 	
 	/*
 	 * Mapping of Damage Types to Resistances
