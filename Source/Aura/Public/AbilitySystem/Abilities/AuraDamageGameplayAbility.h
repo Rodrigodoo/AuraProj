@@ -66,8 +66,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Radial", meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
 	float RadialDamageOuterRadius = 0.f;
 	
-	// Radial Damage Origin Point 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial", meta=(EditCondition = "bIsRadialDamage", EditConditionHides))
+	// Radial Damage Origin Point
+	UPROPERTY()
 	FVector RadialDamageOrigin = FVector::ZeroVector;
 	
 	// All existing damage types for this ability

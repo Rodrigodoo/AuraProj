@@ -118,6 +118,9 @@ namespace AuraGameplayTagsManager
 	// Abilities.Fire.FireBolt
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Fire_FireBolt, "Abilities.Fire.FireBolt", 
 		"FireBolt Ability Tag");
+	// Abilities.Fire.FireBlast
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Fire_FireBlast, "Abilities.Fire.FireBlast", 
+		"FireBlast Ability Tag");
 	// Abilities.Lightning
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Abilities_Lightning, "Abilities.Lightning", "Lightning Ability type Tag");
 	// Abilities.Lightning.Electrocute
@@ -176,6 +179,9 @@ namespace AuraGameplayTagsManager
 	// Cooldown.Fire.FireBolt
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Fire_FireBolt, "Cooldown.Fire.FireBolt", 
 		"Firebolt Cooldown Tag");
+	// Cooldown.Fire.FireBlast
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Fire_FireBlast, "Cooldown.Fire.FireBlast", 
+		"FireBlast Cooldown Tag");
 	// Cooldown.Lightning.Electrocute
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Lightning_Electrocute, "Cooldown.Lightning.Electrocute", 
 		"Electrocute Cooldown Tag");

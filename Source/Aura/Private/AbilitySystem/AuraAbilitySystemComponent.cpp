@@ -240,7 +240,7 @@ bool UAuraAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag
 	// Early checks
 	if (!AbilityTag.IsValid())
 	{
-		OutDescription = "Error - No Ability Tag Set!";
+		OutDescription = "New Ability Coming Soon!";
 		OutNextLevelDescription = "";
 		return false;
 	}

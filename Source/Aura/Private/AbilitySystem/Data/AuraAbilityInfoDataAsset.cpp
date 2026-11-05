@@ -7,6 +7,7 @@
 #include "AbilitySystem/Abilities/AuraArcaneShards.h"
 #include "AbilitySystem/Abilities/AuraBeamSpell.h"
 #include "AbilitySystem/Abilities/AuraDamageGameplayAbility.h"
+#include "AbilitySystem/Abilities/AuraFireBlast.h"
 #include "AbilitySystem/Abilities/AuraGameplayAbilityBase.h"
 #include "AbilitySystem/Abilities/AuraProjectileSpell.h"
 #include "Aura/AuraLogChannels.h"
@@ -98,6 +99,11 @@ void FAuraAbilityInfo::FormatTextValues(FString& OutText, const int32 Level, con
 		// Get the number of Projectiles
 		NamesToValues.Add(AuraRichStyle::ProjectileNum, 
 			FStringFormatArg(ProjectileSpell->GetProjectileCount(AbilityLevel)));
+	}else if (const UAuraFireBlast* FireBlastSpell = Cast<UAuraFireBlast>(AbilityDefault))
+	{
+		// Get the number of Projectiles
+		NamesToValues.Add(AuraRichStyle::ProjectileNum, 
+			FStringFormatArg(FireBlastSpell->GetFireBallsCount(AbilityLevel)));
 	}
 	else if (const UAuraBeamSpell* BeamSpell = Cast<UAuraBeamSpell>(AbilityDefault))
 	{
@@ -105,11 +111,11 @@ void FAuraAbilityInfo::FormatTextValues(FString& OutText, const int32 Level, con
 		NamesToValues.Add(AuraRichStyle::AdditionalBeams, 
 			FStringFormatArg(BeamSpell->GetAdditionalBeamCount(AbilityLevel)));
 	}
-	else if (const UAuraArcaneShards* ArcaneShards = Cast<UAuraArcaneShards>(AbilityDefault))
+	else if (const UAuraArcaneShards* ArcaneShardsSpell = Cast<UAuraArcaneShards>(AbilityDefault))
 	{
 		// Get the number of Shards
 		NamesToValues.Add(AuraRichStyle::ShardNum, 
-			FStringFormatArg(ArcaneShards->GetShardCount(AbilityLevel)));
+			FStringFormatArg(ArcaneShardsSpell->GetShardCount(AbilityLevel)));
 	}
 	
 	// Makes the necessary replacements

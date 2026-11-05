@@ -89,6 +89,8 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Fire);
 	// Abilities.Fire.FireBolt
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Fire_FireBolt);
+	// Abilities.Fire.FireBlast
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Fire_FireBlast);
 	// Abilities.Lightning
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Abilities_Lightning);
 	// Abilities.Lightning.Electrocute
@@ -131,6 +133,8 @@ namespace AuraGameplayTagsManager
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown);
 	// Cooldown.Fire.FireBolt
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Fire_FireBolt);
+	// Cooldown.Fire.FireBlast
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Fire_FireBlast);
 	// Cooldown.Lightning.Electrocute
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_Lightning_Electrocute);
 	// Cooldown.Arcane.ArcaneShards
