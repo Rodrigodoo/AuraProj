@@ -19,6 +19,12 @@ int32 UAuraFireBlast::GetCurrentFireBallsCount() const
 
 TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
 {
+	// If we are not on the server then move along.
+	if (!GetAvatarActorFromActorInfo()->HasAuthority())
+	{
+		return TArray<AAuraFireBall*>();
+	}
+	
 	const int32 FireBallCount = GetCurrentFireBallsCount();
 	if (FireBallCount <= 0)
 	{

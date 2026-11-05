@@ -981,7 +981,8 @@ void UAuraAbilitySystemLibrary::InternalEvenlySpacedCalculation(const TFunction<
 	const FVector LeftOfSpread = ForwardVector.RotateAngleAxis(-Spread / 2.f, Axis);
 	if (NumObjects > 1)
 	{
-		const float DeltaSpread = Spread / (NumObjects - 1);
+		// Spread capped at 360 degrees 
+		const float DeltaSpread = Spread < 360.f ? Spread / (NumObjects - 1) : 360.f / NumObjects;
 		for (int32 i = 0; i < NumObjects; i++)
 		{
 			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, Axis);

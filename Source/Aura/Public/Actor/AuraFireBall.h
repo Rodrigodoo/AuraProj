@@ -16,6 +16,9 @@ class AURA_API AAuraFireBall : public AAuraProjectile
 public:
 	AAuraFireBall();
 
+	// Method to start a timeline to move this object
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartOutgoingTimeline();
 protected:
 	virtual void BeginPlay() override;
 	

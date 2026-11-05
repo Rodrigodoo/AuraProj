@@ -15,6 +15,8 @@ void AAuraFireBall::BeginPlay()
 {
 	// Call the AuraProjectile code
 	Super::BeginPlay();
+	// Start the moving logic
+	StartOutgoingTimeline();
 }
 
 void AAuraFireBall::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
