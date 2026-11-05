@@ -6,6 +6,7 @@
 #include "AbilitySystem/Abilities/AuraDamageGameplayAbility.h"
 #include "AuraFireBlast.generated.h"
 
+class AAuraFireBall;
 /**
  * Ability that shoots a fire bolts in several directions
  */
@@ -22,7 +23,14 @@ public:
 	UFUNCTION(BlueprintPure)
 	int32 GetCurrentFireBallsCount() const;
 	
+	// Spawns the Fire Balls around the character
+	UFUNCTION(BlueprintCallable)
+	TArray<AAuraFireBall*> SpawnFireBalls();
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "FireBlast")
 	FScalableFloat FireBalls;
+
+	// Fire Ball class to spawn
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AAuraFireBall> AuraFireBallClass;
 };

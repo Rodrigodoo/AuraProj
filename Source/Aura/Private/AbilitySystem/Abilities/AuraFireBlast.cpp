@@ -12,3 +12,8 @@ int32 UAuraFireBlast::GetCurrentFireBallsCount() const
 {
 	return GetFireBallsCount(GetAbilityLevel());
 }
+
+TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
+{
+	return TArray<AAuraFireBall*>();
+}

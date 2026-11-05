@@ -39,6 +39,10 @@ protected:
 	// Plays the Effects (sound and particles) whenever this actor hits something
 	void PlayEffectsOnHit();
 	
+	// To be called when the sphere is overlapped
+	UFUNCTION()
+	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, 
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 private:
 
 	// Sphere component for projectile collisions
@@ -67,9 +71,4 @@ private:
 	// If the actor overlapped a target
 	// Note: Only use on client!
 	bool bHit = false;
-
-	// To be called when the sphere is overlapped
-	UFUNCTION()
-	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, 
-		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
