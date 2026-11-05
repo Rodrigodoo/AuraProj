@@ -28,9 +28,9 @@ public:
 	TArray<AAuraFireBall*> SpawnFireBalls();
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "FireBlast")
-	FScalableFloat FireBalls;
+	FScalableFloat NumFireBalls;
 
 	// Fire Ball class to spawn
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AAuraFireBall> AuraFireBallClass;
+	TSubclassOf<AAuraFireBall> FireBallClass;
 };
