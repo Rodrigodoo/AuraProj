@@ -14,4 +14,8 @@ class AURA_API UAuraLoadMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	// Method to Initialize this Widget with relevant data
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void BlueprintInitializeWidget();
 };
