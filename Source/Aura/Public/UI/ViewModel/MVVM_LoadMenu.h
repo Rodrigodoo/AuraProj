@@ -27,6 +27,17 @@ public:
 	UFUNCTION(BlueprintPure)
 	UMVVM_LoadSlot* GetLoadSlotByIndex(const int Index) const;
 	
+	// Process whenever a New Slot Button is Pressed
+	UFUNCTION(BlueprintCallable)
+	void NewSlotButtonPressed(int32 SlotIndex, const FString& EnteredName);
+	
+	// Process whenever a New Game Button is Pressed
+	UFUNCTION(BlueprintCallable)
+	void NewGameButtonPressed(int32 SlotIndex);
+	
+	// Process whenever a Select Slot Button is Pressed
+	UFUNCTION(BlueprintCallable)
+	void SelectSlotButtonPressed(int32 SlotIndex);
 private:
 	// Map to track all the existing Model Views for the Load Slots
 	UPROPERTY()
