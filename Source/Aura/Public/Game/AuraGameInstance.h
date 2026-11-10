@@ -6,6 +6,8 @@
 #include "Engine/GameInstance.h"
 #include "AuraGameInstance.generated.h"
 
+class USaveGame;
+class UMVVM_LoadSlot;
 class UAuraAbilityInfoDataAsset;
 class UAuraCharacterClassInfoDataAsset;
 /**
@@ -25,4 +27,11 @@ public:
 	// Data Asset that stores all the information relating to Abilities
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TObjectPtr<UAuraAbilityInfoDataAsset> AbilityInfoDataAsset;
+	
+	// Save Game Class for the Load Menu
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<USaveGame> LoadMenuSaveGameClass;
+	
+	// Saves the Load Slot Data to Disk
+	void SaveSlotData(UMVVM_LoadSlot* LoadSlot);
 };
